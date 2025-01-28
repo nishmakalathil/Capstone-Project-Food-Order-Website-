@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const userAuth = (req, res, next) => {
     try {
-        console.log('User auth');
         const { token } = req.cookies;
 
         if (!token) {
@@ -16,6 +15,7 @@ const userAuth = (req, res, next) => {
         }
 
         req.user = tokenVerified; 
+        console.log(req.user);
         next();
     } catch (error) {
         if (error.name === 'TokenExpiredError') {

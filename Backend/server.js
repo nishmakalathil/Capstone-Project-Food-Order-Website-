@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 dotenv.config(); // Load environment variables
 
@@ -9,6 +10,9 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use(cors());
+
 
 const dbpassword = process.env.DB_PASSWORD;
 
@@ -23,6 +27,12 @@ mongoose.connect(`mongodb+srv://anukthanish:${dbpassword}@fow1.1f9gk.mongodb.net
 .catch(error => {
     console.error("DB connection failed:", error);
 });
+
+
+
+
+
+
 
 app.use("/api", apiRouter);
 
