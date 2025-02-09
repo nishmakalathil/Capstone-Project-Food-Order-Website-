@@ -6,38 +6,41 @@ const cors = require('cors');
 
 dotenv.config(); // Load environment variables
 
+// Initialize the Express app
 const app = express();
 
-app.use(express.json());
-app.use(cookieParser());
+// Set up CORS after initializing the Express app (and before your routes)
+app.use(cors({
+  origin: "http://localhost:5242",  // This allows requests from your frontend (localhost:5301)
+  methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+  credentials: true,  // Allow cookies to be sent with requests
+  
+}));
 
-app.use(cors());
+// Other middlewares
+app.use(express.json());   // To parse JSON data in request body
+app.use(cookieParser());   // To parse cookies from request
 
-
+// MongoDB connection setup
 const dbpassword = process.env.DB_PASSWORD;
+console.log("DB_PASSWORD:", dbpassword); // Be careful about logging sensitive data in production
 
-console.log("DB_PASSWORD:", dbpassword); // Ensure you do not log sensitive data in production
-const apiRouter = require('./src/routes/index.js'); // Import the apirouter
+// Import API routes
+const apiRouter = require('./src/routes/index.js'); // Import your API routes
 
-mongoose.connect(`mongodb+srv://anukthanish:${dbpassword}@fow1.1f9gk.mongodb.net/?retryWrites=true&w=majority&appName=FOW1`, {
-})
-.then(() => {
+// Connect to MongoDB database
+mongoose.connect(`mongodb+srv://anukthanish:${dbpassword}@fow1.1f9gk.mongodb.net/?retryWrites=true&w=majority&appName=FOW1`, {})
+  .then(() => {
     console.log("DB connected successfully");
-})
-.catch(error => {
+  })
+  .catch(error => {
     console.error("DB connection failed:", error);
-});
+  });
 
-
-
-
-
-
-
+// Use API routes
 app.use("/api", apiRouter);
 
-// Your routes go here
-
+// Start the server
 app.listen(3006, () => {
-  console.log('Server is running on port 3006');  // Correct port number
+  console.log('Server is running on port 3006');
 });

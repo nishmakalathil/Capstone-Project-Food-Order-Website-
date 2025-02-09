@@ -1,6 +1,6 @@
 const express = require("express");
 const cartRouter = express.Router();
-const {addToCart,getCart, removeMenuItemFromCart,updateMenuItemQuantity,clearCart} = require("../controllers/cartControllers.js");
+const {addToCart,getCart, removeMenuItemFromCart,updateMenuItemQuantity,clearCart,applyCouponToCart} = require("../controllers/cartControllers.js");
 const userAuth  = require("../middlewares/userAuth.js");
 
 
@@ -21,5 +21,10 @@ cartRouter.put('/update-quantity', userAuth, updateMenuItemQuantity);
 //Clear Cart
 cartRouter.post('/clear-cart', userAuth, clearCart);
 
+
+//coupon
+
+// Apply coupon to cart
+cartRouter.put("/apply-coupon", userAuth, applyCouponToCart);
 
 module.exports = cartRouter;

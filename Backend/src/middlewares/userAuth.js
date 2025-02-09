@@ -8,7 +8,7 @@ const userAuth = (req, res, next) => {
             return res.status(401).json({ message: "User not authorized", success: false });
         }
 
-        const tokenVerified = jwt.verify(token, process.env. JWT_SECRET_KEY);
+        const tokenVerified = jwt.verify(token, process.env.JWT_SECRET_KEY);
         
         if (!tokenVerified) {
             return res.status(401).json({ message: "User not authorized", success: false });

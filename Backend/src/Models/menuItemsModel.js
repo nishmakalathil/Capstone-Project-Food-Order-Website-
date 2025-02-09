@@ -24,27 +24,26 @@ const menuItemsSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      enum: ['soup', 'Burger', 'Pasta', 'Beverages', 'Sides', 'Desserts','Biriyani'], // Example categories
+      enum: ['soup', 'Burger', 'Pasta', 'Beverages', 'Sides', 'Desserts','Biriyani'], 
       trim: true
     },
     image: {
-      type: String, // URL or path to image
+      type: String, 
       default: ''
     },
     restaurant_id: {
           type: mongoose.Schema.Types.ObjectId,
           required: true,
-          ref: 'restaurants'
+          ref: 'Restaurants'
         },
 
     isAvailable: {
       type: Boolean,
       default: true
     },
-    // Additional fields, such as ingredients or nutritional info
+   
     ingredients: {
-      type: [String], // Array of ingredients, e.g., ['cheese', 'tomato', 'pepperoni']
-      default: []
+      type: [String], 
     },
     createdAt: {
       type: Date,
@@ -56,11 +55,11 @@ const menuItemsSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true // Automatically manage createdAt and updatedAt
+    timestamps: true 
   }
 );
 
-// Create a model based on the schema
+
 const MenuItem = mongoose.model('MenuItem', menuItemsSchema);
 
 module.exports = MenuItem;

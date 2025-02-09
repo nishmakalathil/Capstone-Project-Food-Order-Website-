@@ -44,7 +44,7 @@ const orderSchema = new mongoose.Schema({
         default: 'Pending'
     },
 
-    // Reference to DeliveryInfo schema
+   
     deliveryInfo: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'DeliveryInfo'

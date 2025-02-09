@@ -1,5 +1,5 @@
 const express = require('express');
-const restaurantsRouter = express.Router();// Route for creating a menu item with an image
+const restaurantsRouter = express.Router();
 
 const {createRestaurant, getAllRestaurants, getSingleRestaurantById, updateRestaurantById, deleteRestaurant }= require('../controllers/restaurantsControllers.js');
 

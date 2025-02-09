@@ -17,7 +17,7 @@ const {
 restaurantOwnerRouter.post("/signup", restaurantOwnerSignup);
 
 // Login route
-restaurantOwnerRouter.put("/login", restaurantOwnerLogin);
+restaurantOwnerRouter.post("/login", restaurantOwnerLogin);
 
 // Profile view route
 restaurantOwnerRouter.get("/profile", restaurantOwnerAuth, getRestaurantOwnerProfile);

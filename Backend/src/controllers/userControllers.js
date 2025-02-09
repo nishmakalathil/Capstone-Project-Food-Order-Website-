@@ -147,13 +147,19 @@ const userUpdateProfile = async (req, res, next) => {
     }
 };
 
-
+//chec kuser
   
+ const checkUser = async (req, res, next) => {
+    try {
+        return res.json({ message: "user autherized" });
+    } catch (error) {
+        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+    }
+};
 
 
 
 
 
 
-
-module.exports = { userSignup, userLogin, userProfile ,userLogout,userUpdateProfile};
+module.exports = { userSignup, userLogin, userProfile ,userLogout,userUpdateProfile,checkUser};
