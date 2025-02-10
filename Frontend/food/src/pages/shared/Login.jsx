@@ -6,19 +6,19 @@ import { useNavigate, Link } from "react-router-dom";
 function Login({ role }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const [error, setError] = useState(null); // For capturing login errors
+  const [error, setError] = useState(null); 
 
   const user = {
     role: "user",
     loginAPI: "/user/login",
-    profileRoute: "/user/profile", // Profile page after login
+    profileRoute: "/user/profile", 
     signupRoute: "/signup",
   };
 
   if (role === "restaurantOwner") {
     user.role = "restaurantOwner";
     user.loginAPI = "/restaurantOwner/login";
-    user.profileRoute = "/restaurantOwner/dashboard"; // Restaurant owner dashboard
+    user.profileRoute = "/restaurantOwner/dashboard"; 
     user.signupRoute = "/restaurantOwner/signup";
   }
 
@@ -33,14 +33,14 @@ function Login({ role }) {
 
       if (response.data && response.data.data) {
         const token = response.data.data.token;
-        localStorage.setItem("authToken", token); // Save the token in localStorage
-        navigate(user.profileRoute); // Redirect to profile route
+        localStorage.setItem("authToken", token); 
+        navigate(user.profileRoute); 
 
-        // Optionally trigger a re-check to update auth state on login success
+        
         window.dispatchEvent(new Event("storage"));
       }
     } catch (error) {
-      // Error handling: Display error message
+      
       console.error("Login error:", error);
       setError(error.response?.data?.message || "Login failed, please try again.");
     }
@@ -97,7 +97,7 @@ function Login({ role }) {
               <button className="btn btn-primary">Login</button>
             </div>
           </form>
-          {/* Display error message */}
+        
           {error && <div className="text-red-500 text-center mt-4">{error}</div>}
         </div>
       </div>

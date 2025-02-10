@@ -5,22 +5,28 @@ const User = require('../Models/userModel');
 // Add Item to Cart
 const addToCart = async (req, res) => {
   try {
-    const userId = req.user.id;
+
+    const userId = req.user.id; // Assuming user is authenticated
     const { menuItemId, quantity } = req.body;
 
-    if (!menuItemId || !quantity) {
+    // Validation
+    if (!menuItemId || !quantity || quantity <= 0) {
       return res.status(400).json({ message: 'Menu item ID and quantity are required' });
     }
 
+    // Check if menuItem exists
     const menuItem = await MenuItem.findById(menuItemId);
     if (!menuItem) {
       return res.status(404).json({ message: 'Menu item not found' });
     }
 
     const price = menuItem.price;
+    const image = menuItem.image;
+    const name = menuItem.name;
 
     let cart = await Cart.findOne({ userId });
 
+    // If cart doesn't exist, create a new one
     if (!cart) {
       cart = new Cart({
         userId,
@@ -29,6 +35,7 @@ const addToCart = async (req, res) => {
             menuItemId,
             quantity,
             price,
+            image
           },
         ],
         totalPrice: price * quantity,
@@ -47,73 +54,98 @@ const addToCart = async (req, res) => {
           menuItemId,
           quantity,
           price,
+          image,
         });
       }
 
-      cart.calculateTotalPrice(); // Recalculate total price and total quantity
+      // Recalculate the total price and quantity
+      cart.calculateTotalPrice();
     }
 
+    // Save cart
     await cart.save();
-
     res.status(200).json({ message: 'Item added to cart', cart });
   } catch (error) {
     res.status(500).json({ message: 'Error: ' + error.message });
   }
 };
 
-// Update Item Quantity
+
+// Update item quantity in cart
 const updateMenuItemQuantity = async (req, res) => {
+  
   try {
-    const userId = req.user.id;
+    const userId = req.user.id;  // Assuming the user ID is in the request's user object
     const { menuItemId, quantity } = req.body;
 
     if (!menuItemId || quantity <= 0) {
       return res.status(400).json({ message: 'Valid menu item ID and quantity are required' });
     }
 
+    // Find cart associated with the user
     let cart = await Cart.findOne({ userId });
     if (!cart) {
       return res.status(404).json({ message: 'Cart not found' });
     }
 
-    const itemIndex = cart.menuItems.findIndex((item) => item.menuItemId.toString() === menuItemId.toString());
+    // Find the index of the menu item in the cart
+    const itemIndex = cart.menuItems.findIndex(
+      (item) => item._id.toString() === menuItemId.toString()
+    );
+
     if (itemIndex === -1) {
       return res.status(404).json({ message: 'Item not found in cart' });
     }
 
-    const menuItem = await MenuItem.findById(menuItemId);
+    // Fetch menu item to get its price
+    const menuItem = await MenuItem.findById(cart.menuItems[itemIndex].menuItemId);
+
     if (!menuItem) {
       return res.status(404).json({ message: 'Menu item not found' });
     }
 
-    // Update the quantity and recalculate the total price and total quantity
+    // Save the old quantity to calculate price difference
     const oldQuantity = cart.menuItems[itemIndex].quantity;
-    cart.menuItems[itemIndex].quantity = quantity;
+    cart.menuItems[itemIndex].quantity = quantity;  // Update quantity
+    cart.menuItems[itemIndex].menuItemId= menuItem;  // Update menu item id
 
-    // Update total price
+    // Calculate the price difference
     cart.totalPrice += (quantity - oldQuantity) * menuItem.price;
-    cart.calculateTotalPrice(); // Recalculate the total quantity
 
+    // Recalculate the total price of the cart
+    cart.calculateTotalPrice();  // Assuming you have a method to recalculate prices
+
+    // Save the updated cart
     await cart.save();
 
+    // Return the updated cart
     res.status(200).json({ message: 'Cart updated successfully', cart });
+
   } catch (error) {
     res.status(500).json({ message: 'Error updating cart', error });
   }
 };
 
 // Remove Item from Cart
+
+// Backend: Remove item from the cart
+
 const removeMenuItemFromCart = async (req, res) => {
   try {
     const userId = req.user.id;
     const { menuItemId } = req.body;
 
-    let cart = await Cart.findOne({ userId });
+    let cart = await Cart.findOne({ userId }).populate('menuItems._id', 'price');
     if (!cart) {
       return res.status(404).json({ message: 'Cart not found' });
     }
+    
+    const itemIndex = cart.menuItems.findIndex((item) => {
+      return item._id && item._id.toString() === menuItemId.toString();
+    });
 
-    const itemIndex = cart.menuItems.findIndex((item) => item.menuItemId.toString() === menuItemId.toString());
+    console.log(itemIndex);
+
     if (itemIndex === -1) {
       return res.status(404).json({ message: 'Item not found in cart' });
     }
@@ -131,31 +163,39 @@ const removeMenuItemFromCart = async (req, res) => {
 
     res.status(200).json({ message: 'Item removed from cart', cart });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
+    console.error('Error during item removal:', error); // Log the error for debugging
+    res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
 
-// Clear Cart
+
+// Clear Cart function
 const clearCart = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.id;  // Assuming you use a JWT token to authenticate and extract user ID
 
+    // Find the user's cart
     let cart = await Cart.findOne({ userId });
+
     if (!cart) {
       return res.status(404).json({ message: 'Cart not found' });
     }
 
+    // Clear the cart's menu items
     cart.menuItems = [];
     cart.totalPrice = 0;
     cart.totalQuantity = 0;
 
+    // Save the updated cart
     await cart.save();
 
     res.status(200).json({ message: 'Cart cleared successfully', cart });
   } catch (error) {
-    res.status(500).json({ message: 'Error: ' + error.message });
+    console.error(error);
+    res.status(500).json({ message: 'Error clearing cart: ' + error.message });
   }
 };
+
 
 // Get Cart
 const getCart = async (req, res) => {
@@ -179,7 +219,7 @@ const getCart = async (req, res) => {
 };
 
 // Apply Coupon to Cart
-const applyCouponToCart = async (req, res) => {
+const applyCoupon = async (req, res) => {
   try {
     const userId = req.user.id;
     const { couponCode, discount } = req.body;
@@ -202,4 +242,4 @@ const applyCouponToCart = async (req, res) => {
   }
 };
 
-module.exports = { addToCart, getCart, removeMenuItemFromCart, clearCart, updateMenuItemQuantity, applyCouponToCart };
+module.exports = { addToCart, getCart, removeMenuItemFromCart, clearCart, updateMenuItemQuantity, applyCoupon };

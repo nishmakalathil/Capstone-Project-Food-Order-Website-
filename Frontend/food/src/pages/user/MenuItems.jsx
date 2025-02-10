@@ -1,22 +1,21 @@
 import React from "react";
-import UseFetch from "../../hooks/UseFetch"; // Custom hook to fetch menu items
-import MenuItemsSkeleton from "../../components/shared/Skeltons"; // Skeleton loading component
-import { Link } from "react-router-dom"; // React Router Link for navigation
+import UseFetch from "../../hooks/UseFetch"; 
+import MenuItemsSkeleton from "../../components/shared/Skeltons"; 
+import { Link } from "react-router-dom"; 
 
 function MenuItems() {
-    const [MenuItemsList, isLoading, error] = UseFetch("/menu-items/get-menu"); // Fetch menu items
+    const [MenuItemsList, isLoading, error] = UseFetch("/menu-items/get-menu"); 
 
-    // Handle Loading state
     if (isLoading) {
-        return <MenuItemsSkeleton />; // Display skeleton loader while loading
+        return <MenuItemsSkeleton />; 
     }
 
-    // Handle Error state
+    
     if (error) {
         return <div className="text-red-500">Error: {error.message || "Failed to load menu items."}</div>;
     }
 
-    // Handle case where no menu items are found
+    
     if (!MenuItemsList || MenuItemsList.length === 0) {
         return <div>No menu items found.</div>;
     }
@@ -31,14 +30,14 @@ function MenuItems() {
                     <div key={menuitem._id} className="flex justify-center">
                         <div className="w-full max-w-sm p-4 border rounded-lg shadow-md">
                             <img
-                                src={menuitem.image || "/path/to/placeholder-image.jpg"}  // Use a placeholder image if no image exists
+                                src={menuitem.image || "/path/to/placeholder-image.jpg"}  
                                 alt={menuitem.name || "Menu Item"}
                                 className="w-full h-48 object-cover rounded-lg"
                             />
                             <h3 className="text-xl font-semibold mt-4">{menuitem.name}</h3>
                             <p className="text-lg font-medium text-gray-700 mt-2">{menuitem.price}</p>
                             <Link 
-                                to={`/menu-items/details/${menuitem._id}`}  // Path matches the router definition
+                                to={`/menu-items/details/${menuitem._id}`}  
                                 className="text-white bg-pink-500 hover:bg-pink-600 mt-4 inline-block py-2 px-8 rounded-full text-center transition duration-300"
                             >
                                 Read More

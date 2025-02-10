@@ -9,7 +9,7 @@ import Login from '../pages/shared/Login';
 import Profile from '../pages/user/Profile';
 import SignUp from '../pages/shared/SignUp';
 import RestaurantOwnerLayout from '../layout/RestaurantOwnerLayout';
-import ProtectedRoute from '../router/ProtectedRoute';  // Import ProtectedRoute
+import ProtectedRoute from '../router/ProtectedRoute';  
 import Cart from "../pages/user/Cart";
 
 
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       { path: "menu-items/details/:id", element: <MenuItemsDetails /> },
       { path: "signup", element: <SignUp /> },
       {
-        element: <ProtectedRoute />,  // Wrap protected routes inside ProtectedRoute
+        element: <ProtectedRoute />,  
         path: "user",
         children: [
           { path: "profile", element: <Profile /> },

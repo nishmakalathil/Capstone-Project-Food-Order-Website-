@@ -4,16 +4,16 @@ import UseFetch from "../../hooks/UseFetch";
 
 function Profile() {
     const [profileData, isLoading, error] = UseFetch("/user/profile");
-    const [newProfilePic, setNewProfilePic] = useState(null); // For managing the uploaded picture
+    const [newProfilePic, setNewProfilePic] = useState(null); 
     const navigate = useNavigate();
 
-    // Handle file change for profile picture upload
+    
     const handleProfilePicChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            setNewProfilePic(URL.createObjectURL(file)); // Temporarily show the uploaded picture
+            setNewProfilePic(URL.createObjectURL(file)); 
 
-            // Simulate uploading the file
+            
             const formData = new FormData();
             formData.append("profilePic", file);
 
@@ -28,8 +28,8 @@ function Profile() {
 
                 if (response.ok) {
                     const data = await response.json();
-                    // Update the profile data with the new profile picture URL
-                    setNewProfilePic(data.profilePic); // Update profile picture after successful upload
+                    
+                    setNewProfilePic(data.profilePic); 
                 } else {
                     console.error("Failed to upload profile picture.");
                 }
@@ -39,32 +39,32 @@ function Profile() {
         }
     };
 
-    // Logout functionality
+    
     const handleLogOut = () => {
-        localStorage.removeItem("authToken"); // Remove the token from localStorage
-        navigate("/login"); // Redirect to login page after logout
+        localStorage.removeItem("authToken"); 
+        navigate("/login"); 
     };
 
-    // Loading state
+    
     if (isLoading) {
         return (
             <div className="text-center mt-10">
-                <div className="loader"></div> {/* You can add a loading spinner here */}
+                <div className="loader"></div> 
                 <p>Loading...</p>
             </div>
         );
     }
 
-    // Error state
+    
     if (error) {
         return <div className="error-message">Error: {error.message}</div>;
     }
 
     return (
         <div className="flex">
-            {/* Left Sidebar */}
+            
             <div className="w-1/4 p-4 bg-gray-100 space-y-6">
-                {/* Profile Picture */}
+                
                 <div className="text-center">
                     <img
                         src={newProfilePic || profileData?.profilePic || "/default-avatar.jpg"} // Default or uploaded image
@@ -79,14 +79,14 @@ function Profile() {
                     />
                 </div>
 
-                {/* User Info */}
+                
                 <div className="text-center">
                     <h2 className="text-xl font-semibold">{profileData?.name}</h2>
                     <p className="text-gray-600">{profileData?.email}</p>
                     <p className="text-gray-600">{profileData?.phone}</p>
                 </div>
 
-                {/* Edit Profile Button */}
+                
                 <div className="text-center">
                     <button
                         className="px-4 py-1 bg-pink-500 text-white rounded-full hover:bg-pink-600 text-sm w-auto"
@@ -96,7 +96,7 @@ function Profile() {
                     </button>
                 </div>
 
-                {/* Additional Navigation Links */}
+            
                 <div className="space-y-4 mt-6 flex flex-col items-center"> {/* Use flex column for vertical alignment */}
                     <button
                         className="px-4 py-1 bg-pink-500 text-white rounded-full hover:bg-pink-600 text-sm w-auto"
@@ -112,11 +112,11 @@ function Profile() {
                         Account Settings
                     </button>
 
-                    {/* Logout Button */}
+                    
                     <div className="mt-6">
                         <button
                             className="px-4 py-1 bg-pink-500 text-white rounded-full hover:bg-pink-600 text-sm w-auto"
-                            onClick={handleLogOut} // Trigger logout
+                            onClick={handleLogOut} 
                         >
                             Logout
                         </button>
@@ -124,9 +124,9 @@ function Profile() {
                 </div>
             </div>
 
-            {/* Right Content Area */}
+        
             <div className="w-3/4 p-4 bg-white">
-                {/* Additional content can go here based on navigation */}
+                
             </div>
         </div>
     );

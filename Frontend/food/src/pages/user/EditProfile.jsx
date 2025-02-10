@@ -10,7 +10,7 @@ function EditProfile() {
     const [newProfilePic, setNewProfilePic] = useState(null);
     const navigate = useNavigate();
 
-    // Handle form input change for name, email, and phone number
+    
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         if (name === "name") setUpdatedName(value);
@@ -18,15 +18,15 @@ function EditProfile() {
         if (name === "phone") setUpdatedPhone(value);
     };
 
-    // Handle file change for profile picture upload
+    
     const handleProfilePicChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setNewProfilePic(URL.createObjectURL(file)); // Temporarily show the uploaded picture
+            setNewProfilePic(URL.createObjectURL(file)); 
         }
     };
 
-    // Handle form submission to update profile
+    
     const handleSaveProfile = async (event) => {
         event.preventDefault();
 
@@ -50,7 +50,7 @@ function EditProfile() {
             if (response.ok) {
                 const data = await response.json();
                 alert("Profile updated successfully!");
-                navigate("/profile"); // Navigate back to profile page after saving
+                navigate("/profile"); 
             } else {
                 console.error("Failed to update profile.");
                 alert("Failed to update profile.");
@@ -61,7 +61,7 @@ function EditProfile() {
         }
     };
 
-    // Loading state
+
     if (isLoading) {
         return (
             <div className="text-center mt-10">
@@ -71,7 +71,7 @@ function EditProfile() {
         );
     }
 
-    // Error state
+    
     if (error) {
         return <div className="error-message">Error: {error.message}</div>;
     }
@@ -79,7 +79,7 @@ function EditProfile() {
     return (
         <div className="flex">
             <div className="w-1/4 p-4 bg-gray-100">
-                {/* Profile Picture */}
+                
                 <div className="text-center">
                     <img
                         src={newProfilePic || profileData?.profilePic || "/default-avatar.jpg"}
@@ -95,7 +95,7 @@ function EditProfile() {
                 </div>
             </div>
 
-            {/* Right Content Area (Profile Form) */}
+            
             <div className="w-3/4 p-4 bg-white">
                 <form onSubmit={handleSaveProfile} className="space-y-4">
                     <div className="space-y-2">

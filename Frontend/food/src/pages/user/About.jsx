@@ -3,9 +3,9 @@ import React from "react";
 
 function About() {
   return (
-    <div className="px-6 py-8 bg-gray-50"> {/* Outer padding */}
+    <div className="px-6 py-8 bg-gray-50"> 
       
-      {/* Image Section (Image takes full screen width and height) */}
+      
       <section className="max-w-none mx-auto mb-12 px-0">
         <img
           src="https://res.cloudinary.com/dbkexrtm3/image/upload/v1738655219/pngtree-delivery-man-with-boxes-and-clipboard-on-pink-background-christmas-concept-image_15277281_tchinc.jpg" // Replace with your image URL
@@ -14,10 +14,10 @@ function About() {
         />
       </section>
 
-      {/* About Section (Content on the left side) */}
+      
       <section className="max-w-7xl mx-auto flex items-center justify-between px-4">
         <div className="w-full lg:w-1/2">
-          {/* Main Heading: Break into two lines */}
+          
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-semibold text-black mb-4 tracking-wide leading-tight transform transition duration-300 ease-in-out hover:scale-105 hover:tracking-wider">
             From food delivery <br /> to your daily convenience companion.
           </h2>
@@ -49,7 +49,7 @@ function About() {
 
       
 
-      {/* Our Mission Section */}
+    
       <section className="bg-indigo-100 py-16">
         <div className="max-w-7xl mx-auto text-center px-4">
           <h2 className="text-4xl font-extrabold text-black mb-6">Our Mission</h2>
@@ -65,7 +65,7 @@ function About() {
         </div>
       </section>
 
-      {/* Why Choose Us Section */}
+      
       <section className="max-w-7xl mx-auto text-center my-20 px-4">
         <h2 className="text-4xl font-extrabold text-black mb-6">
           Why Choose Nish Delight?
@@ -95,7 +95,7 @@ function About() {
         </div>
       </section>
 
-      {/* Our Values Section */}
+      
       <section className="max-w-7xl mx-auto text-center my-20 px-4">
         <h2 className="text-4xl font-extrabold text-black mb-6">
           Our Values

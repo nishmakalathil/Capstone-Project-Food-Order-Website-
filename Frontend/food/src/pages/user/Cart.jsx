@@ -1,126 +1,119 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addToCart, removeFromCart, updateQuantity, clearCart } from '../../redux/features/cartSlice';
-function Cart() {
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchCart,
+  addToCart,
+  removeMenuItemFromCart,
+  updateQuantity,
+  applyCoupon,
+  clearCart,
+} from "../../redux/features/cartSlice"; 
+const Cart = () => {
   const dispatch = useDispatch();
-  const { items, totalQuantity, totalPrice, loading, error } = useSelector((state) => state.cart);
+  const { cart, loading, error } = useSelector((state) => state.cart);
+  const [couponCode, setCouponCode] = useState("");
+  const [discount, setDiscount] = useState("");
   useEffect(() => {
-    // Optionally fetch cart data from the backend if needed
-    // dispatch(fetchCart());
+    dispatch(fetchCart());
   }, [dispatch]);
-  // Handle Add Item to Cart
-  function handleAddToCart(menuItemId, price) {
-    const quantity = 1; // Set a default quantity (can be adjusted based on user input)
-    dispatch(addToCart({ menuItemId, quantity, price }));
-  }
-  // Handle Remove Item from Cart
-  function handleRemoveFromCart(menuItemId) {
-    dispatch(removeFromCart({ menuItemId }));
-  }
-  // Handle Update Item Quantity
-  function handleUpdateQuantity(menuItemId, quantity, price) {
-    dispatch(updateQuantity({ menuItemId, quantity, price }));
-  }
-  // Handle Clear Cart
-  function handleClearCart() {
+  const handleRemoveFromCart = (menuItemId) => {
+    dispatch(removeMenuItemFromCart(menuItemId));
+  };
+  const handleUpdateQuantity = (menuItemId, quantity) => {
+    if (quantity <= 0) return;
+    dispatch(updateQuantity({ menuItemId, quantity }));
+  };
+  const handleApplyCoupon = () => {
+    if (couponCode && discount) {
+      dispatch(applyCoupon({ couponCode, discount }));
+    }
+  };
+  const handleClearCart = () => {
     dispatch(clearCart());
-  }
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+  };
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
   return (
-    <div className="py-8">
-      <h2 className="text-3xl font-semibold text-center mb-6">Your Cart</h2>
-      {totalQuantity === 0 ? (
-        <p className="text-center">Your cart is empty.</p>
-      ) : (
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg">
-          <section className="antialiased">
-            <div className="mx-auto max-w-screen-xl px-4 2xl:px-0">
-              <div className="mt-6 sm:mt-8 md:gap-6 lg:flex lg:items-start xl:gap-8">
-                <div className="w-full flex-none lg:max-w-2xl xl:max-w-4xl">
-                  <div className="space-y-6">
-                    {items.map((item) => (
-                      <div
-                        key={item.menuItemId}
-                        className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6 flex items-center justify-between"
-                      >
-                        {/* Image, Item Name, and Price */}
-                        <div className="flex items-center">
-                          <img
-                            className="h-20 w-20 object-cover rounded-md"
-                            src={item.image}
-                            alt={item.name}
-                          />
-                          <div className="ml-4 flex flex-col">
-                            <p className="text-base font-medium text-gray-900 dark:text-white">{item.name}</p>
-                            <p className="text-base font-bold text-gray-900 dark:text-white">${item.price}</p>
-                            {/* Total Quantity and Total Price below item price */}
-                            <div className="mt-2 flex space-x-4">
-                              <span className="text-sm text-gray-600 dark:text-gray-400">Total Quantity: {item.quantity}</span>
-                              <span className="text-sm text-gray-600 dark:text-gray-400">Total Price: ${item.quantity * item.price}</span>
-                            </div>
-                          </div>
-                        </div>
-                        {/* Quantity Controls */}
-                        <div className="flex items-center space-x-2">
-                          <button
-                            onClick={() => handleUpdateQuantity(item.menuItemId, item.quantity - 1, item.price)}
-                            className="inline-flex h-5 w-5 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-                          >
-                            <svg
-                              className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 18 2"
-                            >
-                              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h16" />
-                            </svg>
-                          </button>
-                          <input
-                            type="text"
-                            value={item.quantity}
-                            className="w-10 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
-                            readOnly
-                          />
-                          <button
-                            onClick={() => handleUpdateQuantity(item.menuItemId, item.quantity + 1, item.price)}
-                            className="inline-flex h-5 w-5 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-                          >
-                            <svg
-                              className="h-2.5 w-2.5 text-gray-900 dark:text-white"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 18 18"
-                            >
-                              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 1v16M1 9h16" />
-                            </svg>
-                          </button>
-                        </div>
-                        {/* Remove Button */}
-                        <button
-                          onClick={() => handleRemoveFromCart(item.menuItemId)}
-                          className="bg-pink-500 text-white py-2 px-4 rounded-full hover:bg-pink-600 transition"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div>
+    <div className="p-4">
+      <h2 className="text-2xl font-semibold">Your Cart</h2>
+      {cart && cart.menuItems.length === 0 && <p>Your cart is empty!</p>}
+      {cart && cart.menuItems.length > 0 && (
+        <div>
+          {cart.menuItems.map((item) => (
+            <div key={item.menuItemId._id} className="flex items-center mb-4">
+              
+              <img
+                src={item.image || "/path/to/placeholder-image.jpg"} 
+                alt={item.menuItemId.name}
+                className="w-20 h-20 object-cover mr-4"
+                onError={(e) => (e.target.src = "/path/to/placeholder-image.jpg")} 
+              />
+              <div className="flex flex-col justify-between">
+                <p className="font-semibold text-lg">{item.menuItemId.name}</p>
+                <p className="font-semibold text-md">
+                  ${item.price} x {item.quantity}
+                </p>
+                <div className="flex items-center justify-center mt-4">
+                  <button
+                    onClick={() => handleUpdateQuantity(item._id, item.quantity - 1)}
+                    disabled={item.quantity <= 1}
+                    className="px-6 py-2 bg-pink-500 rounded-full text-white hover:bg-pink-600 transition duration-300"
+                  >
+                    -
+                  </button>
+                  <span className="mx-4 text-lg">{item.quantity}</span>
+                  <button
+                    onClick={() => handleUpdateQuantity(item._id, item.quantity + 1)}
+                    className="px-6 py-2 bg-pink-500 rounded-full text-white hover:bg-pink-600 transition duration-300"
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="flex space-x-2 mt-2">
+                  <button
+                    onClick={() => handleRemoveFromCart(item._id)}
+                    className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
+                  >
+                    Remove Item
+                  </button>
                 </div>
               </div>
             </div>
-          </section>
-          {/* Clear Cart Button */}
-          <div className="mt-6 flex justify-center">
+          ))}
+          <h3 className="font-semibold text-xl mt-4">Total Price: ${cart.totalPrice}</h3>
+          <h3 className="font-semibold text-xl">Total Quantity: {cart.totalQuantity}</h3>
+          
+          <div className="mt-6">
+            <h3 className="font-semibold text-lg">Apply Coupon</h3>
+            <div className="flex space-x-4">
+              <input
+                type="text"
+                placeholder="Coupon Code"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+                className="border p-2 rounded-md w-1/3"
+              />
+              <input
+                type="number"
+                placeholder="Discount"
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                className="border p-2 rounded-md w-1/3"
+              />
+              <button
+                onClick={handleApplyCoupon}
+                disabled={!couponCode || !discount}
+                className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
+              >
+                Apply Coupon
+              </button>
+            </div>
+          </div>
+        
+          <div className="mt-6">
             <button
               onClick={handleClearCart}
-              className="bg-pink-600 text-white py-2 px-6 rounded-full hover:bg-pink-700 transition"
+              className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
             >
               Clear Cart
             </button>
@@ -129,5 +122,5 @@ function Cart() {
       )}
     </div>
   );
-}
+};
 export default Cart;

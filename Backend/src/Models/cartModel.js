@@ -1,88 +1,39 @@
 const mongoose = require('mongoose');
-const User = require('./userModel.js');
-const MenuItem = require('./menuItemsModel.js');
 
-const cartSchema = new mongoose.Schema(
-  {
-    userId: {
-      type: mongoose.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-    menuItems: [
-      {
-        menuItemId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: 'MenuItem',
-          required: true,
-        },
-        quantity: {
-          type: Number,
-          required: true,
-          default: 1,
-        },
-        price: {
-          type: Number,
-          required: true,
-        },
-        image: {
-          type: String,  // Store the URL or path to the image
-          required: false, // It's optional for some cases
-        },
-      },
-    ],
-    coupon: {
-      code: { type: String },
-      discount: { type: Number }, // Discount in percentage (0-100)
-    },
-    totalPrice: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    totalQuantity: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    status: {
-      type: String,
-      enum: ['Pending', 'Paid', 'Cancelled'],
-      default: 'Pending',
-    },
-  },
-  { timestamps: true }
-);
+// Cart Schema
+const CartSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  menuItems: [{
+    menuItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem', required: true },
+    quantity: { type: Number, required: true },
+    price: { type: Number, required: true },
+    image: { type: String },
+  }],
+  totalPrice: { type: Number, default: 0 },
+  totalQuantity: { type: Number, default: 0 },
+  status: { type: String, default: 'Pending' },
+});
 
-// Method to calculate the total price and total quantity
-cartSchema.methods.calculateTotalPrice = function () {
-  let subtotal = this.menuItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
-  
-  // Apply coupon discount if any
-  if (this.coupon && this.coupon.discount) {
-    const discountAmount = (this.coupon.discount / 100) * subtotal;
-    subtotal -= discountAmount;
+// Calculate total price and quantity of the cart
+CartSchema.methods.calculateTotalPrice = function() {
+  let total = 0;
+  let quantity = 0;
+
+  this.menuItems.forEach(item => {
+    total += item.price * item.quantity;
+    quantity += item.quantity;
+  });
+
+  this.totalPrice = total;
+  this.totalQuantity = quantity;
+};
+
+// Apply a coupon
+CartSchema.methods.applyCoupon = function(couponCode, discount) {
+  if (couponCode === 'VALID_COUPON') {  // Example logic for valid coupon
+    this.totalPrice -= discount;
   }
-  
-  this.totalPrice = subtotal;
-  this.totalQuantity = this.menuItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
 };
 
-// Method to apply a coupon
-cartSchema.methods.applyCoupon = function (couponCode, discount) {
-  this.coupon = {
-    code: couponCode,
-    discount: discount, // Discount in percentage (0-100)
-  };
-  this.calculateTotalPrice();
-};
-
-const Cart = mongoose.model('Cart', cartSchema);
-
+const Cart = mongoose.model('Cart', CartSchema);
 module.exports = Cart;

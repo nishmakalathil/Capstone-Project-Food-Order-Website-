@@ -1,58 +1,96 @@
-import { createSlice } from '@reduxjs/toolkit';
-const initialState = {
-  items: [],
-  totalQuantity: 0,
-  totalPrice: 0,
-  loading: false,
-  error: null,
-};
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axiosInstance from '../../config/axiosInstances';
+// Fetch the cart data
+const fetchCart = createAsyncThunk('cart/fetchCart', async () => {
+    console
+  const response = await axiosInstance.get('/cart/get-cart');
+  return response.data.cart; // Return cart data
+});
+// Add item to cart
+const addToCart = createAsyncThunk('cart/addToCart', async ({ menuItemId, quantity }) => {
+  console.log('In cart slice');
+  console.log(menuItemId+ ""+ quantity);
+  if (!menuItemId || quantity <= 0) {
+    throw new Error('Menu item ID and quantity are required');
+  }
+  const response = await axiosInstance.post('/cart/add-to-cart', { menuItemId, quantity });
+  return response.data.cart; // Return updated cart
+});
+// Remove item from the cart
+const removeMenuItemFromCart = createAsyncThunk('cart/removeFromCart', async (menuItemId) => {
+  const response = await axiosInstance.delete('/cart/remove-from-cart', { data: { menuItemId } });
+  return response.data.cart; // Return updated cart
+});
+// Update item quantity
+const updateQuantity = createAsyncThunk('cart/updateQuantity', async ({ menuItemId, quantity }) => {
+  const response = await axiosInstance.put('/cart/update-quantity', { menuItemId, quantity });
+  return response.data.cart; // Return updated cart
+});
+
+// Frontend: Clear Cart function (Redux Slice)
+const clearCart = createAsyncThunk('cart/clearCart', async () => {
+    const response = await axiosInstance.post('/cart/clear-cart');  // Use DELETE request
+    return response.data.cart;  // Return the updated cart after clearing it
+  });
+  
+
+// Apply coupon
+const applyCoupon = createAsyncThunk('cart/applyCoupon', async ({ couponCode, discount }) => {
+  const response = await axiosInstance.post('/cart/apply-coupon', { couponCode, discount });
+  return response.data.cart; // Return updated cart
+});
+// Cart slice
 const cartSlice = createSlice({
   name: 'cart',
-  initialState,
-  reducers: {
-    addToCart: (state, action) => {
-        const { menuItemId, quantity, price, name, image } = action.payload;
-        const existingItem = state.items.find(item => item.menuItemId === menuItemId);
-        if (existingItem) {
-          existingItem.quantity += quantity;
-        } else {
-          state.items.push({ menuItemId, quantity, price, name, image });
-        }
-        state.totalQuantity += quantity;
-        state.totalPrice += price * quantity;
-      },
-      //
-    removeFromCart: (state, action) => {
-      const { menuItemId } = action.payload;
-      const itemToRemove = state.items.find(item => item.menuItemId === menuItemId);
-      if (itemToRemove) {
-        state.totalQuantity -= itemToRemove.quantity;
-        state.totalPrice -= itemToRemove.quantity * itemToRemove.price;
-        state.items = state.items.filter(item => item.menuItemId !== menuItemId);
-      }
-    },
-    updateQuantity: (state, action) => {
-      const { menuItemId, quantity, price } = action.payload;
-      const existingItem = state.items.find(item => item.menuItemId === menuItemId);
-      if (existingItem) {
-        const quantityChange = quantity - existingItem.quantity;
-        existingItem.quantity = quantity;
-        state.totalQuantity += quantityChange;
-        state.totalPrice += price * quantityChange;
-      }
-    },
-    clearCart: (state) => {
-      state.items = [];
-      state.totalQuantity = 0;
-      state.totalPrice = 0;
-    },
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
-    setError: (state, action) => {
-      state.error = action.payload;
-    },
+  initialState: {
+    cart: null,
+    loading: false,
+    error: null,
+  },
+  extraReducers: (builder) => {
+    builder
+      // Fetch cart actions
+      .addCase(fetchCart.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchCart.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cart = action.payload;
+      })
+      .addCase(fetchCart.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      // Add item to cart
+      .addCase(addToCart.fulfilled, (state, action) => {
+        state.cart = action.payload;
+      })
+      // Remove item from cart
+      .addCase(removeMenuItemFromCart.fulfilled, (state, action) => {
+        state.cart = action.payload;
+      })
+      // Update item quantity
+      .addCase(updateQuantity.fulfilled, (state, action) => {
+        state.cart = action.payload;
+      })
+      // Apply coupon
+      .addCase(applyCoupon.fulfilled, (state, action) => {
+        state.cart = action.payload;
+      })
+      .addCase(clearCart.fulfilled, (state, action) => {
+        state.cart = action.payload;
+        state.loading = false;
+      })
+      .addCase(clearCart.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(clearCart.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.loading = false;
+      });
   },
 });
-export const { addToCart, removeFromCart, updateQuantity, clearCart, setLoading, setError } = cartSlice.actions;
+// Export actions
+export { fetchCart, addToCart, removeMenuItemFromCart, updateQuantity, applyCoupon ,clearCart};
+// Export the reducer to be used in the store
 export default cartSlice.reducer;

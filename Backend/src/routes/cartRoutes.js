@@ -1,30 +1,31 @@
-const express = require("express");
+const express = require('express');
 const cartRouter = express.Router();
-const {addToCart,getCart, removeMenuItemFromCart,updateMenuItemQuantity,clearCart,applyCouponToCart} = require("../controllers/cartControllers.js");
-const userAuth  = require("../middlewares/userAuth.js");
+const {
+  addToCart,            // Ensure this function is correctly imported
+  getCart,
+  removeMenuItemFromCart,
+  updateMenuItemQuantity,
+  clearCart,
+  applyCoupon,
+} = require('../controllers/cartControllers');   // Make sure the paths and function names are correct
+const userAuth = require('../middlewares/userAuth');
 
+// Route to add an item to the cart (POST)
+cartRouter.post('/add-to-cart', userAuth, addToCart);   // Ensure 'addToCart' function is valid and imported
 
-//addtocart
-cartRouter.post("/add-to-cart",userAuth,addToCart,) ;
+// Route to get the user's cart (GET)
+cartRouter.get('/get-cart', userAuth, getCart);
 
-//getcart
-cartRouter.get("/get-cart", userAuth, getCart);
+// Route to remove an item from the cart (DELETE)
+cartRouter.delete('/remove-from-cart', userAuth, removeMenuItemFromCart);
 
-// Route to remove an item from the cart
-cartRouter.delete('/remove-from-cart', userAuth,removeMenuItemFromCart);
+// Route to update the quantity of a menu item in the cart (PUT)
+cartRouter.put('/update-quantity', userAuth, updateMenuItemQuantity); // Ensure 'updateMenuItemQuantity' is valid and imported
 
-
-// Route to update the quantity of a menu item in the cart
-cartRouter.put('/update-quantity', userAuth, updateMenuItemQuantity);
-
-
-//Clear Cart
+// Route to clear the cart (DELETE)
 cartRouter.post('/clear-cart', userAuth, clearCart);
 
-
-//coupon
-
-// Apply coupon to cart
-cartRouter.put("/apply-coupon", userAuth, applyCouponToCart);
+// Route to apply a coupon to the cart (POST)
+cartRouter.post('/apply-coupon', userAuth, applyCoupon);
 
 module.exports = cartRouter;

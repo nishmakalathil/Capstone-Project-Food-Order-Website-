@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import Carousel from "../../components/user/Carousel"; // Corrected import
+import Carousel from "../../components/user/Carousel"; 
 
 function Home() {
-  const [user, setUser] = useState("Arnika"); // Example state for user
+  const [user, setUser] = useState("Arnika"); 
 
   return (
     <div className="px-20">
-      {/* Carousel Section Moved to the Top */}
+      
       <section>
         <Carousel />
       </section>
 
       <section className="min-h-96 flex gap-20 px-20 py-10 w-full">
-        <div className="w-8/12 mx-auto"> {/* Center the text container */}
+        <div className="w-8/12 mx-auto"> 
           <p className="text-2xl text-center p-5">
             Welcome to{" "}
             <span className="font-extrabold text-gray-900">Nish Delight</span>, where every bite brings pure joy! We’re here to serve up delicious, crave-worthy meals that make every moment feel special. From bold flavors to fresh ingredients, we bring you the finest dishes designed to satisfy your cravings and lift your spirits. Let us take care of the cooking, while you indulge in the delight of exceptional taste.
@@ -22,21 +22,21 @@ function Home() {
 
       <div className="px-20 py-10">
         <section className="flex items-center justify-between space-x-10">
-          {/* Left Section (Image) */}
+          
           <div className="w-6/12">
             <img
               className="w-full h-auto rounded-lg shadow-lg"
-              src="https://res.cloudinary.com/dbkexrtm3/image/upload/v1738604997/homepage_left_pic_g7wnyl.jpg" // Replace with your image
+              src="https://res.cloudinary.com/dbkexrtm3/image/upload/v1738604997/homepage_left_pic_g7wnyl.jpg" 
               alt="Home Image"
             />
           </div>
 
-          {/* Right Section (Content) */}
+          
           <div className="w-6/12">
-            <h1 className="text-4xl font-bold mb-5 text-center"> {/* Center the heading */}
+            <h1 className="text-4xl font-bold mb-5 text-center"> 
               Meet the next generation of delivery!
             </h1>
-            <p className="text-xl font-normal mb-5 text-center"> {/* Center the paragraph */}
+            <p className="text-xl font-normal mb-5 text-center"> 
               Craving something special? At Nish Delight, we’ve got it all – from the aromatic Biriyanis that will transport you to another world, to the juicy, flavorful Burgers that’ll leave you craving more. And don’t forget the Desserts, where every bite is pure indulgence. Freshly made, bursting with flavor, and just a click away. Order now and treat yourself to a feast that’s as delicious as it is unforgettable!
             </p>
             <button className="bg-pink-500 text-white hover:bg-pink-600 py-2 px-6 rounded-full mx-auto block transition duration-300">Read our story</button> {/* Pink Button */}
@@ -44,10 +44,10 @@ function Home() {
         </section>
       </div>
 
-      {/* New Section with Left Content, Right Image */}
+      
       <div className="px-20 py-10">
         <section className="flex items-center justify-between space-x-10">
-          {/* Left Section (Content) */}
+          
           <div className="w-6/12">
             <h1 className="text-4xl font-bold mb-5 text-center"> {/* Center the heading */}
               Your favorite meals, delivered fresh!
@@ -58,7 +58,7 @@ function Home() {
             <button className="bg-pink-500 text-white hover:bg-pink-600 py-2 px-6 rounded-full mx-auto block transition duration-300">Explore our menu</button> {/* Pink Button */}
           </div>
 
-          {/* Right Section (Image) */}
+        
           <div className="w-6/12">
             <img
               className="w-full h-auto rounded-lg shadow-lg"
@@ -69,10 +69,10 @@ function Home() {
         </section>
       </div>
 
-      {/* New Section with Left Image, Right Content */}
+      
       <div className="px-20 py-10">
         <section className="flex items-center justify-between space-x-10">
-          {/* Left Section (Image) */}
+          
           <div className="w-6/12">
             <img
               className="w-full h-auto rounded-lg shadow-lg"
@@ -81,12 +81,12 @@ function Home() {
             />
           </div>
 
-          {/* Right Section (Content) */}
+          
           <div className="w-6/12">
-            <h1 className="text-4xl font-bold mb-5 text-center"> {/* Center the heading */}
+            <h1 className="text-4xl font-bold mb-5 text-center"> 
               Fast and Reliable Delivery!
             </h1>
-            <p className="text-xl font-normal mb-5 text-center"> {/* Center the paragraph */}
+            <p className="text-xl font-normal mb-5 text-center"> 
               Enjoy your favorite dishes delivered to your doorsteps quickly and reliably. With Nish Delight, you can always count on fast and fresh delivery to satisfy your cravings. We ensure every meal is made with care and delivered with a smile.
             </p>
             <button className="bg-pink-500 text-white hover:bg-pink-600 py-2 px-6 rounded-full mx-auto block transition duration-300">Order Now</button> {/* Pink Button */}
