@@ -1,7 +1,7 @@
 import React from "react";
 import  Footer  from "../components/user/Footer";
 import { Outlet } from "react-router-dom";
-import RestaurantOwnerHeader  from "../components/restaurantowner/RestaurantOwnerHeader";
+import RestaurantOwnerHeader  from "../components/restaurantOwner/RestaurantOwnerHeader";
 import  Header  from "../components/restaurantowner/Header";
 
 function RestaurantOwnerLayout() {
