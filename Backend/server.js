@@ -42,17 +42,8 @@ mongoose.connect(`mongodb+srv://anukthanish:${dbpassword}@fow1.1f9gk.mongodb.net
 // Use API routes
 app.use("/api", apiRouter);
 
-// Example route
-app.get('/api/data', (req, res) => {
-  res.json({ message: "Hello from Express server!" });
-});
 
 // Start the server
 app.listen(3006, () => {
   console.log('Server is running on port 3006');
 });
-
-// Export the app as a serverless function
-module.exports = (req, res) => {
-  app(req, res);  // Pass the request to Express
-};
