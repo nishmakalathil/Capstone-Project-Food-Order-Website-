@@ -37,6 +37,10 @@ mongoose.connect(`mongodb+srv://anukthanish:${dbpassword}@fow1.1f9gk.mongodb.net
     console.error("DB connection failed:", error);
   });
 
+app.get('/', (req, res) => {
+    res.send('Hello from Express on Vercel!');
+  });
+
 // Use API routes
 app.use("/api", apiRouter);
 
