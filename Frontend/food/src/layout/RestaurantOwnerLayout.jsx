@@ -2,7 +2,7 @@ import React from "react";
 import  Footer  from "../components/user/Footer";
 import { Outlet } from "react-router-dom";
 import RestaurantOwnerHeader  from "../components/restaurantOwner/RestaurantOwnerHeader";
-import  Header  from "../components/restaurantowner/Header";
+import  Header  from "../components/restaurantOwner/Header";
 
 function RestaurantOwnerLayout() {
     const isUserAuth = false;
