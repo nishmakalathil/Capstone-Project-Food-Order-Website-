@@ -89,7 +89,7 @@ const userProfile = async (req, res, next) => {
 const userUpdateProfile = async (req, res, next) => {
     try {
         const userId = req.user.id; 
-        const { name, email, mobile, profilePic, password } = req.body;  
+        const { name, email, mobile, profilePic,password } = req.body;  
 
       
         if (!name || !email || !mobile) {

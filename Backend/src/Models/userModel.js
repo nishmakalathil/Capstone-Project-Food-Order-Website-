@@ -13,7 +13,7 @@ const userSchema = new  mongoose.Schema({
     
     profilePic: { type: String, 
         
-        default: 'https://example.com/default-profile-pic.jpg' 
+        default: 'https://res.cloudinary.com/dbkexrtm3/image/upload/v1739434486/Profile_PIC_tjmsma.jpg' 
     },
         
     createdAt: { type: Date, default: Date.now }

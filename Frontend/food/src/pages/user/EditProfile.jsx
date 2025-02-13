@@ -1,154 +1,158 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import UseFetch from "../../hooks/UseFetch";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../../config/axiosInstances';
 
-function EditProfile() {
-    const [profileData, isLoading, error] = UseFetch("/user/profile");
-    const [updatedName, setUpdatedName] = useState("");
-    const [updatedEmail, setUpdatedEmail] = useState("");
-    const [updatedPhone, setUpdatedPhone] = useState("");
-    const [newProfilePic, setNewProfilePic] = useState(null);
+const EditProfile = () => {
+    const [user, setUser] = useState({
+        name: '',
+        email: '',
+        mobile: '',
+        profilePic: '',
+        password: ''
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        if (name === "name") setUpdatedName(value);
-        if (name === "email") setUpdatedEmail(value);
-        if (name === "phone") setUpdatedPhone(value);
+    // Fetch the current user data and populate the form
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await axiosInstance.get('/user/profile');
+                setUser(response.data.data);  // Populate the form with existing user data
+            } catch (error) {
+                console.error('Error fetching user profile for editing', error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
+
+    // Handle form field changes
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUser((prevState) => ({
+            ...prevState,
+            [name]: value
+        }));
     };
 
-    
-    const handleProfilePicChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setNewProfilePic(URL.createObjectURL(file)); 
-        }
-    };
-
-    
-    const handleSaveProfile = async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData();
-        formData.append("name", updatedName || profileData?.name);
-        formData.append("email", updatedEmail || profileData?.email);
-        formData.append("phone", updatedPhone || profileData?.phone);
-        if (newProfilePic) {
-            formData.append("profilePic", newProfilePic);
-        }
+    // Handle the form submission to update the profile
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
 
         try {
-            const response = await fetch("/user/edit-profile", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
-                },
-                body: formData,
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                alert("Profile updated successfully!");
-                navigate("/profile"); 
-            } else {
-                console.error("Failed to update profile.");
-                alert("Failed to update profile.");
-            }
+            const response = await axiosInstance.put('/user/update', user);
+            // Redirect to profile page after successful update
+            navigate('/user/profile');
         } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("Error updating profile.");
+            setError('Failed to update profile');
+            console.error('Error updating profile:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-
-    if (isLoading) {
-        return (
-            <div className="text-center mt-10">
-                <div className="loader"></div>
-                <p>Loading...</p>
-            </div>
-        );
-    }
-
-    
-    if (error) {
-        return <div className="error-message">Error: {error.message}</div>;
-    }
+    // Handle Logout action
+    const handleLogout = async () => {
+        try {
+            const response = await axiosInstance.post('/user/logout');
+            navigate('/login'); // Redirect to login page after successful logout
+        } catch (error) {
+            console.error('Error logging out', error);
+        }
+    };
 
     return (
-        <div className="flex">
-            <div className="w-1/4 p-4 bg-gray-100">
-                
-                <div className="text-center">
-                    <img
-                        src={newProfilePic || profileData?.profilePic || "/default-avatar.jpg"}
-                        alt="Profile"
-                        className="w-32 h-32 rounded-full object-cover mx-auto mb-4"
-                    />
+        <div className="max-w-md mx-auto p-4">
+            {/* Welcome message */}
+            <h1 className="text-2xl font-bold text-center mb-6">Welcome to ReshRajans' Profile</h1>
+
+            <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
+            {error && <p className="text-red-500 mb-4">{error}</p>}
+            <form onSubmit={handleSubmit}>
+                <div className="mb-4">
+                    <label htmlFor="name" className="block text-sm font-medium">Name</label>
                     <input
-                        type="file"
-                        accept="image/*"
-                        className="mt-2 block mx-auto"
-                        onChange={handleProfilePicChange}
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={user.name}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        required
                     />
                 </div>
-            </div>
 
-            
-            <div className="w-3/4 p-4 bg-white">
-                <form onSubmit={handleSaveProfile} className="space-y-4">
-                    <div className="space-y-2">
-                        <label htmlFor="name" className="block text-sm font-medium">Name</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            className="w-full p-2 border rounded"
-                            placeholder="Enter your name"
-                            value={updatedName || profileData?.name || ""}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                <div className="mb-4">
+                    <label htmlFor="email" className="block text-sm font-medium">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={user.email}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        required
+                    />
+                </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="email" className="block text-sm font-medium">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            className="w-full p-2 border rounded"
-                            placeholder="Enter your email"
-                            value={updatedEmail || profileData?.email || ""}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                <div className="mb-4">
+                    <label htmlFor="mobile" className="block text-sm font-medium">Mobile</label>
+                    <input
+                        type="text"
+                        id="mobile"
+                        name="mobile"
+                        value={user.mobile}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        required
+                    />
+                </div>
 
-                    <div className="space-y-2">
-                        <label htmlFor="phone" className="block text-sm font-medium">Phone</label>
-                        <input
-                            type="text"
-                            id="phone"
-                            name="phone"
-                            className="w-full p-2 border rounded"
-                            placeholder="Enter your phone number"
-                            value={updatedPhone || profileData?.phone || ""}
-                            onChange={handleInputChange}
-                        />
-                    </div>
+                <div className="mb-4">
+                    <label htmlFor="profilePic" className="block text-sm font-medium">Profile Picture URL</label>
+                    <input
+                        type="text"
+                        id="profilePic"
+                        name="profilePic"
+                        value={user.profilePic}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    />
+                </div>
 
-                    <div className="text-center mt-4">
-                        <button
-                            type="submit"
-                            className="px-4 py-1 bg-pink-500 text-white rounded-full hover:bg-pink-600 text-sm"
-                        >
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div className="mb-4">
+                    <label htmlFor="password" className="block text-sm font-medium">New Password (optional)</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={user.password}
+                        onChange={handleChange}
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className={`w-full bg-pink-500 text-white py-2 px-4 rounded-full hover:bg-pink-600 focus:outline-none transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                    {loading ? 'Updating...' : 'Update Profile'}
+                </button>
+            </form>
+
+            {/* Logout Button with Tailwind CSS for oval shape */}
+            <button
+                onClick={handleLogout}
+                className="w-full bg-pink-500 text-white py-2 px-4 rounded-full hover:bg-pink-600 focus:outline-none transition duration-300 mt-4"
+            >
+                Logout
+            </button>
         </div>
     );
-}
+};
 
 export default EditProfile;

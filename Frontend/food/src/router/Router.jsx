@@ -14,6 +14,7 @@ import Cart from "../pages/user/Cart";
 import DeliveryInformation from "../pages/user/DeliveryInformations";
 import SearchResults from "../pages/user/SearchResults";
 import CreateOrder from "../pages/user/CreateOrder";
+import EditProfile from "../pages/user/EditProfile";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
         path: "user",
         children: [
           { path: "profile", element: <Profile /> },
+          { path: "edit-profile", element: <EditProfile /> },
           { path: "cart", element: <Cart /> },
           { path: "deliveryInfo", element: < DeliveryInformation/> },
           { path: "search", element: < SearchResults/> },

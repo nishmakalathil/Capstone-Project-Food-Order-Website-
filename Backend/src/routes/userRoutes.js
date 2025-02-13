@@ -18,7 +18,7 @@ userRouter.get("/profile",userAuth,userProfile);
 
 //logout
 
-userRouter.put("/logout",userAuth,userLogout);
+userRouter.post("/logout",userAuth,userLogout);
 
 //userUpdateProfile
 userRouter.put('/update', userAuth, userUpdateProfile);
