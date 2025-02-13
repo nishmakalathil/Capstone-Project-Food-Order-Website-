@@ -1,16 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-// Regular function declaration for ErrorPage component
+
 function ErrorPage({ role }) {
     const navigate = useNavigate();
     const user = {
         home_route: "",
     };
 
-    // Conditionally set the home route based on the role
+    
     if (role === "restaurantOwner") {
-        user.home_route = "/owner/dashboard";  // Update this to the restaurant owner's dashboard or home page
+        user.home_route = "/owner/dashboard";  
     }
 
     return (
@@ -27,5 +27,5 @@ function ErrorPage({ role }) {
     );
 }
 
-// Default export
+
 export default ErrorPage;

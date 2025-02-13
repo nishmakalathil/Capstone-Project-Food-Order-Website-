@@ -11,7 +11,9 @@ import SignUp from '../pages/shared/SignUp';
 import RestaurantOwnerLayout from '../layout/RestaurantOwnerLayout';
 import ProtectedRoute from '../router/ProtectedRoute';  
 import Cart from "../pages/user/Cart";
-
+import DeliveryInformation from "../pages/user/DeliveryInformations";
+import SearchResults from "../pages/user/SearchResults";
+import CreateOrder from "../pages/user/CreateOrder";
 
 const router = createBrowserRouter([
   {
@@ -31,8 +33,9 @@ const router = createBrowserRouter([
         children: [
           { path: "profile", element: <Profile /> },
           { path: "cart", element: <Cart /> },
-          
-          
+          { path: "deliveryInfo", element: < DeliveryInformation/> },
+          { path: "search", element: < SearchResults/> },
+          { path: "create-order", element: < CreateOrder/> },
         ],
       },
     ],

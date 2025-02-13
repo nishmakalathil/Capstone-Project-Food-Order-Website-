@@ -1,17 +1,26 @@
 const express = require("express");
 const orderRouter = express.Router();
-const getOrderSummary= require("../controllers/orderControllers.js");
+const createOrder= require("../controllers/orderControllers.js");
 
 const userAuth  = require("../middlewares/userAuth.js");
 
-//Order Summary
-
-orderRouter.get('/order-summary', userAuth, getOrderSummary);
 
 
-//placed order
 
-//orderRouter.post('/place-order', userAuth, placeOrder);
+
+// Route to create a new order
+orderRouter.post('/create-order',userAuth , createOrder);
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = orderRouter;

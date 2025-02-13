@@ -27,7 +27,7 @@ function Header() {
               className="bg-transparent border-none outline-none text-sm text-white placeholder-white w-full pr-10"
             />
             <span className="text-white pr-2">
-              🔍
+              
             </span>
           </button>
         </div>

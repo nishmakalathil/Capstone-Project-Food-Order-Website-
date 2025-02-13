@@ -177,11 +177,42 @@ const deleteMenuItem = async (req, res) => {
     }
 };
 
+//search
+const searchMenuItems = async (req, res) => {
+    try {
+        const query = req.query.query;  // Get search query from query string
+
+        // If no query is provided, return a bad request response
+        if (!query || query.trim() === "") {
+            return res.status(400).json({ message: "Search query cannot be empty" });
+        }
+
+        // Search the menu items by name (case-insensitive)
+        const items = await MenuItem.find({
+            name: { $regex: query, $options: 'i' },  // Case-insensitive regex search
+        });
+
+        // If no items are found, return a 404 response
+        if (items.length === 0) {
+            return res.status(404).json({ message: "No menu items found matching your search" });
+        }
+
+        // Return the matching items
+        res.status(200).json(items);
+    } catch (error) {
+        console.error('Error during search:', error);
+        res.status(500).json({ message: "Error fetching search results", error });
+    }
+};
+
+
+
 module.exports = {
     createMenuItems,
     getAllMenuItems,
     getSingleMenuItem,
     getMenuItemDetails,
     updateMenuItem,
-    deleteMenuItem
+    deleteMenuItem,
+    searchMenuItems 
 };

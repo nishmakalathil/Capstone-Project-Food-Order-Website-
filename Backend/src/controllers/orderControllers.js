@@ -1,61 +1,61 @@
+
+const Order = require('../Models/orderModel.js');
 const Cart = require('../Models/cartModel.js');
-const Order = require("../Models/orderModel.js");
-const DeliveryInfo = require('../Models/deliveryInfoModel.js');
 
-// getOrderSummary
-const getOrderSummary = async (req, res) => {
-    try {
-        const userId = req.user.id; // Get user ID from authenticated user
+const createOrder = async (req, res) => {
+  try {
+    // Extract user data and cart details from the request
+    const { userId, deliveryInfo, couponCode, discount } = req.body;
 
-        if (!userId) {
-            return res.status(400).json({ message: "User ID is missing or not authenticated." });
-        }
+    // Find the cart for the user
+    const cart = await Cart.findOne({ userId });
 
-        // Fetch the user's cart and include item details
-        const cart = await Cart.findOne({ userId }).populate('menuItems.menuItemId');
-
-        if (!cart) {
-            return res.status(404).json({ message: "Cart not found." });
-        }
-
-        // Fetch the delivery info for the user
-        const deliveryInfo = await DeliveryInfo.findOne({ userId });
-
-        if (!deliveryInfo) {
-            return res.status(404).json({ message: "Delivery information not found." });
-        }
-
-        // Calculate total price dynamically
-        let totalPrice = 0;
-        cart.menuItems.forEach(item => {
-            if (item.menuItemId && item.menuItemId.price) {
-                totalPrice += item.menuItemId.price * item.quantity;  // Add the price of each item
-            }
-        });
-
-        // Add delivery charges (can be static or dynamic)
-        let deliveryCharges = cart.deliveryCharges || 0; // Default to 0 if not set
-
-        // Apply coupon discount if any
-        let coupon = cart.coupon || null;
-        if (coupon && coupon.discount) {
-            totalPrice -= coupon.discount; // Subtract coupon discount from total price
-        }
-
-        // Return order summary with cart and delivery info
-        res.status(200).json({
-            message: "Order summary retrieved successfully",
-            cart: cart,
-            deliveryInfo: deliveryInfo,
-            totalPrice: totalPrice,
-            deliveryCharges: deliveryCharges,
-            coupon: coupon
-        });
-
-    } catch (error) {
-        console.error('Error retrieving order summary:', error);
-        res.status(500).json({ message: "Error retrieving order summary", error });
+    if (!cart) {
+      return res.status(400).json({ message: 'Cart not found for this user.' });
     }
+
+    // Calculate delivery charges (example: fixed amount or based on cart value)
+    const deliveryCharges = cart.totalPrice > 50 ? 0 : 5;  // Example logic
+
+    // Create a new order object
+    const order = new Order({
+      userId,
+      cart: {
+        menuItems: cart.menuItems,
+        totalPrice: cart.totalPrice,
+        totalQuantity: cart.totalQuantity,
+        couponCode: couponCode || '',  // If couponCode exists, it will be used
+      },
+      deliveryInfo: {
+        deliveryAddress: deliveryInfo.deliveryAddress,
+        deliveryTime: deliveryInfo.deliveryTime,
+        contactNumber: deliveryInfo.contactNumber,
+        deliveryInstructions: deliveryInfo.deliveryInstructions || '',
+      },
+      deliveryCharges,  // Add delivery charges here
+    });
+
+    // Apply the coupon if it's available
+    if (couponCode && discount) {
+      // Assuming discount is a percentage
+      order.totalAmount = order.cart.totalPrice - (order.cart.totalPrice * (discount / 100)) + deliveryCharges;
+    } else {
+      order.totalAmount = order.cart.totalPrice + deliveryCharges;
+    }
+
+    // Save the order
+    await order.save();
+
+    // Optionally clear the cart after placing the order
+    await Cart.deleteOne({ userId });
+
+    // Send the response
+    return res.status(201).json({ message: 'Order created successfully!', order });
+
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server error. Could not create order.' });
+  }
 };
 
-module.exports = getOrderSummary;
+module.exports = createOrder;

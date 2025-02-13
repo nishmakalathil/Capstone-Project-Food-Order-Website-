@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom"; 
 import {
   fetchCart,
   addToCart,
@@ -8,31 +9,53 @@ import {
   applyCoupon,
   clearCart,
 } from "../../redux/features/cartSlice"; 
+
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize navigate hook
   const { cart, loading, error } = useSelector((state) => state.cart);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState("");
+
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);
+
   const handleRemoveFromCart = (menuItemId) => {
     dispatch(removeMenuItemFromCart(menuItemId));
   };
+
   const handleUpdateQuantity = (menuItemId, quantity) => {
     if (quantity <= 0) return;
     dispatch(updateQuantity({ menuItemId, quantity }));
   };
+
   const handleApplyCoupon = () => {
     if (couponCode && discount) {
       dispatch(applyCoupon({ couponCode, discount }));
     }
   };
+
   const handleClearCart = () => {
     dispatch(clearCart());
   };
+
+  // Proceed to Checkout handler
+  const handleProceedToCheckout = () => {
+    if (cart && cart.menuItems.length > 0) {
+      // Store the cart data in localStorage to pass it to the DeliveryInfo page
+      localStorage.setItem('cartItems', JSON.stringify(cart));
+
+      // Navigate to the Delivery Info page
+      navigate("/user/deliveryinfo");
+    } else {
+      alert('Your cart is empty, add items before proceeding to checkout.');
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
+
   return (
     <div className="p-4">
       <h2 className="text-2xl font-semibold">Your Cart</h2>
@@ -41,7 +64,6 @@ const Cart = () => {
         <div>
           {cart.menuItems.map((item) => (
             <div key={item.menuItemId._id} className="flex items-center mb-4">
-              
               <img
                 src={item.image || "/path/to/placeholder-image.jpg"} 
                 alt={item.menuItemId.name}
@@ -109,7 +131,7 @@ const Cart = () => {
               </button>
             </div>
           </div>
-        
+
           <div className="mt-6">
             <button
               onClick={handleClearCart}
@@ -118,9 +140,20 @@ const Cart = () => {
               Clear Cart
             </button>
           </div>
+
+          {/* Proceed to Checkout Button */}
+          <div className="mt-6">
+            <button
+              onClick={handleProceedToCheckout}
+              className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition duration-300"
+            >
+              Proceed to Checkout
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
 };
+
 export default Cart;

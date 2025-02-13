@@ -51,11 +51,12 @@ const saveDeliveryInfo = async (req, res) => {
 
 const updateDeliveryInfo = async (req, res) => {
     try {
-        const { addressId, deliveryAddress, deliveryTime, contactNumber, deliveryInstructions } = req.body;
+        //console.log('here in delivery info');
+        const { deliveryAddress, deliveryTime, contactNumber, deliveryInstructions, _id } = req.body;
         const userId = req.user.id;
 
         // Check if the required fields are provided
-        if (!addressId || !deliveryAddress || !deliveryTime || !contactNumber) {
+        if ( !deliveryAddress || !deliveryTime || !contactNumber) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -67,7 +68,7 @@ const updateDeliveryInfo = async (req, res) => {
         }
 
         // Find the address by its ID and update it
-        const address = deliveryInfo.addresses.id(addressId);
+        const address = deliveryInfo.addresses.id(_id);
         if (!address) {
             return res.status(404).json({ message: "Address not found" });
         }

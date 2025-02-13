@@ -11,7 +11,7 @@ function SignUp({ role = 'user' }) {
         try {
             const response = await axiosInstance({
                 method: "PUT",
-                url: "/user/login", // Update URL for sign up route if needed
+                url: "/user/login", 
                 data: data,
             });
             console.log("response====", response);

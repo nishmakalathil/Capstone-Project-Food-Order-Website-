@@ -2,12 +2,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import cartReducer from './features/cartSlice'; 
 import userReducer from './features/userSlice'; 
-
+import deliveryInfoReducer from  './features/deliveryInfoSlice';
+import createOrderReducer from  './features/createOrderSlice';
 
 const store = configureStore({
   reducer: {
     cart: cartReducer,
     user: userReducer,
+    deliveryInfo: deliveryInfoReducer,
+ 
+     createOrder:createOrderReducer,
   },
 });
  export default store;
