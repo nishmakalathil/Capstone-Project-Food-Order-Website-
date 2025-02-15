@@ -23,7 +23,7 @@ export const Footer = () => {
                 <a className="link link-hover">Terms of use</a>
                 <a className="link link-hover">Privacy policy</a>
                 <a className="link link-hover">Cookie policy</a>
-                <Link className="link link-hover" to={'/restaurantowner/login'}>Login as restaurant owner</Link>
+                <Link className="link link-hover font-bold" to={'/restaurantowner/login'}>Login as restaurant owner</Link> {/* Added font-bold class */}
             </nav>
             <form>
                 <h6 className="footer-title">Newsletter</h6>

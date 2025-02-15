@@ -1,3 +1,10 @@
+
+
+
+
+
+
+
 const restaurantOwner = require("../Models/restaurantOwnerModel.js");
 const bcrypt = require('bcrypt');
 const  generateToken  = require('../utils/token.js');
@@ -180,17 +187,6 @@ const updateRestaurantOwnerProfile = async (req, res) => {
     }
 };
 
-
-
-
-
-
-
-
-
-
-
-
 // Restaurant Owner Logout Controller
 const restaurantOwnerLogout = (req, res) => {
     try {
@@ -208,18 +204,29 @@ const restaurantOwnerLogout = (req, res) => {
     }
 };
 
+//check Restaurant Owner
+const checkRestaurantOwner = async (req, res) => {
+    try {
+        const user = req.restaurantOwner; // Access the authenticated user from the request
+        
+        if (!user) {
+            return res.status(401).json({ authenticated: false, message: "Unauthorized: No user found" });
+        }
+
+        if (user.role !== 'restaurantOwner') {
+            return res.status(403).json({ authenticated: false, message: "Forbidden: User is not a restaurant owner" });
+        }
+
+        return res.json({
+            authenticated: true,
+            user: { id: user.id, name: user.name, email: user.email }
+        });
+    } catch (error) {
+        return res.status(500).json({ message: error.message || "Internal server error" });
+    }
+};
 
 
 
 
-
-
-module.exports = { restaurantOwnerSignup ,restaurantOwnerLogin,getRestaurantOwnerProfile,updateRestaurantOwnerProfile,restaurantOwnerLogout}; // Ensure all functions are correctly exported
-
-
-
-
-
-
-
-
+module.exports = { restaurantOwnerSignup ,restaurantOwnerLogin,getRestaurantOwnerProfile,updateRestaurantOwnerProfile,restaurantOwnerLogout,checkRestaurantOwner}; // Ensure all functions are correctly exported

@@ -37,7 +37,7 @@ function UserHeader() {
   };
 
   return (
-    <div className="flex justify-between items-center p-4 md:p-14 h-auto shadow-2xl flex-wrap">
+    <div className="flex justify-between items-center p-4 md:p-14 h-auto shadow-2xl flex-wrap bg-black"> {/* Black background */}
       {/* Logo and Search Bar Section */}
       <div className="flex items-center gap-1 flex-wrap md:flex-nowrap w-full md:w-auto">
         <img
@@ -45,7 +45,7 @@ function UserHeader() {
           alt="Logo"
           className="w-20 h-20 object-contain -mr-3"
         />
-        <h1 className="text-3xl font-bold text-pink-500">Nish Delight</h1>
+        <h1 className="text-3xl font-bold text-white">Nish Delight</h1> {/* White text for contrast */}
 
         {/* Search Bar */}
         <div className="relative ml-4 w-full md:w-auto mt-3 md:mt-0">
@@ -88,21 +88,21 @@ function UserHeader() {
         <nav>
           <ul className="flex justify-center items-center gap-6 text-md">
             <li>
-              <Link to={"/"} className="font-bold">
+              <Link to={"/"} className="font-bold text-white">
                 Home
               </Link>
             </li>
             <li>
-              <Link to={"/about"} className="font-bold">
+              <Link to={"/about"} className="font-bold text-white">
                 About
               </Link>
             </li>
             <li>
-              <Link to={"/menu-items"} className="font-bold">
+              <Link to={"/menu-items"} className="font-bold text-white">
                 Menu Items
               </Link>
             </li>
-            <Link to={"/user/profile"}>
+            <Link to={"/user/profile"} className="text-white">
               <CircleUser size={24} />
             </Link>
           </ul>
@@ -111,7 +111,7 @@ function UserHeader() {
         {/* Cart */}
         <div className="flex gap-6 items-center">
           <Link to={"/user/cart"} className="relative">
-            <ShoppingBag size={24} />
+            <ShoppingBag size={24} className="text-white" />
             <span className="absolute top-0 right-0 text-xs bg-pink-600 text-white rounded-full px-2">
               3 {/* Example count */}
             </span>

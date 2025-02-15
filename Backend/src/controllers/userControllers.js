@@ -149,15 +149,25 @@ const userUpdateProfile = async (req, res, next) => {
 
 //chec kuser
   
- const checkUser = async (req, res, next) => {
+ 
+const checkUser = async (req, res, next) => {
     try {
-        return res.json({ message: "user autherized" });
+      const user = req.user; // Get authenticated user from session or JWT
+  
+      if (user) {
+        return res.json({
+          authenticated: true,
+          user: { id: user.id, name: user.name, email: user.email } // Send user data
+        });
+      }
+  
+      // If no user is authenticated, return authenticated: false
+      return res.json({ authenticated: false });
     } catch (error) {
-        return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
+      return res.status(500).json({ message: error.message || "Internal server error" });
     }
-};
-
-
+  };
+  
 
 
 

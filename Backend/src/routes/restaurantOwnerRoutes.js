@@ -8,8 +8,7 @@ const {
     restaurantOwnerLogin,
     getRestaurantOwnerProfile,
     updateRestaurantOwnerProfile ,
-    
-    
+    checkRestaurantOwner,
     restaurantOwnerLogout
 } = require("../controllers/restaurantOwnerControllers.js");
 
@@ -23,16 +22,13 @@ restaurantOwnerRouter.post("/login", restaurantOwnerLogin);
 restaurantOwnerRouter.get("/profile", restaurantOwnerAuth, getRestaurantOwnerProfile);
 
 // updateRestaurantOwnerProfile
-
 restaurantOwnerRouter.put('/update',restaurantOwnerAuth,updateRestaurantOwnerProfile );
 
-
-
-
-
-                                           
+//check restaturant owner
+restaurantOwnerRouter.get('/check-restaurant-owner',restaurantOwnerAuth, checkRestaurantOwner);
+                                         
 //Logout
-restaurantOwnerRouter.put("/logout",restaurantOwnerAuth,restaurantOwnerLogout);
+restaurantOwnerRouter.post("/logout",restaurantOwnerAuth,restaurantOwnerLogout);
 
 
 module.exports = restaurantOwnerRouter;

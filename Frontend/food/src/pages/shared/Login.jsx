@@ -8,39 +8,50 @@ function Login({ role }) {
   const navigate = useNavigate();
   const [error, setError] = useState(null); 
 
+  
   const user = {
     role: "user",
     loginAPI: "/user/login",
-    profileRoute: "/user/profile", 
+    profileRoute: "/user/profile",
     signupRoute: "/signup",
-  };
+};
 
-  if (role === "restaurantOwner") {
-    user.role = "restaurantOwner";
-    user.loginAPI = "/restaurantOwner/login";
-    user.profileRoute = "/restaurantOwner/dashboard"; 
-    user.signupRoute = "/restaurantOwner/signup";
-  }
+
+
+if (role == "restaurantOwner") {
+  user.role = "restaurantOwner";
+  user.loginAPI = "/restaurantOwner/login";
+  (user.profileRoute = "/restaurantOwner/profile"), (user.signupRoute = "/restaurantOwner/signup");
+}
+
+  
+
+  
 
   const onSubmit = async (data) => {
     try {
       const { email, password } = data;
+
+      console.log(user.loginAPI);
+
       const response = await axios.post(
         `http://localhost:3006/api${user.loginAPI}`,
         { email, password },
         { withCredentials: true }
       );
 
+      
+      
+
       if (response.data && response.data.data) {
         const token = response.data.data.token;
         localStorage.setItem("authToken", token); 
         navigate(user.profileRoute); 
 
-        
+        // This might be for state sync or to refresh some part of the app
         window.dispatchEvent(new Event("storage"));
       }
     } catch (error) {
-      
       console.error("Login error:", error);
       setError(error.response?.data?.message || "Login failed, please try again.");
     }

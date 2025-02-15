@@ -11,7 +11,7 @@ const app = express();
 
 // Set up CORS after initializing the Express app (and before your routes)
 app.use(cors({
-  origin: "http://localhost:5223",  // This allows requests from your frontend (localhost:5301)
+  origin: "http://localhost:5252",  // This allows requests from your frontend (localhost:5301)
   methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
   credentials: true,  // Allow cookies to be sent with requests
   

@@ -44,7 +44,13 @@ const Profile = () => {
                     <h2 className="text-xl font-semibold">Name: {user.name}</h2>
                     <p className="font-bold">Email: {user.email}</p>  {/* Make email bold */}
                     <p className="font-bold">Mobile: {user.mobile}</p>  {/* Make mobile bold */}
-                    {user.profilePic && <img src={user.profilePic} alt="Profile" className="mt-4 w-32 h-32 rounded-full" />}
+
+                    {/* Profile Picture with fallback */}
+                    <img 
+                        src={user.profilePic || 'https://res.cloudinary.com/dbkexrtm3/image/upload/v1739434486/Profile_PIC_tjmsma.jpg'} 
+                        alt="Profile" 
+                        className="mt-4 w-32 h-32 rounded-full" 
+                    />
                     
                     <button 
                         onClick={handleEditClick} 

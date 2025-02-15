@@ -140,7 +140,35 @@ const deleteRestaurant = async (req, res) => {
     }
 };
 
+
+const getRestaurantsByOwner = async (req, res) => {
+  // Ensure you're correctly accessing the owner's ID
+  const ownerId = req.restaurantOwner.id; // or req.user.id depending on how you set up your authentication
+  
+  // Validate the ownerId
+  if (!mongoose.Types.ObjectId.isValid(ownerId)) {
+    return res.status(400).json({ message: 'Invalid ownerId format' });
+  }
+
+  try {
+    // Fetch restaurants by owner_id
+    const restaurants = await Restaurants.find({ owner_id: ownerId });
+
+    if (!restaurants || restaurants.length === 0) {
+      return res.status(404).json({ message: 'No restaurants found for this owner' });
+    }
+
+    res.status(200).json(restaurants);
+  } catch (error) {
+    console.error('Error fetching restaurants:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+
   
 
 
-module.exports = {createRestaurant,getAllRestaurants,getSingleRestaurantById,updateRestaurantById,deleteRestaurant};
+module.exports = {createRestaurant,getAllRestaurants,getSingleRestaurantById,updateRestaurantById,deleteRestaurant, getRestaurantsByOwner};

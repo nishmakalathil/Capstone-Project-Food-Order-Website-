@@ -1,7 +1,7 @@
 const express = require('express');
 const restaurantsRouter = express.Router();
 
-const {createRestaurant, getAllRestaurants, getSingleRestaurantById, updateRestaurantById, deleteRestaurant }= require('../controllers/restaurantsControllers.js');
+const {createRestaurant, getAllRestaurants, getSingleRestaurantById, updateRestaurantById, deleteRestaurant, getRestaurantsByOwner }= require('../controllers/restaurantsControllers.js');
 
 const restaurantOwnerAuth = require("../middlewares/restaurantOwnerAuth.js");
 const upload = require("../middlewares/multer.js");
@@ -24,6 +24,9 @@ restaurantsRouter.put('/update/:id', updateRestaurantById);
 
 //delete restaurants
 restaurantsRouter.delete('/delete-restaurants', restaurantOwnerAuth, deleteRestaurant);
+
+
+restaurantsRouter.get('/owner/:ownerId', restaurantOwnerAuth, getRestaurantsByOwner);
 
 
 
