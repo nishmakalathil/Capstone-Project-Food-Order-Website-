@@ -9,6 +9,13 @@ dotenv.config(); // Load environment variables
 // Initialize the Express app
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
+// Example API Route
+app.get("/api/test", (req, res) => {
+  res.json({ message: "API is working!" });
+});
+
 // Set up CORS after initializing the Express app (and before your routes)
 app.use(cors({
   origin: "http://localhost:5256",  // This allows requests from your frontend (localhost:5301)
@@ -44,6 +51,6 @@ app.use("/api", apiRouter);
 
 
 // Start the server
-app.listen(3006, () => {
-  console.log('Server is running on port 3006');
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
