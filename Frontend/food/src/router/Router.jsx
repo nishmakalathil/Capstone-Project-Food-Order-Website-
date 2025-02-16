@@ -18,8 +18,8 @@ import CreateOrder from "../pages/user/CreateOrder";
 import EditProfile from "../pages/user/EditProfile";
 import CreateMenuItemsPage from "../pages/restaurantOwner/CreateMenuItemsPage";  // Fixed import
 import ProtectedRouteRestaurantOwner from "./ProtectedRouteRestaurantOwner";
-import RestaurantOwnerProfile from "../pages/RestaurantOwner/RestaurantOwnerProfile";
-import RestaurantOwnerEditProfile from "../pages/RestaurantOwner/RestaurantOwnerEditProfile";
+import RestaurantOwnerProfile from "../pages/restaurantOwner/RestaurantOwnerProfile";
+import RestaurantOwnerEditProfile from "../pages/restaurantOwner/RestaurantOwnerEditProfile";
 
 const router = createBrowserRouter([
   {
