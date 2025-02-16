@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import  axiosInstance  from "../../config/axiosInstances";
+import axiosInstance from "../../config/axiosInstances";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -16,7 +16,6 @@ function RestaurantOwnerSignUp() {
             return null;  // Prevent rendering anything if the user isn't authenticated
     }
 
-
     const onSubmit = async (data) => {
         try {
             const response = await axiosInstance({
@@ -25,7 +24,7 @@ function RestaurantOwnerSignUp() {
                 data: data,
             });
             console.log("response====", response);
-            navigate("/restaurant/profile");
+            navigate("/restaurantOwner/login");
         } catch (error) {
             console.log(error);
         }
@@ -56,6 +55,7 @@ function RestaurantOwnerSignUp() {
                             </label>
                             <input type="email" placeholder="email" {...register("email")} className="input input-bordered" required />
                         </div>
+
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Password</span>
@@ -67,14 +67,42 @@ function RestaurantOwnerSignUp() {
                                 className="input input-bordered"
                                 required
                             />
-                            <label className="label">
-                                <Link to={'/login'}>
-                                    <a href="#" className="label-text-alt link link-hover">
-                                        Existing User?
-                                    </a>
-                                </Link>
-                            </label>
                         </div>
+
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">Phone Number</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="phone number"
+                                {...register("phoneNumber")}
+                                className="input input-bordered"
+                                required
+                            />
+                        </div>
+
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">Address</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="address"
+                                {...register("address")}
+                                className="input input-bordered"
+                                required
+                            />
+                        </div>
+
+                        <label className="label">
+                            <Link to={'/login'}>
+                                <a href="#" className="label-text-alt link link-hover">
+                                    Existing User?
+                                </a>
+                            </Link>
+                        </label>
+
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Sign Up</button>
                         </div>

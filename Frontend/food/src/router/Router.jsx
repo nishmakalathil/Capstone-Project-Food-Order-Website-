@@ -16,7 +16,7 @@ import DeliveryInformation from "../pages/user/DeliveryInformations";
 import SearchResults from "../pages/user/SearchResults";
 import CreateOrder from "../pages/user/CreateOrder";
 import EditProfile from "../pages/user/EditProfile";
-import CreateMenuItems from "../pages/RestaurantOwner/CreateMenuItems";  // Fixed import
+import CreateMenuItemsPage from "../pages/restaurantOwner/CreateMenuItemsPage";  // Fixed import
 import ProtectedRouteRestaurantOwner from "./ProtectedRouteRestaurantOwner";
 import RestaurantOwnerProfile from "../pages/RestaurantOwner/RestaurantOwnerProfile";
 import RestaurantOwnerEditProfile from "../pages/RestaurantOwner/RestaurantOwnerEditProfile";
@@ -59,7 +59,7 @@ const router = createBrowserRouter([
         children: [
           { path: "profile", element: <RestaurantOwnerProfile /> },  // Route for restaurant owner profile
           { path: "update", element: <RestaurantOwnerEditProfile /> },
-          { path: "create-menu-items", element: <CreateMenuItems /> },
+          { path: "create-menu-items", element: <CreateMenuItemsPage /> },
         ],
       }
       

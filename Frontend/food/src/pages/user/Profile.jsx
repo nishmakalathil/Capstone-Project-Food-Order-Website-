@@ -37,7 +37,7 @@ const Profile = () => {
     return (
         <div className="max-w-md mx-auto p-4">
             {/* Welcome message */}
-            <h1 className="text-2xl font-bold text-center mb-6">Welcome to Reshma Rajan's Profile</h1>
+            <h1 className="text-2xl font-bold text-center mb-6">Welcome to Your Profile</h1>
 
             {user ? (
                 <>

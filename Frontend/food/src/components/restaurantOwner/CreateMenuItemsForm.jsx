@@ -1,139 +1,239 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { axiosInstance } from "../../config/axiosInstance";  // Modify the axios instance import
-import toast from "react-hot-toast";
+import React, { useState, useEffect } from "react";
+import axiosInstance from '../../config/axiosInstances';  // Importing the Axios instance
 
- const CreateMenuItemForm = () => {
-    const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
-
-    const onSubmit = async (data) => {
-        try {
-            console.log(data, "=====data");
-            const formData = new FormData();
-
-            formData.append("name", data.name);
-            formData.append("description", data.description);
-            formData.append("price", data.price);
-            formData.append("category", data.category);
-            formData.append("image", data.image[0]);
-
-            setLoading(true); // Show loading spinner
-
-            const response = await axiosInstance({
-                url: "/menu/create-item",  // Modify endpoint as needed
-                method: "POST",
-                data: formData,
-            });
-            toast.success("Menu item created successfully");
-            navigate("/restaurantowner/menu-items");  // Redirect to menu items page after successful creation
-        } catch (error) {
-            console.log(error);
-            toast.error("Error while creating menu item");
-        } finally {
-            setLoading(false);  // Hide loading spinner after API call
-        }
+function CreateMenuItemsForm() {
+  // State for form fields and the image file
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    price: '',
+    category: '',
+    isAvailable: true,
+    ingredients: '',
+    restaurant_id: '', // Ensure this is dynamically set or passed as a prop
+  });
+  const [image, setImage] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false); // to handle submit button state
+  const [error, setError] = useState(''); // for displaying any error message
+  const [success, setSuccess] = useState(''); // for displaying success message
+  const [ownerId, setOwnerId] = useState(null); // State to store ownerId
+  const [restaurants, setRestaurants] = useState([]);
+  
+  // Fetch profile data and set ownerId
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axiosInstance.get("/restaurantOwner/profile");
+        setOwnerId(response.data.data._id); // Set ownerId from profile data
+      } catch (err) {
+        setError("Error fetching profile");
+      }
     };
+    fetchProfile();
+  }, []); // This runs once when the component mounts
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)} className="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Name */}
-            <div className="form-control">
-                <label className="label">
-                    <span className="label-text">Dish Name</span>
-                </label>
-                <input
-                    type="text"
-                    placeholder="Enter Dish Name"
-                    className={`input input-bordered text-sm ${errors.name ? "input-error" : ""}`}
-                    {...register("name", {
-                        required: "Dish name is required",
-                    })}
-                />
-                {errors.name && <span className="text-red-500 text-sm mt-1">{errors.name.message}</span>}
-            </div>
+  // Fetch restaurants when ownerId is available
+  useEffect(() => {
+    if (ownerId) {
+      const fetchRestaurants = async () => {
+        try {
+          const response = await axiosInstance.get(`/restaurants/owner/${ownerId}`);
+          console.log("Fetched Restaurants:", response.data); // Log the response to check the structure
+          if (Array.isArray(response.data)) {
+            setRestaurants(response.data); // Set the fetched restaurants
+          } else {
+            console.error("Unexpected data structure:", response.data);
+            setError("Invalid data received for restaurants");
+          }
+        } catch (error) {
+          console.error("Error fetching restaurants:", error);
+          setError("Error fetching restaurants");
+        }
+      };
+      fetchRestaurants();
+    }
+  }, [ownerId]); // This effect runs when ownerId is set
 
-            {/* Image */}
-            <div className="form-control">
-                <label className="label">
-                    <span className="label-text">Upload Image</span>
-                </label>
-                <input
-                    type="file"
-                    className={`input text-sm ${errors.image ? "input-error" : ""}`}
-                    {...register("image", { required: "Image is required" })}
-                />
-                {errors.image && <span className="text-red-500 text-sm mt-1">{errors.image.message}</span>}
-            </div>
+  // Handle input field changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
-            {/* Price */}
-            <div className="form-control">
-                <label className="label">
-                    <span className="label-text">Price</span>
-                </label>
-                <input
-                    type="text"
-                    placeholder="Enter Price"
-                    className={`input input-bordered text-sm ${errors.price ? "input-error" : ""}`}
-                    {...register("price", {
-                        required: "Price is required",
-                    })}
-                />
-                {errors.price && <span className="text-red-500 text-sm mt-1">{errors.price.message}</span>}
-            </div>
+  // Handle file input (image) change
+  const handleImageChange = (e) => {
+    setImage(e.target.files[0]);
+  };
 
-            {/* Category */}
-            <div className="form-control">
-                <label className="label">
-                    <span className="label-text">Category</span>
-                </label>
-                <input
-                    type="text"
-                    placeholder="Enter Category (e.g. Appetizer, Main Course)"
-                    className={`input input-bordered text-sm ${errors.category ? "input-error" : ""}`}
-                    {...register("category", {
-                        required: "Category is required",
-                    })}
-                />
-                {errors.category && <span className="text-red-500 text-sm mt-1">{errors.category.message}</span>}
-            </div>
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true); // Show loading state
+    // Create a new FormData object to send the form data and the image
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('description', formData.description);
+    formDataToSend.append('price', formData.price);
+    formDataToSend.append('category', formData.category);
+    formDataToSend.append('isAvailable', formData.isAvailable);
+    formDataToSend.append('ingredients', formData.ingredients);
+    formDataToSend.append('restaurant_id', formData.restaurant_id);
+    formDataToSend.append('image', image);
 
-            {/* Description */}
-            <div className="form-control">
-                <label className="label">
-                    <span className="label-text">Description</span>
-                </label>
-                <textarea
-                    placeholder="Dish Description"
-                    className={`input input-bordered text-sm ${errors.description ? "input-error" : ""}`}
-                    {...register("description", {
-                        required: "Description is required",
-                    })}
-                />
-                {errors.description && <span className="text-red-500 text-sm mt-1">{errors.description.message}</span>}
-            </div>
+    try {
+      // Make the POST request to the backend
+      const response = await axiosInstance.post('/menu-items/create', formDataToSend);
+      // On success, clear the form and show success message
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        isAvailable: true,
+        ingredients: '',
+        restaurant_id: '', // Reset restaurant_id
+      });
+      setImage(null);
+      setError('');
+      setSuccess('Menu item created successfully!');
+      console.log('Menu item created:', response.data);
+    } catch (error) {
+      // On error, show the error message
+      setSuccess('');
+      setError('Error creating menu item: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setIsSubmitting(false); // Hide loading state
+    }
+  };
 
-            <div className="form-control mt-6">
-                <button
-                    type="submit"
-                    className="btn primary-bg text-white font-semibold w-full md:w-1/2"
-                >
-                    {loading ? (
-                        <span className="loading loading-dots loading-lg"></span>
-                    ) : (
-                        "Create Menu Item"
-                    )}
-                </button>
-            </div>
-        </form>
-    );
-};
+  return (
+    <div className="form-container">
+      <h2 className="font-bold text-2xl mb-4">Create Menu Item</h2>
+      {/* Display Success or Error Messages */}
+      {success && <div className="text-green-500">{success}</div>}
+      {error && <div className="text-red-500">{error}</div>}
 
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label className="font-bold">Restaurant</label>
+          <select
+            name="restaurant_id"
+            value={formData.restaurant_id}
+            onChange={handleInputChange}
+            required
+            className="input-field"
+          >
+            <option value="">Select a restaurant</option>
+            {restaurants.length > 0 ? (
+              restaurants.map((restaurant) => (
+                <option key={restaurant._id} value={restaurant._id}>
+                  {restaurant.name}
+                </option>
+              ))
+            ) : (
+              <option>No restaurants found.</option>
+            )}
+          </select>
+        </div>
 
-export default CreateMenuItemForm;
+        <div>
+          <label className="font-bold">Name</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
+            className="input-field"
+          />
+        </div>
+
+        <div>
+          <label className="font-bold">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            required
+            className="textarea-field"
+          />
+        </div>
+
+        <div>
+          <label className="font-bold">Price</label>
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleInputChange}
+            required
+            className="input-field"
+          />
+        </div>
+
+        <div>
+          <label className="font-bold">Category</label>
+          <input
+            type="text"
+            name="category"
+            value={formData.category}
+            onChange={handleInputChange}
+            required
+            className="input-field"
+          />
+        </div>
+
+        <div>
+          <label className="font-bold">Is Available</label>
+          <input
+            type="checkbox"
+            name="isAvailable"
+            checked={formData.isAvailable}
+            onChange={() => setFormData({ ...formData, isAvailable: !formData.isAvailable })}
+            className="checkbox-field"
+          />
+        </div>
+
+        <div>
+          <label className="font-bold">Ingredients</label>
+          <textarea
+            name="ingredients"
+            value={formData.ingredients}
+            onChange={handleInputChange}
+            required
+            className="textarea-field"
+          />
+        </div>
+
+        <div>
+          <label className="font-bold">Image</label>
+          <input
+            type="file"
+            name="image"
+            onChange={handleImageChange}
+            accept="image/*"
+            required
+            className="file-input"
+          />
+        </div>
+
+        <div className="mt-4">
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`submit-button bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600 ${
+              isSubmitting ? 'cursor-not-allowed opacity-50' : ''
+            }`}
+          >
+            {isSubmitting ? 'Creating...' : 'Create Menu Item'}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
+export default CreateMenuItemsForm;

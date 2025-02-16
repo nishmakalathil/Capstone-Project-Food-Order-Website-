@@ -1,19 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import  axiosInstance  from "../../config/axiosInstances";
+import axiosInstance from "../../config/axiosInstances";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
 
 function SignUp() {
     const { register, handleSubmit } = useForm();
     const navigate = useNavigate();
     const isUserAuth = useSelector((state) => state.user.isUserAuth);
 
-     if (isUserAuth) {
-          navigate("/user/profile");
-          return null;  // Prevent rendering anything if the user isn't authenticated
-      }
+    // if logged in user, redirect to profile 
+    if (isUserAuth) {
+        navigate("/user/profile");
+        return null;  // Prevent rendering anything if the user isn't authenticated
+    }
 
     const onSubmit = async (data) => {
         try {
@@ -54,6 +54,7 @@ function SignUp() {
                             </label>
                             <input type="email" placeholder="email" {...register("email")} className="input input-bordered" required />
                         </div>
+
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Password</span>
@@ -65,14 +66,29 @@ function SignUp() {
                                 className="input input-bordered"
                                 required
                             />
-                            <label className="label">
-                                <Link to={'/login'}>
-                                    <a href="#" className="label-text-alt link link-hover">
-                                        Existing User?
-                                    </a>
-                                </Link>
-                            </label>
                         </div>
+
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">Mobile</span>
+                            </label>
+                            <input
+                                type="text"
+                                placeholder="mobile number"
+                                {...register("mobile")}
+                                className="input input-bordered"
+                                required
+                            />
+                        </div>
+
+                        <label className="label">
+                            <Link to={'/login'}>
+                                <a href="#" className="label-text-alt link link-hover">
+                                    Existing User?
+                                </a>
+                            </Link>
+                        </label>
+
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Sign Up</button>
                         </div>

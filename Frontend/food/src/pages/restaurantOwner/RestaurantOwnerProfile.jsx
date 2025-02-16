@@ -32,15 +32,18 @@ function RestaurantOwnerProfile() {
     if (ownerId) {
       const fetchRestaurants = async () => {
         try {
+            console.log(ownerId);
           const response = await axiosInstance.get(`/restaurants/owner/${ownerId}`);
-          console.log("Fetched Restaurants:", response.data); // Log the response to check the structure
-
-          if (Array.isArray(response.data)) {
+          console.log("Fetched Restaurants:", response); // Log the response to check the structure
+          if(response.data.msg == "No restaurants found for this owner")
+          {
+            setRestaurants('');  
+          } 
+          else
+          {
             setRestaurants(response.data); // Set the fetched restaurants
-          } else {
-            console.error("Unexpected data structure:", response.data);
-            setError("Invalid data received for restaurants");
           }
+
         } catch (error) {
           console.error("Error fetching restaurants:", error);
           setError("Error fetching restaurants");

@@ -141,6 +141,7 @@ const deleteRestaurant = async (req, res) => {
 };
 
 
+
 const getRestaurantsByOwner = async (req, res) => {
   // Ensure you're correctly accessing the owner's ID
   const ownerId = req.restaurantOwner.id; // or req.user.id depending on how you set up your authentication
@@ -154,8 +155,10 @@ const getRestaurantsByOwner = async (req, res) => {
     // Fetch restaurants by owner_id
     const restaurants = await Restaurants.find({ owner_id: ownerId });
 
+    console.log(restaurants);
+
     if (!restaurants || restaurants.length === 0) {
-      return res.status(404).json({ message: 'No restaurants found for this owner' });
+      return res.status(200).json({ message: 'No restaurants found for this owner' });
     }
 
     res.status(200).json(restaurants);

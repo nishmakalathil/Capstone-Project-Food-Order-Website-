@@ -60,14 +60,6 @@ const RestaurantOwnerHeader = () => {
           </ul>
         </nav>
 
-        {/* Oval-shaped Logout Button */}
-        <div className="flex justify-center gap-3">
-          <Link to="/restaurantOwner/RestaurantOwnerlogout">
-            <button className="px-8 py-3 rounded-full bg-pink-500 text-white font-semibold hover:bg-pink-700 transition duration-300">
-              Logout
-            </button>
-          </Link>
-        </div>
       </div>
     </div>
   );
