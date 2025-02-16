@@ -40,6 +40,7 @@ const Cart = () => {
     dispatch(clearCart());
   };
 
+  
   // Proceed to Checkout handler
   const handleProceedToCheckout = () => {
     if (cart && cart.menuItems.length > 0) {
