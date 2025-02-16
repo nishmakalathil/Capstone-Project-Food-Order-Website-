@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axiosInstance from "../../config/axiosInstances";
 import { useNavigate, Link } from "react-router-dom";
 
 function Login({ role }) {
@@ -34,8 +34,7 @@ if (role == "restaurantOwner") {
 
       console.log(user.loginAPI);
 
-      const response = await axios.post(
-        `http://localhost:3006/api${user.loginAPI}`,
+      const response = await axiosInstance.post(user.loginAPI,
         { email, password },
         { withCredentials: true }
       );
