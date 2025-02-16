@@ -34,7 +34,7 @@ if (role == "restaurantOwner") {
 
       console.log(user.loginAPI);
 
-      const response = await axiosInstance.post(user.loginAPI,
+      const response = await axiosInstance.fetch(user.loginAPI,
         { email, password },
         { withCredentials: true }
       );
