@@ -8,13 +8,5 @@ export const axiosInstance = axios.create({
     },
 });
 
-// Automatically attach the Authorization header if a token is stored
-axiosInstance.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token"); // Or use cookies
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  });
 
 export default axiosInstance;
