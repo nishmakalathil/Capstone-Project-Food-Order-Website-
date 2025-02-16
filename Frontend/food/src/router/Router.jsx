@@ -12,7 +12,7 @@ import RestaurantOwnerSignUp from '../pages/shared/RestaurantOwnerSignUp';
 import RestaurantOwnerLayout from '../layout/RestaurantOwnerLayout';
 import ProtectedRoute from '../router/ProtectedRoute';  
 import Cart from "../pages/user/Cart";
-import DeliveryInformation from "../pages/user/DeliveryInformations";
+import DeliveryInformation from "../pages/user/DeliveryInformation";
 import SearchResults from "../pages/user/SearchResults";
 import CreateOrder from "../pages/user/CreateOrder";
 import EditProfile from "../pages/user/EditProfile";
