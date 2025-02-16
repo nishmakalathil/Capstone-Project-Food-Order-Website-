@@ -2,6 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "main": "server.js",
+  "scripts": {
+    "build": "npm run build"
+  },
   "author": "",
   "license": "ISC",
   "description": "",
