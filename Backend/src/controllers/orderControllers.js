@@ -5,7 +5,8 @@ const Cart = require('../Models/cartModel.js');
 const createOrder = async (req, res) => {
   try {
     // Extract user data and cart details from the request
-    const { userId, deliveryInfo, couponCode, discount } = req.body;
+    const userId = req.user.id;
+    const { deliveryInfo, couponCode, discount } = req.body;
 
     // Find the cart for the user
     const cart = await Cart.findOne({ userId });

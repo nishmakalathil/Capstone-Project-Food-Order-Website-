@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    createOrder,
+  } from '../../redux/features/createOrderSlice';
 import { useNavigate } from 'react-router-dom';
 
 const CreateOrder = () => {
@@ -7,6 +10,7 @@ const CreateOrder = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [totalAmount, setTotalAmount] = useState(0);
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Get cart items from redux store
@@ -39,10 +43,10 @@ const CreateOrder = () => {
 
     // Here you can dispatch an action to create the order
     // For example:
-    // dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
+    dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
 
-    alert('Order placed successfully!');
-    navigate('/order-success');  // Redirect to order success page after placing the order
+    //alert('Order placed successfully!');
+    navigate('/order-payment');  // Redirect to order success page after placing the order
   };
 
   return (

@@ -1,5 +1,3 @@
-// src/redux/features/orderSlice.js
-// src/redux/features/createOrderSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../config/axiosInstances';
 
@@ -8,7 +6,7 @@ export const createOrder = createAsyncThunk(
   'order/createOrder',
   async (orderData, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.post('orders/create-order', orderData);
+      const response = await axiosInstance.post('order/create-order', orderData);
       return response.data; // Success, return the data to the reducer
     } catch (error) {
       return rejectWithValue(error.response.data); // Error, pass the error data to the reducer
