@@ -26,7 +26,7 @@ const dbpassword = process.env.DB_PASSWORD;
 console.log("DB_PASSWORD:", dbpassword); // Be careful about logging sensitive data in production
 
 // Import API routes
-const apiRouter = require('./src/routes/index.js'); // Import your API routes
+const apiRouter = require('./routes/index.js'); // Import your API routes
 
 // Connect to MongoDB database
 mongoose.connect(`mongodb+srv://anukthanish:${dbpassword}@fow1.1f9gk.mongodb.net/?retryWrites=true&w=majority&appName=FOW1`, {})
