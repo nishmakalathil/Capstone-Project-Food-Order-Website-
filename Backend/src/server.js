@@ -9,7 +9,7 @@ dotenv.config(); // Load environment variables
 // Initialize the Express app
 const app = express();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3006;
 
 // Example API Route
 app.get("/api/test", (req, res) => {
@@ -18,7 +18,7 @@ app.get("/api/test", (req, res) => {
 
 // Set up CORS after initializing the Express app (and before your routes)
 app.use(cors({
-  origin: "http://localhost:5256",  // This allows requests from your frontend (localhost:5301)
+  origin: ["http://localhost:5256","https://capstone-project-food-order-website-5n5w.vercel.app"],  // This allows requests from your frontend (localhost:5301)
   methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
   credentials: true,  // Allow cookies to be sent with requests
   
