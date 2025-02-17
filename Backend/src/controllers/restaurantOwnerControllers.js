@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 const restaurantOwner = require("../Models/restaurantOwnerModel.js");
 const bcrypt = require('bcrypt');
 const  generateToken  = require('../utils/token.js');
@@ -39,21 +32,15 @@ const restaurantOwnerSignup = async (req, res, next) => {
             password: hashedPassword,  
         });
 
-      
         await newOwner.save();
 
-       
-        const token = generateToken(newOwner._id);
+        const token = generateToken(newOwner._id, "restaurantOwner");
 
-      
-        roleType = "Restaurant Owner";
+        res.cookie("token", token);
 
-        if (role === 'admin') {
-            roleType = "Admin";
-        }
         res.status(201).json({
             data: { name: newOwner.name, email: newOwner.email },
-            message: roleType +' created successfully',
+            message: 'Restaurant Owner created successfully',
             token: token 
         });
     } catch (error) {

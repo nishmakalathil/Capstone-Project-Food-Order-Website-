@@ -9,7 +9,6 @@ const Profile = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                // Use the axiosInstance to make the API call
                 const response = await axiosInstance.get('/user/profile');
                 setUser(response.data.data);
             } catch (error) {
@@ -17,17 +16,15 @@ const Profile = () => {
             }
         };
         fetchUserProfile();
-    }, []);  // Empty dependency array ensures this runs only once after the initial render
+    }, []);
 
     const handleEditClick = () => {
-        navigate('/user/edit-profile');  // Redirect to the edit profile page
+        navigate('/user/edit-profile');
     };
 
     const handleLogout = async () => {
         try {
-            // Make an API call to the logout endpoint
             const response = await axiosInstance.post('/user/logout');
-            // Redirect to the login page after successful logout
             navigate('/login');
         } catch (error) {
             console.error('Error logging out', error);
@@ -35,39 +32,44 @@ const Profile = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto p-4">
-            {/* Welcome message */}
-            <h1 className="text-2xl font-bold text-center mb-6">Welcome to Your Profile</h1>
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                <h1 className="text-2xl font-semibold text-center mb-6">Profile</h1>
 
-            {user ? (
-                <>
-                    <h2 className="text-xl font-semibold">Name: {user.name}</h2>
-                    <p className="font-bold">Email: {user.email}</p>  {/* Make email bold */}
-                    <p className="font-bold">Mobile: {user.mobile}</p>  {/* Make mobile bold */}
+                {user ? (
+                    <>
+                        <div className="flex justify-center mb-6">
+                            <img 
+                                src={user.profilePic || 'https://res.cloudinary.com/dbkexrtm3/image/upload/v1739786132/avatar-profile-icon-flat-style-female-user-profile-vector-illustration-isolated-background-women-profile-sign-business-concept_157943-38866_njdxig.avif'} 
+                                alt="Profile" 
+                                className="w-32 h-32 rounded-full" 
+                            />
+                        </div>
 
-                    {/* Profile Picture with fallback */}
-                    <img 
-                        src={user.profilePic || 'https://res.cloudinary.com/dbkexrtm3/image/upload/v1739434486/Profile_PIC_tjmsma.jpg'} 
-                        alt="Profile" 
-                        className="mt-4 w-32 h-32 rounded-full" 
-                    />
-                    
-                    <button 
-                        onClick={handleEditClick} 
-                        className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600 focus:outline-none transition duration-300 mt-4">
-                        Edit Profile
-                    </button>
+                        <div className="text-center mb-6">
+                            <p><strong>Name:</strong> {user.name}</p>
+                            <p><strong>Email:</strong> {user.email}</p>
+                            <p><strong>Mobile:</strong> {user.mobile}</p>
+                        </div>
 
-                    {/* Logout Button - Pink and Oval Shape */}
-                    <button 
-                        onClick={handleLogout} 
-                        className="bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600 focus:outline-none transition duration-300 mt-4">
-                        Logout
-                    </button>
-                </>
-            ) : (
-                <p>Loading...</p>
-            )}
+                        <div className="flex justify-between gap-4">
+                            <button 
+                                onClick={handleEditClick} 
+                                className="w-full py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600">
+                                Edit Profile
+                            </button>
+
+                            <button 
+                                onClick={handleLogout} 
+                                className="w-full py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600">
+                                Logout
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <p>Loading...</p>
+                )}
+            </div>
         </div>
     );
 };

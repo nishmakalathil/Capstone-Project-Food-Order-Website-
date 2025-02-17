@@ -95,7 +95,7 @@ const DeliveryInformation = () => {
     if (selectedAddress) {
       // Store selected address and cart items in localStorage
       localStorage.setItem('selectedAddress', JSON.stringify(selectedAddress));
-      localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      //localStorage.setItem('cartItems', JSON.stringify(cartItems));
 
       // Navigate to the Create Order page
       navigate('/user/create-order');

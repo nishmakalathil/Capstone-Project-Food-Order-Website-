@@ -19,11 +19,11 @@ const createMenuItems = async (req, res) => {
         }
 
         // Ensure image is uploaded
-        if (!req.file) {
+        if (!req.image) {
             return res.status(400).json({ message: "Image is required" });
         }
 
-        const cloudinaryResponse = await cloudinaryInstance.uploader.upload(req.file.path);
+        const cloudinaryResponse = await cloudinaryInstance.uploader.upload(req.image.path);
 
         // Create the new menu item
         const newMenuItem = new MenuItem({

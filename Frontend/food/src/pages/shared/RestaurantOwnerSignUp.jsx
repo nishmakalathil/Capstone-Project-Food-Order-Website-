@@ -24,7 +24,7 @@ function RestaurantOwnerSignUp() {
                 data: data,
             });
             console.log("response====", response);
-            navigate("/restaurantOwner/login");
+            navigate("/restaurantOwner/profile");
         } catch (error) {
             console.log(error);
         }

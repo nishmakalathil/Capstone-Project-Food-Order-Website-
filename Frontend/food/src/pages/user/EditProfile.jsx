@@ -67,7 +67,7 @@ const EditProfile = () => {
     return (
         <div className="max-w-md mx-auto p-4">
             {/* Welcome message */}
-            <h1 className="text-2xl font-bold text-center mb-6">Welcome to ReshRajans' Profile</h1>
+            <h1 className="text-2xl font-bold text-center mb-6">Edit Your Profile</h1>
 
             <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
             {error && <p className="text-red-500 mb-4">{error}</p>}
