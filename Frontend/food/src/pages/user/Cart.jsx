@@ -12,7 +12,7 @@ import {
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize navigate hook
+  const navigate = useNavigate();
   const { cart, loading, error } = useSelector((state) => state.cart);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState("");
@@ -40,14 +40,9 @@ const Cart = () => {
     dispatch(clearCart());
   };
 
-  
-  // Proceed to Checkout handler
   const handleProceedToCheckout = () => {
     if (cart && cart.menuItems.length > 0) {
-      // Store the cart data in localStorage to pass it to the DeliveryInfo page
       localStorage.setItem('cartItems', JSON.stringify(cart));
-
-      // Navigate to the Delivery Info page
       navigate("/user/deliveryinfo");
     } else {
       alert('Your cart is empty, add items before proceeding to checkout.');
@@ -58,48 +53,46 @@ const Cart = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold">Your Cart</h2>
+    <div className="p-6 max-w-4xl mx-auto">
+      <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
       {cart && cart.menuItems.length === 0 && <p>Your cart is empty!</p>}
       {cart && cart.menuItems.length > 0 && (
-        <div>
+        <div className="bg-white shadow-lg rounded-lg p-6">
           {cart.menuItems.map((item) => (
-            <div key={item.menuItemId._id} className="flex items-center mb-4">
+            <div key={item.menuItemId._id} className="flex items-center mb-6 border-b pb-4">
               <img
                 src={item.image || "/path/to/placeholder-image.jpg"} 
                 alt={item.menuItemId.name}
-                className="w-20 h-20 object-cover mr-4"
-                onError={(e) => (e.target.src = "/path/to/placeholder-image.jpg")} 
+                className="w-32 h-32 object-cover rounded-lg mr-4"
+                onError={(e) => (e.target.src = "/path/to/placeholder-image.jpg")}
               />
-              <div className="flex flex-col justify-between">
+              <div className="flex flex-col flex-grow">
                 <p className="font-semibold text-lg">{item.menuItemId.name}</p>
                 <p className="font-semibold text-md">
                   ${item.price} x {item.quantity}
                 </p>
-                <div className="flex items-center justify-center mt-4">
+                <div className="flex items-center space-x-4 mt-2">
                   <button
                     onClick={() => handleUpdateQuantity(item._id, item.quantity - 1)}
                     disabled={item.quantity <= 1}
-                    className="px-6 py-2 bg-pink-500 rounded-full text-white hover:bg-pink-600 transition duration-300"
+                    className="px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition duration-300"
                   >
                     -
                   </button>
-                  <span className="mx-4 text-lg">{item.quantity}</span>
+                  <span className="text-lg">{item.quantity}</span>
                   <button
                     onClick={() => handleUpdateQuantity(item._id, item.quantity + 1)}
-                    className="px-6 py-2 bg-pink-500 rounded-full text-white hover:bg-pink-600 transition duration-300"
+                    className="px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition duration-300"
                   >
                     +
                   </button>
                 </div>
-                <div className="flex space-x-2 mt-2">
-                  <button
-                    onClick={() => handleRemoveFromCart(item._id)}
-                    className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
-                  >
-                    Remove Item
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleRemoveFromCart(item._id)}
+                  className="mt-3 bg-pink-500 text-white px-4 py-1 w-20 text-sm rounded-full hover:bg-pink-600 transition"
+                >
+                  Remove
+                </button>
               </div>
             </div>
           ))}
@@ -107,7 +100,7 @@ const Cart = () => {
           <h3 className="font-semibold text-xl">Total Quantity: {cart.totalQuantity}</h3>
           
           <div className="mt-6">
-            <h3 className="font-semibold text-lg">Apply Coupon</h3>
+            <h3 className="font-semibold text-lg mb-2">Apply Coupon</h3>
             <div className="flex space-x-4">
               <input
                 type="text"
@@ -133,20 +126,16 @@ const Cart = () => {
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6 flex justify-between">
             <button
               onClick={handleClearCart}
               className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
             >
               Clear Cart
             </button>
-          </div>
-
-          {/* Proceed to Checkout Button */}
-          <div className="mt-6">
             <button
               onClick={handleProceedToCheckout}
-              className="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition duration-300"
+              className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
             >
               Proceed to Checkout
             </button>

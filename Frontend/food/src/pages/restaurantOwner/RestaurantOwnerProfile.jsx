@@ -7,65 +7,50 @@ function RestaurantOwnerProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [restaurants, setRestaurants] = useState([]);
-  const [ownerId, setOwnerId] = useState(null); // State to store ownerId
+  const [ownerId, setOwnerId] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch profile data and set ownerId
+  // Fetch profile and ownerId
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axiosInstance.get("/restaurantOwner/profile");
         setProfile(response.data.data);
-        setOwnerId(response.data.data._id); // Set ownerId from profile data
+        setOwnerId(response.data.data._id);
         setLoading(false);
       } catch (err) {
         setError("Error fetching profile");
         setLoading(false);
       }
     };
-
     fetchProfile();
-  }, []); // This runs once when the component mounts
+  }, []);
 
-  // Fetch restaurants when ownerId is available
+  // Fetch restaurants for the owner
   useEffect(() => {
     if (ownerId) {
       const fetchRestaurants = async () => {
         try {
-            console.log(ownerId);
           const response = await axiosInstance.get(`/restaurants/owner/${ownerId}`);
-          console.log("Fetched Restaurants:", response); // Log the response to check the structure
-          if(response.data.msg == "No restaurants found for this owner")
-          {
-            setRestaurants('');  
-          } 
-          else
-          {
-            setRestaurants(response.data); // Set the fetched restaurants
+          if (response.data.msg === "No restaurants found for this owner") {
+            setRestaurants([]);
+          } else {
+            setRestaurants(response.data);
           }
-
         } catch (error) {
-          console.error("Error fetching restaurants:", error);
           setError("Error fetching restaurants");
         }
       };
-
       fetchRestaurants();
     }
-  }, [ownerId]); // This effect runs when ownerId is set
+  }, [ownerId]);
 
-  const handleEditProfile = () => {
-    navigate("/restaurantOwner/update");
-  };
+  const handleEditProfile = () => navigate("/restaurantOwner/update");
 
-  // Handle logout
   const handleLogout = async () => {
     try {
       const response = await axiosInstance.post("/restaurantOwner/logout");
-      if (response.data.success) {
-        // Clear local state (if necessary) and navigate to login page
-        navigate("/restaurantOwner/login");  // Redirect to login after logout
-      }
+      if (response.data.success) navigate("/restaurantOwner/login");
     } catch (error) {
       console.error("Error logging out:", error);
     }
@@ -75,59 +60,78 @@ function RestaurantOwnerProfile() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-semibold text-center mb-6">Restaurant Owner Profile</h2>
-      <div className="flex items-center space-x-6 mb-6">
-        <img
-          src={profile.profilePic}
-          alt="Profile"
-          className="w-24 h-24 rounded-full object-cover"
-        />
-        <div>
-          <h3 className="text-xl font-semibold">RestaurantOwner: {profile.name}</h3>
-          <p className="text-gray-600 font-bold">Email: {profile.email}</p>
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="bg-white shadow-xl rounded-3xl p-8 max-w-3xl w-full">
+        <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+          Restaurant Owner Profile
+        </h2>
+
+        {/* Profile Information */}
+        <div className="flex items-center space-x-8 mb-8">
+          <img
+            src={profile.profilePic || "/path/to/default-image.jpg"}
+            alt="Profile"
+            className="w-32 h-32 rounded-full object-cover border-4 border-pink-500"
+            onError={(e) => (e.target.src = "/path/to/default-image.jpg")}
+          />
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-800">
+              {profile.name}
+            </h3>
+            <p className="text-gray-600">📧 {profile.email}</p>
+          </div>
         </div>
-      </div>
-      <div className="space-y-4">
-        <div>
-          <strong className="text-gray-700">Address:</strong>
-          <p className="text-gray-600">{profile.address}</p>
+
+        {/* Additional Info */}
+        <div className="space-y-4">
+          <div>
+            <p className="text-lg text-gray-700">
+               <strong>Address:</strong> {profile.address}
+            </p>
+          </div>
+          <div>
+            <p className="text-lg text-gray-700">
+               <strong>Phone:</strong> {profile.phoneNumber}
+            </p>
+          </div>
+
+          {/* Restaurants Section */}
+          <div>
+            <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+              Restaurants Owned by {profile.name}
+            </h3>
+            <ul className="space-y-2">
+              {restaurants.length > 0 ? (
+                restaurants.map((restaurant) => (
+                  <li
+                    key={restaurant._id}
+                    className="text-lg text-gray-700 bg-gray-100 p-3 rounded-lg"
+                  >
+                    🍽️ {restaurant.name}
+                  </li>
+                ))
+              ) : (
+                <li className="text-lg text-gray-500">No restaurants found.</li>
+              )}
+            </ul>
+          </div>
         </div>
-        <div>
-          <strong className="text-gray-700">Phone:</strong>
-          <p className="text-gray-600">{profile.phoneNumber}</p>
+
+        {/* Actions */}
+        <div className="flex justify-center space-x-6 mt-8">
+          <button
+            onClick={handleEditProfile}
+            className="bg-pink-500 text-white text-lg rounded-full py-3 px-8 hover:bg-pink-600 transition duration-300"
+          >
+            Edit Profile
+          </button>
+          <button
+            onClick={handleLogout}
+            className="bg-pink-500 text-white text-lg rounded-full py-3 px-8 hover:bg-pink-600 transition duration-300"
+          >
+            Logout
+          </button>
         </div>
-        <div>
-          <h2 className="font-bold text-lg">Restaurants Owned by {profile.name}</h2>
-          <ul>
-            {restaurants.length > 0 ? (
-              restaurants.map((restaurant) => (
-                <li key={restaurant._id}>
-                  {restaurant.name}
-                  {/* Optionally display other restaurant details here */}
-                </li>
-              ))
-            ) : (
-              <li>No restaurants found.</li>
-            )}
-          </ul>
-        </div>
-      </div>
-      <div className="mt-6 text-center">
-        <button
-          onClick={handleEditProfile}
-          className="bg-pink-500 text-white rounded-full py-2 px-6 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
-        >
-          Edit Profile
-        </button>
-      </div>
-      <div className="mt-4 text-center">
-        <button
-          onClick={handleLogout}
-          className="bg-pink-500 text-white rounded-full py-2 px-6 hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-300"
-        >
-          Logout
-        </button>
       </div>
     </div>
   );

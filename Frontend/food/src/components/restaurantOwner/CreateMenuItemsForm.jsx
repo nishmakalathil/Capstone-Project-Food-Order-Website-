@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axiosInstance from '../../config/axiosInstances';  // Importing the Axios instance
 
 function CreateMenuItemsForm() {
-  // State for form fields and the image file
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -13,48 +12,42 @@ function CreateMenuItemsForm() {
     restaurant_id: '', // Ensure this is dynamically set or passed as a prop
   });
   const [image, setImage] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false); // to handle submit button state
-  const [error, setError] = useState(''); // for displaying any error message
-  const [success, setSuccess] = useState(''); // for displaying success message
-  const [ownerId, setOwnerId] = useState(null); // State to store ownerId
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [ownerId, setOwnerId] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
   
-  // Fetch profile data and set ownerId
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axiosInstance.get("/restaurantOwner/profile");
-        setOwnerId(response.data.data._id); // Set ownerId from profile data
+        setOwnerId(response.data.data._id); 
       } catch (err) {
         setError("Error fetching profile");
       }
     };
     fetchProfile();
-  }, []); // This runs once when the component mounts
+  }, []);
 
-  // Fetch restaurants when ownerId is available
   useEffect(() => {
     if (ownerId) {
       const fetchRestaurants = async () => {
         try {
           const response = await axiosInstance.get(`/restaurants/owner/${ownerId}`);
-          console.log("Fetched Restaurants:", response.data); // Log the response to check the structure
           if (Array.isArray(response.data)) {
-            setRestaurants(response.data); // Set the fetched restaurants
+            setRestaurants(response.data);
           } else {
-            console.error("Unexpected data structure:", response.data);
             setError("Invalid data received for restaurants");
           }
         } catch (error) {
-          console.error("Error fetching restaurants:", error);
           setError("Error fetching restaurants");
         }
       };
       fetchRestaurants();
     }
-  }, [ownerId]); // This effect runs when ownerId is set
+  }, [ownerId]);
 
-  // Handle input field changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -63,16 +56,13 @@ function CreateMenuItemsForm() {
     });
   };
 
-  // Handle file input (image) change
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true); // Show loading state
-    // Create a new FormData object to send the form data and the image
+    setIsSubmitting(true);
     const formDataToSend = new FormData();
     formDataToSend.append('name', formData.name);
     formDataToSend.append('description', formData.description);
@@ -84,9 +74,7 @@ function CreateMenuItemsForm() {
     formDataToSend.append('image', image);
 
     try {
-      // Make the POST request to the backend
       const response = await axiosInstance.post('/menu-items/create', formDataToSend);
-      // On success, clear the form and show success message
       setFormData({
         name: '',
         description: '',
@@ -94,37 +82,35 @@ function CreateMenuItemsForm() {
         category: '',
         isAvailable: true,
         ingredients: '',
-        restaurant_id: '', // Reset restaurant_id
+        restaurant_id: '',
       });
       setImage(null);
       setError('');
       setSuccess('Menu item created successfully!');
-      console.log('Menu item created:', response.data);
     } catch (error) {
-      // On error, show the error message
       setSuccess('');
       setError('Error creating menu item: ' + (error.response?.data?.message || error.message));
     } finally {
-      setIsSubmitting(false); // Hide loading state
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="form-container">
-      <h2 className="font-bold text-2xl mb-4">Create Menu Item</h2>
-      {/* Display Success or Error Messages */}
-      {success && <div className="text-green-500">{success}</div>}
-      {error && <div className="text-red-500">{error}</div>}
-
-      <form onSubmit={handleSubmit}>
+    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <h2 className="font-bold text-3xl text-center text-gray-800 mb-6">Create Menu Item</h2>
+      
+      {success && <div className="text-green-600 mb-4">{success}</div>}
+      {error && <div className="text-red-600 mb-4">{error}</div>}
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="font-bold">Restaurant</label>
+          <label className="block font-semibold text-gray-700">Restaurant</label>
           <select
             name="restaurant_id"
             value={formData.restaurant_id}
             onChange={handleInputChange}
             required
-            className="input-field"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           >
             <option value="">Select a restaurant</option>
             {restaurants.length > 0 ? (
@@ -140,83 +126,83 @@ function CreateMenuItemsForm() {
         </div>
 
         <div>
-          <label className="font-bold">Name</label>
+          <label className="block font-semibold text-gray-700">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
             required
-            className="input-field"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
 
         <div>
-          <label className="font-bold">Description</label>
+          <label className="block font-semibold text-gray-700">Description</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleInputChange}
             required
-            className="textarea-field"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
 
         <div>
-          <label className="font-bold">Price</label>
+          <label className="block font-semibold text-gray-700">Price</label>
           <input
             type="number"
             name="price"
             value={formData.price}
             onChange={handleInputChange}
             required
-            className="input-field"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
 
         <div>
-          <label className="font-bold">Category</label>
+          <label className="block font-semibold text-gray-700">Category</label>
           <input
             type="text"
             name="category"
             value={formData.category}
             onChange={handleInputChange}
             required
-            className="input-field"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
 
         <div>
-          <label className="font-bold">Is Available</label>
+          <label className="block font-semibold text-gray-700">Is Available</label>
           <input
             type="checkbox"
             name="isAvailable"
             checked={formData.isAvailable}
             onChange={() => setFormData({ ...formData, isAvailable: !formData.isAvailable })}
-            className="checkbox-field"
+            className="h-5 w-5"
           />
         </div>
 
         <div>
-          <label className="font-bold">Ingredients</label>
+          <label className="block font-semibold text-gray-700">Ingredients</label>
           <textarea
             name="ingredients"
             value={formData.ingredients}
             onChange={handleInputChange}
             required
-            className="textarea-field"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
 
         <div>
-          <label className="font-bold">Image</label>
+          <label className="block font-semibold text-gray-700">Image</label>
           <input
             type="file"
             name="image"
             onChange={handleImageChange}
             accept="image/*"
             required
-            className="file-input"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
 
@@ -224,9 +210,7 @@ function CreateMenuItemsForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`submit-button bg-pink-500 text-white py-2 px-6 rounded-full hover:bg-pink-600 ${
-              isSubmitting ? 'cursor-not-allowed opacity-50' : ''
-            }`}
+            className={`w-full py-3 px-6 rounded-lg text-white font-semibold bg-pink-500 hover:bg-pink-600 transition duration-300 focus:outline-none ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isSubmitting ? 'Creating...' : 'Create Menu Item'}
           </button>
