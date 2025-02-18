@@ -63,7 +63,7 @@ function RestaurantOwnerEditProfile() {
         {error && <div className="mt-4 text-red-500 text-center">{error}</div>}
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-          {[
+          {[ 
             { label: "Name", name: "name", type: "text" },
             { label: "Email", name: "email", type: "email" },
             { label: "Phone", name: "phone", type: "tel" },
@@ -86,7 +86,7 @@ function RestaurantOwnerEditProfile() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-full px-6 py-3 bg-pink-500 text-white font-semibold rounded-lg shadow-md hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all duration-200"
+              className="w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
               disabled={loading}
             >
               {loading ? "Saving..." : "Save Changes"}

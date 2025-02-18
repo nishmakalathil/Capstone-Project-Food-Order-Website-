@@ -138,7 +138,7 @@ const EditProfile = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full bg-pink-500 text-white py-2 px-4 rounded-full hover:bg-pink-600 focus:outline-none transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`w-full bg-pink-500 text-white py-2 px-4 rounded-full focus:outline-none transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                     {loading ? 'Updating...' : 'Update Profile'}
                 </button>
@@ -147,7 +147,7 @@ const EditProfile = () => {
             {/* Logout Button with Tailwind CSS for oval shape */}
             <button
                 onClick={handleLogout}
-                className="w-full bg-pink-500 text-white py-2 px-4 rounded-full hover:bg-pink-600 focus:outline-none transition duration-300 mt-4"
+                className="w-full bg-pink-500 text-white py-2 px-4 rounded-full focus:outline-none transition duration-300 mt-4"
             >
                 Logout
             </button>

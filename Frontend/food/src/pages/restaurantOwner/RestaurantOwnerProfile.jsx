@@ -71,7 +71,7 @@ function RestaurantOwnerProfile() {
           <img
             src={profile.profilePic || "/path/to/default-image.jpg"}
             alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-pink-500"
+            className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
             onError={(e) => (e.target.src = "/path/to/default-image.jpg")}
           />
           <div>
@@ -121,13 +121,13 @@ function RestaurantOwnerProfile() {
         <div className="flex justify-center space-x-6 mt-8">
           <button
             onClick={handleEditProfile}
-            className="bg-pink-500 text-white text-lg rounded-full py-3 px-8 hover:bg-pink-600 transition duration-300"
+            className="bg-blue-500 text-white text-lg py-3 px-8 rounded transition duration-300"
           >
             Edit Profile
           </button>
           <button
             onClick={handleLogout}
-            className="bg-pink-500 text-white text-lg rounded-full py-3 px-8 hover:bg-pink-600 transition duration-300"
+            className="bg-blue-500 text-white text-lg py-3 px-8 rounded transition duration-300"
           >
             Logout
           </button>
