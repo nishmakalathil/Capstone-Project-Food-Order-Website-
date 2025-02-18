@@ -9,23 +9,30 @@ const Profile = () => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
+                // Send request to fetch the user profile
                 const response = await axiosInstance.get('/user/profile');
-                setUser(response.data.data);
+                setUser(response.data.data); // Set the user data
             } catch (error) {
                 console.error('Error fetching user profile', error);
+                
+                // Check for 401 error (unauthorized) and redirect to login page
+                if (error.response && error.response.status === 401) {
+                    navigate('/login');  // Redirect to login if not authenticated
+                }
             }
         };
-        fetchUserProfile();
-    }, []);
+
+        fetchUserProfile();  // Call the function to fetch user profile
+    }, [navigate]);
 
     const handleEditClick = () => {
-        navigate('/user/edit-profile');
+        navigate('/user/edit-profile');  // Navigate to edit profile page
     };
 
     const handleLogout = async () => {
         try {
-            const response = await axiosInstance.post('/user/logout');
-            navigate('/login');
+            await axiosInstance.post('/user/logout');  // Log the user out
+            navigate('/login');  // Redirect to login page after logout
         } catch (error) {
             console.error('Error logging out', error);
         }
@@ -67,7 +74,7 @@ const Profile = () => {
                         </div>
                     </>
                 ) : (
-                    <p>Loading...</p>
+                    <p>Loading...</p>  // Display "Loading..." until the user profile is fetched
                 )}
             </div>
         </div>
