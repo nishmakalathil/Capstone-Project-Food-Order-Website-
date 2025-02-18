@@ -11,42 +11,35 @@ const validateObjectId = (id) => {
 // Create Menu Item
 const createMenuItems = async (req, res) => {
     try {
-        const { name, description, price, category, isAvailable, ingredients, restaurant_id } = req.body;
-
-        // Ensure all required fields are provided
-        if (!name || !description || !price || !category || !restaurant_id || !ingredients) {
-            return res.status(400).json({ message: "All fields are required" });
-        }
-
-        // Ensure image is uploaded
-        if (!req.image) {
-            return res.status(400).json({ message: "Image is required" });
-        }
-
-        const cloudinaryResponse = await cloudinaryInstance.uploader.upload(req.image.path);
-
-        // Create the new menu item
-        const newMenuItem = new MenuItem({
-            restaurant_id,
-            name,
-            description,
-            price,
-            category,
-            image: cloudinaryResponse.url,
-            isAvailable,
-            ingredients
-        });
-
-        // Save the menu item
-        await newMenuItem.save();
-        res.status(201).json({
-            message: "Menu item created successfully",
-            menuItem: newMenuItem
-        });
+      const { name, description, price, category, isAvailable, ingredients, restaurant_id } = req.body;
+      if (!name || !description || !price || !category || !restaurant_id || !ingredients) {
+        return res.status(400).json({ message: "All fields are required" });
+      }
+  
+      if (!req.file) {  // Check if the file is being uploaded
+        return res.status(400).json({ message: "Image is required" });
+      }
+  
+      const cloudinaryResponse = await cloudinaryInstance.uploader.upload(req.file.path);
+      
+      const newMenuItem = new MenuItem({
+        restaurant_id,
+        name,
+        description,
+        price,
+        category,
+        image: cloudinaryResponse.url, // Store the URL of the image
+        isAvailable,
+        ingredients
+      });
+  
+      await newMenuItem.save();
+      res.status(201).json({ message: "Menu item created successfully", menuItem: newMenuItem });
     } catch (error) {
-        res.status(500).json({ message: "Error: " + error.message });
+      res.status(500).json({ message: "Error: " + error.message });
     }
-};
+  };
+  
 
 // Get All Menu Items
 const getAllMenuItems = async (req, res) => {

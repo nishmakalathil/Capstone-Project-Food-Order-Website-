@@ -47,6 +47,8 @@ function RestaurantOwnerProfile() {
 
   const handleEditProfile = () => navigate("/restaurantOwner/update");
 
+  const handleCreateRestaurant = () => navigate("/restaurants/create");
+
   const handleLogout = async () => {
     try {
       const response = await axiosInstance.post("/restaurantOwner/logout");
@@ -86,12 +88,12 @@ function RestaurantOwnerProfile() {
         <div className="space-y-4">
           <div>
             <p className="text-lg text-gray-700">
-               <strong>Address:</strong> {profile.address}
+              <strong>Address:</strong> {profile.address}
             </p>
           </div>
           <div>
             <p className="text-lg text-gray-700">
-               <strong>Phone:</strong> {profile.phoneNumber}
+              <strong>Phone:</strong> {profile.phoneNumber}
             </p>
           </div>
 
@@ -126,8 +128,14 @@ function RestaurantOwnerProfile() {
             Edit Profile
           </button>
           <button
+            onClick={handleCreateRestaurant}
+            className="bg-green-500 text-white text-lg py-3 px-8 rounded transition duration-300"
+          >
+            Create Restaurant
+          </button>
+          <button
             onClick={handleLogout}
-            className="bg-blue-500 text-white text-lg py-3 px-8 rounded transition duration-300"
+            className="bg-red-500 text-white text-lg py-3 px-8 rounded transition duration-300"
           >
             Logout
           </button>

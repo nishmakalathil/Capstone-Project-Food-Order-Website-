@@ -17,7 +17,7 @@ function CreateMenuItemsForm() {
   const [success, setSuccess] = useState('');
   const [ownerId, setOwnerId] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
-  
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -59,10 +59,10 @@ function CreateMenuItemsForm() {
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+  
     const formDataToSend = new FormData();
     formDataToSend.append('name', formData.name);
     formDataToSend.append('description', formData.description);
@@ -71,29 +71,22 @@ function CreateMenuItemsForm() {
     formDataToSend.append('isAvailable', formData.isAvailable);
     formDataToSend.append('ingredients', formData.ingredients);
     formDataToSend.append('restaurant_id', formData.restaurant_id);
-    formDataToSend.append('image', image);
-
+    formDataToSend.append('image', image); // Append the selected image file
+  
     try {
-      const response = await axiosInstance.post('/menu-items/create', formDataToSend);
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        category: '',
-        isAvailable: true,
-        ingredients: '',
-        restaurant_id: '',
+      const response = await axiosInstance.post('/menu-items/create', formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      setImage(null);
-      setError('');
-      setSuccess('Menu item created successfully!');
+      // Handle success
     } catch (error) {
-      setSuccess('');
-      setError('Error creating menu item: ' + (error.response?.data?.message || error.message));
+      // Handle error
     } finally {
       setIsSubmitting(false);
     }
   };
+  
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
