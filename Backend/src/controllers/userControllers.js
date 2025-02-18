@@ -39,37 +39,43 @@ const userLogin = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
+        // Check if email and password are provided
         if (!email || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
+        // Find user by email
         const userExist = await User.findOne({ email });
 
         if (!userExist) {
             return res.status(404).json({ message: "User does not exist" });
         }
 
-        const passwordMatch = bcrypt.compareSync(password, userExist.password);
+        // Compare the password with the hashed password in the database
+        const passwordMatch = await bcrypt.compare(password, userExist.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ message: "User not authenticated" });
+            return res.status(401).json({ message: "Invalid credentials" });
         }
 
+        // Generate JWT token
         const token = generateToken(userExist._id);
 
         // Set the cookie with secure options for production
         res.cookie('token', token, {
-            httpOnly: true, // Makes the cookie inaccessible to JavaScript
-            secure: process.env.NODE_ENV === 'production', // Only true in production (ensures cookie is only sent over HTTPS)
-            sameSite: 'Strict', // CSRF protection
-            maxAge: 24 * 60 * 60 * 1000 // Optional: set an expiry for the cookie (24 hours here)
+            httpOnly: true,  // Make sure the cookie can't be accessed via JavaScript
+            secure: process.env.NODE_ENV === 'production',  // Only send cookie over HTTPS in production
+            sameSite: 'Strict',  // Protect from CSRF attacks
+            maxAge: 24 * 60 * 60 * 1000,  // Expiry: 24 hours
         });
 
         return res.json({ data: userExist, message: "User login success" });
     } catch (error) {
+        console.error(error);
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };
+
 //profile view
 
 const userProfile = async (req, res, next) => {
