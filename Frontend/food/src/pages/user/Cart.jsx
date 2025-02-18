@@ -6,7 +6,6 @@ import {
   addToCart,
   removeMenuItemFromCart,
   updateQuantity,
-  applyCoupon,
   clearCart,
 } from "../../redux/features/cartSlice"; 
 
@@ -15,7 +14,14 @@ const Cart = () => {
   const navigate = useNavigate();
   const { cart, loading, error } = useSelector((state) => state.cart);
   const [couponCode, setCouponCode] = useState("");
-  const [discount, setDiscount] = useState("");
+  const [discount, setDiscount] = useState(0);
+  const [carterror, setError] = useState("");
+  const [finalTotal, setFinalTotal] = useState(0); 
+
+  useEffect(() => {
+    const total = cart?.menuItems?.reduce((total, item) => total + item.price * item.quantity, 0) || 0;
+    setFinalTotal(total - discount); // Subtract discount when cart updates
+  }, [cart, discount]); // Recalculate total when cart or discount changes
 
   useEffect(() => {
     dispatch(fetchCart());
@@ -30,9 +36,29 @@ const Cart = () => {
     dispatch(updateQuantity({ menuItemId, quantity }));
   };
 
-  const handleApplyCoupon = () => {
-    if (couponCode && discount) {
-      dispatch(applyCoupon({ couponCode, discount }));
+  
+
+  const handleApplyCoupon = async () => {
+    try {
+      setError(""); // Reset error message
+      const response = await fetch("http://localhost:3006/api/coupon/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: couponCode,
+          orderAmount: finalTotal,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to apply coupon");
+      }
+
+      setDiscount(data.discount);
+      setFinalTotal(data.finalAmount);
+    } catch (err) {
+      setError(err.message);
     }
   };
 
@@ -104,25 +130,21 @@ const Cart = () => {
             <div className="flex space-x-4">
               <input
                 type="text"
-                placeholder="Coupon Code"
+                placeholder="Enter coupon code"
                 value={couponCode}
                 onChange={(e) => setCouponCode(e.target.value)}
-                className="border p-2 rounded-md w-1/3"
               />
-              <input
-                type="number"
-                placeholder="Discount"
-                value={discount}
-                onChange={(e) => setDiscount(e.target.value)}
-                className="border p-2 rounded-md w-1/3"
-              />
-              <button
-                onClick={handleApplyCoupon}
-                disabled={!couponCode || !discount}
-                className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
+              <button onClick={handleApplyCoupon} 
+              className="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition duration-300"
               >
                 Apply Coupon
               </button>
+
+              {discount > 0 && <p style={{ color: "green" }}>Discount Applied: -${discount}</p>}
+              {carterror && <p style={{ color: "red" }}>{carterror}</p>}
+
+              <h3 className="font-semibold text-xl">Total after discount: ${finalTotal}</h3>
+
             </div>
           </div>
 

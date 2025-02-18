@@ -32,13 +32,6 @@ const clearCart = createAsyncThunk('cart/clearCart', async () => {
     return response.data.cart;  
   });
   
-
-
-const applyCoupon = createAsyncThunk('cart/applyCoupon', async ({ couponCode, discount }) => {
-  const response = await axiosInstance.post('/cart/apply-coupon', { couponCode, discount });
-  return response.data.cart; // Return updated cart
-});
-
 const cartSlice = createSlice({
   name: 'cart',
   initialState: {
@@ -73,9 +66,6 @@ const cartSlice = createSlice({
         state.cart = action.payload;
       })
       
-      .addCase(applyCoupon.fulfilled, (state, action) => {
-        state.cart = action.payload;
-      })
       .addCase(clearCart.fulfilled, (state, action) => {
         state.cart = action.payload;
         state.loading = false;
@@ -90,6 +80,6 @@ const cartSlice = createSlice({
   },
 });
 // 
-export { fetchCart, addToCart, removeMenuItemFromCart, updateQuantity, applyCoupon ,clearCart};
+export { fetchCart, addToCart, removeMenuItemFromCart, updateQuantity, clearCart};
 //
 export default cartSlice.reducer;

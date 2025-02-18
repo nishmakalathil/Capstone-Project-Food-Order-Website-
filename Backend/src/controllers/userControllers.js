@@ -40,25 +40,32 @@ const userLogin = async (req, res, next) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ message: "all fields are required" });
+            return res.status(400).json({ message: "All fields are required" });
         }
 
         const userExist = await User.findOne({ email });
 
         if (!userExist) {
-            return res.status(404).json({ message: "user does not exist" });
+            return res.status(404).json({ message: "User does not exist" });
         }
 
         const passwordMatch = bcrypt.compareSync(password, userExist.password);
 
         if (!passwordMatch) {
-            return res.status(401).json({ message: "user not authenticated" });
+            return res.status(401).json({ message: "User not authenticated" });
         }
 
         const token = generateToken(userExist._id);
-        res.cookie("token", token);
 
-        return res.json({ data: userExist, message: "user login success" });
+        // Set the cookie with secure options for production
+        res.cookie('token', token, {
+            httpOnly: true, // Makes the cookie inaccessible to JavaScript
+            secure: process.env.NODE_ENV === 'production', // Only true in production (ensures cookie is only sent over HTTPS)
+            sameSite: 'Strict', // CSRF protection
+            maxAge: 24 * 60 * 60 * 1000 // Optional: set an expiry for the cookie (24 hours here)
+        });
+
+        return res.json({ data: userExist, message: "User login success" });
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
