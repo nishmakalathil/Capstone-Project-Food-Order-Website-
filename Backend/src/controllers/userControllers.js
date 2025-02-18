@@ -2,6 +2,7 @@ const User = require('../Models/userModel.js');
 
 const bcrypt = require('bcrypt');
 const  generateToken  = require('../utils/token.js');
+const NODE_ENV = process.env.NODE_ENV;
 
 // Sign up
  const userSignup = async (req, res, next) => {
@@ -61,12 +62,12 @@ const userLogin = async (req, res, next) => {
         // Generate JWT token
         const token = generateToken(userExist._id);
 
-        // Set the cookie with secure options for production
-        res.cookie('token', token, {
-            httpOnly: true,  // Make sure the cookie can't be accessed via JavaScript
-            secure: process.env.NODE_ENV === 'production',  // Only send cookie over HTTPS in production
-            sameSite: 'Strict',  // Protect from CSRF attacks
-            maxAge: 24 * 60 * 60 * 1000,  // Expiry: 24 hours
+        // Set cookie with secure options for production
+        res.cookie("token", token, {
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            secure: process.env.NODE_ENV === "production",  // Only true in production (HTTPS)
+            httpOnly: true,  // Cookie is not accessible by JavaScript
+            maxAge: 24 * 60 * 60 * 1000,  // 1 day expiry (24 hours)
         });
 
         return res.json({ data: userExist, message: "User login success" });
