@@ -8,43 +8,35 @@ const createRestaurant = async (req, res) => {
     // The owner_id is now automatically attached to req.owner_id by the middleware
     const { name, address, phone_number, delivery_hours, delivery_areas, average_delivery_time, owner_id ,ratings} = req.body;
     //const owner_id = req.owner_id; // Get owner_id from middleware (extracted from JWT)
-
     // Validate required fields
     if (!name || !address || !phone_number ||!ratings || !delivery_hours || !delivery_areas || !average_delivery_time || !owner_id) {
       return res.status(400).json({ error: 'Restaturant - All fields are required' });
     }
-
     // Ensure file is present in the request
     if (!req.file) {
         return res.status(400).json({ message: "Image is required" });
     }
-
     // Upload image to Cloudinary
     const cloudinaryResponse = await cloudinaryInstance.uploader.upload(req.file.path);
-
     // Create a new restaurant instance
     const newRestaurant = new Restaurants({
       owner_id, // The owner_id extracted from the token
       name,
-      address, 
+      address,
       phone_number,
       delivery_hours,
       delivery_areas,
       average_delivery_time,
       image: cloudinaryResponse.url || '', // Default image field to an empty string if not provided
     });
-
     // Save the new restaurant to the database
     await newRestaurant.save();
-
     // Return a success response with the created restaurant
     res.status(201).json({
       message: 'Restaurant created successfully',
       restaurant: newRestaurant
     });
-
   } catch (error) {
-    
     res.status(500).json({ error: error.message || 'Error creating the restaurant' });
   }
 };

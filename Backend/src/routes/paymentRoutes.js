@@ -1,14 +1,13 @@
+// routes/paymentRoutes.js
+
+// routes/paymentRoutes.js
+
 const express = require('express');
-const router = express.Router();
-const paymentController = require('../controllers/paymentControllers.js');
+const paymentRouter = express.Router();
+const  createCheckoutSession  = require('../controllers/paymentController.js');
 
-// Create a payment (after checkout)
-router.post('/create', paymentController.createPayment);
+const userAuth = require("../middlewares/userAuth.js");
 
-// Get payment details by order ID
-router.get('/:orderId', paymentController.getPaymentDetails);
+paymentRouter.post('/create-checkout-session',userAuth, createCheckoutSession);
 
-// Update payment status (e.g., for refunds)
-router.put('/update-status', paymentController.updatePaymentStatus);
-
-module.exports = router;
+module.exports = paymentRouter;

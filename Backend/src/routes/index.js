@@ -10,6 +10,7 @@ const reviewRouter = require('./reviewRoutes.js');
 const orderRouter = require('./orderRoutes.js'); 
 const deliveryInfoRouter = require('./deliveryInfoRoutes.js'); 
 const couponRouter = require('./couponRoutes.js'); 
+const paymentRouter = require('./couponRoutes.js'); 
 
 apiRouter.use('/user',userRouter);
 apiRouter.use('/restaurantOwner',restaurantOwnerRouter);
@@ -20,6 +21,8 @@ apiRouter.use('/review',reviewRouter);
 apiRouter.use('/order',orderRouter);
 apiRouter.use('/deliveryInfo',deliveryInfoRouter);
 apiRouter.use('/coupon',couponRouter);
+
+apiRouter.use('/payment',paymentRouter);
 
 
 

@@ -23,6 +23,29 @@ const Cart = () => {
     setFinalTotal(total - discount); // Subtract discount when cart updates
   }, [cart, discount]); // Recalculate total when cart or discount changes
 
+
+  const makePayment = async () => {
+    try {
+        const stripe = await loadStripe(import.meta.env.VITE_STRIPE_Publishable_key);
+
+        const session = await axiosInstance({
+            url: "/payment/create-checkout-session",
+            method: "POST",
+            data: { products: cartDetails?.courses },
+        });
+
+        console.log(session, "=======session");
+        const result = stripe.redirectToCheckout({
+            sessionId: session.data.sessionId,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+
+
+
   useEffect(() => {
     dispatch(fetchCart());
   }, [dispatch]);

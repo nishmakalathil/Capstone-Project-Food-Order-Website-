@@ -10,7 +10,6 @@ function CreateRestaurantForm() {
     delivery_hours: '',
     delivery_areas: '',
     average_delivery_time: '',
-    ratings: '',
   });
   const [image, setImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +39,6 @@ function CreateRestaurantForm() {
     formDataToSend.append('delivery_hours', formData.delivery_hours);
     formDataToSend.append('delivery_areas', formData.delivery_areas);
     formDataToSend.append('average_delivery_time', formData.average_delivery_time);
-    formDataToSend.append('ratings', formData.ratings);
     formDataToSend.append('image', image);
 
     try {
@@ -134,21 +132,6 @@ function CreateRestaurantForm() {
             value={formData.average_delivery_time}
             onChange={handleInputChange}
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700">Ratings</label>
-          <input
-            type="number"
-            name="ratings"
-            value={formData.ratings}
-            onChange={handleInputChange}
-            required
-            min="1"
-            max="5"
-            step="0.1"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

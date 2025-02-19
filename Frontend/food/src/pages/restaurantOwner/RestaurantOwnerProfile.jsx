@@ -47,7 +47,7 @@ function RestaurantOwnerProfile() {
 
   const handleEditProfile = () => navigate("/restaurantOwner/update");
 
-  const handleCreateRestaurant = () => navigate("/restaurants/create");
+  const handleCreateRestaurant = () => navigate("/restaurantOwner/create-restaurant");
 
   const handleLogout = async () => {
     try {
