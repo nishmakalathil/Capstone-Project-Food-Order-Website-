@@ -10,7 +10,6 @@ function RestaurantOwnerProfile() {
   const [ownerId, setOwnerId] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch profile and ownerId
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -26,17 +25,12 @@ function RestaurantOwnerProfile() {
     fetchProfile();
   }, []);
 
-  // Fetch restaurants for the owner
   useEffect(() => {
     if (ownerId) {
       const fetchRestaurants = async () => {
         try {
           const response = await axiosInstance.get(`/restaurants/owner/${ownerId}`);
-          if (response.data.msg === "No restaurants found for this owner") {
-            setRestaurants([]);
-          } else {
-            setRestaurants(response.data);
-          }
+          setRestaurants(response.data.msg === "No restaurants found for this owner" ? [] : response.data);
         } catch (error) {
           setError("Error fetching restaurants");
         }
@@ -46,9 +40,8 @@ function RestaurantOwnerProfile() {
   }, [ownerId]);
 
   const handleEditProfile = () => navigate("/restaurantOwner/update");
-
   const handleCreateRestaurant = () => navigate("/restaurantOwner/create-restaurant");
-
+  const handleManageMenuItems = () => navigate("/restaurantOwner/menu-items-page");
   const handleLogout = async () => {
     try {
       const response = await axiosInstance.post("/restaurantOwner/logout");
@@ -68,7 +61,6 @@ function RestaurantOwnerProfile() {
           Restaurant Owner Profile
         </h2>
 
-        {/* Profile Information */}
         <div className="flex items-center space-x-8 mb-8">
           <img
             src={profile.profilePic || "/path/to/default-image.jpg"}
@@ -77,66 +69,42 @@ function RestaurantOwnerProfile() {
             onError={(e) => (e.target.src = "/path/to/default-image.jpg")}
           />
           <div>
-            <h3 className="text-2xl font-semibold text-gray-800">
-              {profile.name}
-            </h3>
+            <h3 className="text-2xl font-semibold text-gray-800">{profile.name}</h3>
             <p className="text-gray-600">📧 {profile.email}</p>
           </div>
         </div>
 
-        {/* Additional Info */}
         <div className="space-y-4">
-          <div>
-            <p className="text-lg text-gray-700">
-              <strong>Address:</strong> {profile.address}
-            </p>
-          </div>
-          <div>
-            <p className="text-lg text-gray-700">
-              <strong>Phone:</strong> {profile.phoneNumber}
-            </p>
-          </div>
+          <p className="text-lg text-gray-700"><strong>Address:</strong> {profile.address}</p>
+          <p className="text-lg text-gray-700"><strong>Phone:</strong> {profile.phoneNumber}</p>
 
-          {/* Restaurants Section */}
-          <div>
-            <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-              Restaurants Owned by {profile.name}
-            </h3>
-            <ul className="space-y-2">
-              {restaurants.length > 0 ? (
-                restaurants.map((restaurant) => (
-                  <li
-                    key={restaurant._id}
-                    className="text-lg text-gray-700 bg-gray-100 p-3 rounded-lg"
-                  >
-                    🍽️ {restaurant.name}
-                  </li>
-                ))
-              ) : (
-                <li className="text-lg text-gray-500">No restaurants found.</li>
-              )}
-            </ul>
-          </div>
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
+            Restaurants Owned by {profile.name}
+          </h3>
+          <ul className="space-y-2">
+            {restaurants.length > 0 ? (
+              restaurants.map((restaurant) => (
+                <li key={restaurant._id} className="text-lg text-gray-700 bg-gray-100 p-3 rounded-lg">
+                  🍽️ {restaurant.name}
+                </li>
+              ))
+            ) : (
+              <li className="text-lg text-gray-500">No restaurants found.</li>
+            )}
+          </ul>
         </div>
 
-        {/* Actions */}
         <div className="flex justify-center space-x-6 mt-8">
-          <button
-            onClick={handleEditProfile}
-            className="bg-blue-500 text-white text-lg py-3 px-8 rounded transition duration-300"
-          >
+          <button onClick={handleEditProfile} className="bg-blue-500 text-white text-lg py-3 px-8 rounded transition duration-300">
             Edit Profile
           </button>
-          <button
-            onClick={handleCreateRestaurant}
-            className="bg-green-500 text-white text-lg py-3 px-8 rounded transition duration-300"
-          >
+          <button onClick={handleCreateRestaurant} className="bg-green-500 text-white text-lg py-3 px-8 rounded transition duration-300">
             Create Restaurant
           </button>
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white text-lg py-3 px-8 rounded transition duration-300"
-          >
+          <button onClick={handleManageMenuItems} className="bg-purple-500 text-white text-lg py-3 px-8 rounded transition duration-300">
+            Manage Menu Items
+          </button>
+          <button onClick={handleLogout} className="bg-red-500 text-white text-lg py-3 px-8 rounded transition duration-300">
             Logout
           </button>
         </div>

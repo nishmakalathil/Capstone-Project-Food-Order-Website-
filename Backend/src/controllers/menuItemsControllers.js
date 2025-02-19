@@ -200,6 +200,46 @@ const searchMenuItems = async (req, res) => {
 
 
 
+
+
+
+// Controller to fetch menu items by ownerId
+const getMenuItemsByOwner = async (req, res) => {
+  const { ownerId } = req.params;
+
+  try {
+    // Fetch menu items from the database where ownerId matches
+    const menuItems = await MenuItem.find({ owner: ownerId });
+
+    if (!menuItems) {
+      return res.status(404).json({ message: 'No menu items found for this owner.' });
+    }
+
+    // Send the fetched menu items as a JSON response
+    res.status(200).json(menuItems);
+  } catch (error) {
+    // Handle any errors that occur during the fetch
+    console.error('Error fetching menu items:', error);
+    res.status(500).json({ message: 'Server error while fetching menu items.' });
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = {
     createMenuItems,
     getAllMenuItems,
@@ -207,5 +247,5 @@ module.exports = {
     getMenuItemDetails,
     updateMenuItem,
     deleteMenuItem,
-    searchMenuItems 
+    searchMenuItems ,getMenuItemsByOwner
 };

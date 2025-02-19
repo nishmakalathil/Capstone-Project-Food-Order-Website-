@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from '../../config/axiosInstances';  // Importing the Axios instance
-
 function CreateMenuItemsForm() {
   const [formData, setFormData] = useState({
     name: '',
@@ -17,19 +16,17 @@ function CreateMenuItemsForm() {
   const [success, setSuccess] = useState('');
   const [ownerId, setOwnerId] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
-
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axiosInstance.get("/restaurantOwner/profile");
-        setOwnerId(response.data.data._id); 
+        setOwnerId(response.data.data._id);
       } catch (err) {
         setError("Error fetching profile");
       }
     };
     fetchProfile();
   }, []);
-
   useEffect(() => {
     if (ownerId) {
       const fetchRestaurants = async () => {
@@ -47,7 +44,6 @@ function CreateMenuItemsForm() {
       fetchRestaurants();
     }
   }, [ownerId]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -55,14 +51,12 @@ function CreateMenuItemsForm() {
       [name]: value,
     });
   };
-
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
     const formDataToSend = new FormData();
     formDataToSend.append('name', formData.name);
     formDataToSend.append('description', formData.description);
@@ -72,7 +66,6 @@ function CreateMenuItemsForm() {
     formDataToSend.append('ingredients', formData.ingredients);
     formDataToSend.append('restaurant_id', formData.restaurant_id);
     formDataToSend.append('image', image); // Append the selected image file
-  
     try {
       const response = await axiosInstance.post('/menu-items/create', formDataToSend, {
         headers: {
@@ -86,15 +79,11 @@ function CreateMenuItemsForm() {
       setIsSubmitting(false);
     }
   };
-  
-
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h2 className="font-bold text-3xl text-center text-gray-800 mb-6">Create Menu Item</h2>
-      
       {success && <div className="text-green-600 mb-4">{success}</div>}
       {error && <div className="text-red-600 mb-4">{error}</div>}
-      
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block font-semibold text-gray-700">Restaurant</label>
@@ -117,7 +106,6 @@ function CreateMenuItemsForm() {
             )}
           </select>
         </div>
-
         <div>
           <label className="block font-semibold text-gray-700">Name</label>
           <input
@@ -129,7 +117,6 @@ function CreateMenuItemsForm() {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
         <div>
           <label className="block font-semibold text-gray-700">Description</label>
           <textarea
@@ -140,7 +127,6 @@ function CreateMenuItemsForm() {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
         <div>
           <label className="block font-semibold text-gray-700">Price</label>
           <input
@@ -152,7 +138,6 @@ function CreateMenuItemsForm() {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
         <div>
           <label className="block font-semibold text-gray-700">Category</label>
           <input
@@ -164,7 +149,6 @@ function CreateMenuItemsForm() {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
         <div>
           <label className="block font-semibold text-gray-700">Is Available</label>
           <input
@@ -175,7 +159,6 @@ function CreateMenuItemsForm() {
             className="h-5 w-5"
           />
         </div>
-
         <div>
           <label className="block font-semibold text-gray-700">Ingredients</label>
           <textarea
@@ -186,7 +169,6 @@ function CreateMenuItemsForm() {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
         <div>
           <label className="block font-semibold text-gray-700">Image</label>
           <input
@@ -198,7 +180,6 @@ function CreateMenuItemsForm() {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
         <div className="mt-4">
           <button
             type="submit"
@@ -212,5 +193,4 @@ function CreateMenuItemsForm() {
     </div>
   );
 }
-
 export default CreateMenuItemsForm;

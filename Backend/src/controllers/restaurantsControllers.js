@@ -6,10 +6,10 @@ const multer = require('multer');
 const createRestaurant = async (req, res) => {
   try {
     // The owner_id is now automatically attached to req.owner_id by the middleware
-    const { name, address, phone_number, delivery_hours, delivery_areas, average_delivery_time, owner_id ,ratings} = req.body;
+    const { name, address, phone_number, delivery_hours, delivery_areas, average_delivery_time, owner_id } = req.body;
     //const owner_id = req.owner_id; // Get owner_id from middleware (extracted from JWT)
     // Validate required fields
-    if (!name || !address || !phone_number ||!ratings || !delivery_hours || !delivery_areas || !average_delivery_time || !owner_id) {
+    if (!name || !address || !phone_number || !delivery_hours || !delivery_areas || !average_delivery_time || !owner_id) {
       return res.status(400).json({ error: 'Restaturant - All fields are required' });
     }
     // Ensure file is present in the request

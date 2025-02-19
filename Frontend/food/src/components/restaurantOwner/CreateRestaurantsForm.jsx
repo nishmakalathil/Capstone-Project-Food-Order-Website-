@@ -1,167 +1,114 @@
-import React, { useState } from 'react';
-import axiosInstance from '../../config/axiosInstances'; // Import your configured Axios instance
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import axiosInstance from "../../config/axiosInstances";
 
-function CreateRestaurantForm() {
+const CreateRestaurantForm = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    address: '',
-    phone_number: '',
-    delivery_hours: '',
-    delivery_areas: '',
-    average_delivery_time: '',
+    name: "",
+    address: "",
+    phone_number: "",
+    delivery_hours: "",
+    delivery_areas: "",
+    average_delivery_time: "",
   });
   const [image, setImage] = useState(null);
+  const [ownerId, setOwnerId] = useState(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+  // Fetch the owner's profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await axiosInstance.get("/restaurantOwner/profile");
+        setOwnerId(response.data.data._id);
+      } catch (err) {
+        setError("Error fetching profile");
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
+  const handleFileChange = (e) => {
     setImage(e.target.files[0]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
     setIsSubmitting(true);
 
+    // Validate required fields
+    if (!formData.name || !formData.address || !formData.phone_number || !formData.delivery_hours || !formData.delivery_areas || !formData.average_delivery_time || !ownerId) {
+      setError("All fields are required.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!image) {
+      setError("Image is required.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Prepare FormData
     const formDataToSend = new FormData();
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('address', formData.address);
-    formDataToSend.append('phone_number', formData.phone_number);
-    formDataToSend.append('delivery_hours', formData.delivery_hours);
-    formDataToSend.append('delivery_areas', formData.delivery_areas);
-    formDataToSend.append('average_delivery_time', formData.average_delivery_time);
-    formDataToSend.append('image', image);
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("address", formData.address);
+    formDataToSend.append("phone_number", formData.phone_number);
+    formDataToSend.append("delivery_hours", formData.delivery_hours);
+    formDataToSend.append("delivery_areas", formData.delivery_areas);
+    formDataToSend.append("average_delivery_time", formData.average_delivery_time);
+    formDataToSend.append("owner_id", ownerId); // Attach owner_id from profile
+    formDataToSend.append("image", image);
 
     try {
-      const response = await axiosInstance.post('/restaurants/create', formDataToSend, {
+      const response = await axiosInstance.post("/restaurants/create", formDataToSend, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       });
-      if (response.status === 201) {
-        alert('Restaurant created successfully');
-        navigate('/restaurantOwner/profile'); // Navigate back to the profile page
-      }
-    } catch (error) {
-      setError('Error creating restaurant');
+      setSuccess("Restaurant created successfully!");
+      setFormData({
+        name: "",
+        address: "",
+        phone_number: "",
+        delivery_hours: "",
+        delivery_areas: "",
+        average_delivery_time: "",
+      });
+      setImage(null);
+    } catch (err) {
+      setError(err.response?.data?.error || "Error creating restaurant");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="font-bold text-3xl text-center text-gray-800 mb-6">Create Restaurant</h2>
-
-      {error && <div className="text-red-600 mb-4">{error}</div>}
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block font-semibold text-gray-700">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700">Address</label>
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700">Phone Number</label>
-          <input
-            type="text"
-            name="phone_number"
-            value={formData.phone_number}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700">Delivery Hours</label>
-          <input
-            type="text"
-            name="delivery_hours"
-            value={formData.delivery_hours}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700">Delivery Areas</label>
-          <input
-            type="text"
-            name="delivery_areas"
-            value={formData.delivery_areas}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700">Average Delivery Time</label>
-          <input
-            type="text"
-            name="average_delivery_time"
-            value={formData.average_delivery_time}
-            onChange={handleInputChange}
-            required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold text-gray-700">Image</label>
-          <input
-            type="file"
-            name="image"
-            onChange={handleImageChange}
-            accept="image/*"
-            required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="mt-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`w-full py-3 px-6 rounded-lg text-white font-semibold bg-blue-500 hover:bg-blue-600 transition duration-300 focus:outline-none ${
-              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            {isSubmitting ? 'Creating...' : 'Create Restaurant'}
-          </button>
-        </div>
+    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+      <h2 className="text-xl font-bold mb-4">Create Restaurant</h2>
+      {error && <p className="text-red-500">{error}</p>}
+      {success && <p className="text-green-500">{success}</p>}
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="name" placeholder="Restaurant Name" value={formData.name} onChange={handleChange} className="w-full p-2 border rounded mb-2" required />
+        <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} className="w-full p-2 border rounded mb-2" required />
+        <input type="text" name="phone_number" placeholder="Phone Number" value={formData.phone_number} onChange={handleChange} className="w-full p-2 border rounded mb-2" required />
+        <input type="text" name="delivery_hours" placeholder="Delivery Hours" value={formData.delivery_hours} onChange={handleChange} className="w-full p-2 border rounded mb-2" required />
+        <input type="text" name="delivery_areas" placeholder="Delivery Areas" value={formData.delivery_areas} onChange={handleChange} className="w-full p-2 border rounded mb-2" required />
+        <input type="text" name="average_delivery_time" placeholder="Average Delivery Time" value={formData.average_delivery_time} onChange={handleChange} className="w-full p-2 border rounded mb-2" required />
+        <input type="file" name="image" onChange={handleFileChange} className="w-full p-2 border rounded mb-2" required />
+        <button type="submit" className={`w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`} disabled={isSubmitting}>
+          {isSubmitting ? "Creating..." : "Create Restaurant"}
+        </button>
       </form>
     </div>
   );
-}
+};
 
 export default CreateRestaurantForm;
