@@ -22,6 +22,7 @@ import RestaurantOwnerProfile from "../pages/restaurantOwner/RestaurantOwnerProf
 import RestaurantOwnerEditProfile from "../pages/restaurantOwner/RestaurantOwnerEditProfile";
 import CreateRestaurantsPage from "../pages/restaurantOwner/CreateRestaurantsPage";
 import MenuItemsPage from"../pages/restaurantOwner/MenuItemsPage";
+import EditMenuItemPage from "../pages/restaurantOwner/EditMenuItemPage";
 
 const router = createBrowserRouter([
   {
@@ -64,6 +65,7 @@ const router = createBrowserRouter([
           { path: "create-menu-items", element: <CreateMenuItemsPage /> },
           { path: "create-restaurant", element: <CreateRestaurantsPage /> },
           { path: "menu-items/:restaurantId", element: <MenuItemsPage /> },
+          { path: "edit-menu-item/:menuitemId", element: <EditMenuItemPage/> },
         ],
       }
       

@@ -80,6 +80,7 @@ const Cart = () => {
 
       setDiscount(data.discount);
       setFinalTotal(data.finalAmount);
+      localStorage.setItem('couponDetails', JSON.stringify(data));
     } catch (err) {
       setError(err.message);
     }
@@ -166,9 +167,13 @@ const Cart = () => {
               {discount > 0 && <p style={{ color: "green" }}>Discount Applied: -${discount}</p>}
               {carterror && <p style={{ color: "red" }}>{carterror}</p>}
 
-              <h3 className="font-semibold text-xl">Total after discount: ${finalTotal}</h3>
+              
 
             </div>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="font-semibold text-xl">Total after discount: ${finalTotal}</h3>
           </div>
 
           <div className="mt-6 flex justify-between">

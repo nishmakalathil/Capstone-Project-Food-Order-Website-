@@ -2,16 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosInstances';
 import { useNavigate, useParams } from 'react-router-dom';
-
 function MenuItemsPage() {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { restaurantId } = useParams();
-
   useEffect(() => {
-
     const fetchMenuItems = async () => {
       try {
         const response = await axiosInstance.get(`/menu-items/menu-items-restaurant/${restaurantId}`, {
@@ -27,26 +24,22 @@ function MenuItemsPage() {
         setLoading(false);
       }
     };
-
     fetchMenuItems();
   }, [restaurantId]);
-
   const handleEdit = (id) => {
-    navigate(`/edit-menu-item/${id}`);
+    console.log(id);
+    navigate(`/restaurantOwner/edit-menu-item/${id}`);
   };
-
   const handleDelete = async (id) => {
     try {
-      await axiosInstance.delete(`/menu-items/${id}`, { withCredentials: true });
+      await axiosInstance.delete(`/menu-items/delete/${id}`, { withCredentials: true });
       setMenuItems(menuItems.filter((item) => item._id !== id));
     } catch (err) {
       setError('Error deleting menu item');
     }
   };
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-600">{error}</div>;
-
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h2 className="font-bold text-3xl text-center text-gray-800 mb-6">Menu Items</h2>
@@ -86,5 +79,4 @@ function MenuItemsPage() {
     </div>
   );
 }
-
 export default MenuItemsPage;

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 const CreateOrder = () => {
   const [cartItems, setCartItems] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [couponDetails, setCouponDetails] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
 
   const dispatch = useDispatch();
@@ -29,9 +30,12 @@ const CreateOrder = () => {
     // Set deliveryCharges to a fixed value of 50
     const deliveryCharges = 50;
 
+    const couponDetails = JSON.parse(localStorage.getItem('couponDetails'));
+    setCouponDetails(couponDetails);
+
     // Calculate total amount (cart totalPrice + fixed deliveryCharges of 50)
     if (cart) {
-      setTotalAmount(cart.totalPrice + deliveryCharges);
+      setTotalAmount(cart.totalPrice + deliveryCharges - couponDetails.discount);
     }
   }, [cart]);
 
@@ -95,6 +99,7 @@ const CreateOrder = () => {
             <div className="mt-4">
               <p><strong>Total Price: ${cart.totalPrice}</strong></p>
               <p><strong>Delivery Charges: $50</strong></p>
+              <p><strong>Discount coupon ${couponDetails.couponCode} applied : -(${couponDetails.discount})</strong></p>
               <p><strong>Total Amount: ${totalAmount}</strong></p>
             </div>
           </div>

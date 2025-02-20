@@ -48,6 +48,7 @@ const validateCoupon = async (req, res) => {
       message: "Coupon applied successfully",
       discount: discountValue,
       finalAmount: finalAmount > 0 ? finalAmount : 0,
+      couponCode: code
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

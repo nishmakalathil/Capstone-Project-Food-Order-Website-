@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from '../../config/axiosInstances';  // Importing the Axios instance
+import axiosInstance from '../../config/axiosInstances';
+
 function CreateMenuItemsForm() {
   const [formData, setFormData] = useState({
     name: '',
@@ -8,19 +9,20 @@ function CreateMenuItemsForm() {
     category: '',
     isAvailable: true,
     ingredients: '',
-    restaurant_id: '', // Ensure this is dynamically set or passed as a prop
+    restaurant_id: '', 
   });
+
   const [image, setImage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [ownerId, setOwnerId] = useState(null);
   const [restaurants, setRestaurants] = useState([]);
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axiosInstance.get("/restaurantOwner/profile");
-        console.log(response);
         setOwnerId(response.data.data._id);
       } catch (err) {
         setError("Error fetching profile");
@@ -28,6 +30,7 @@ function CreateMenuItemsForm() {
     };
     fetchProfile();
   }, []);
+
   useEffect(() => {
     if (ownerId) {
       const fetchRestaurants = async () => {
@@ -45,6 +48,7 @@ function CreateMenuItemsForm() {
       fetchRestaurants();
     }
   }, [ownerId]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -52,12 +56,17 @@ function CreateMenuItemsForm() {
       [name]: value,
     });
   };
+
   const handleImageChange = (e) => {
     setImage(e.target.files[0]);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSuccess('');
+    setError('');
+
     const formDataToSend = new FormData();
     formDataToSend.append('name', formData.name);
     formDataToSend.append('description', formData.description);
@@ -66,20 +75,33 @@ function CreateMenuItemsForm() {
     formDataToSend.append('isAvailable', formData.isAvailable);
     formDataToSend.append('ingredients', formData.ingredients);
     formDataToSend.append('restaurant_id', formData.restaurant_id);
-    formDataToSend.append('image', image); // Append the selected image file
+    formDataToSend.append('image', image);
+
     try {
-      const response = await axiosInstance.post('/menu-items/create', formDataToSend, {
+      await axiosInstance.post('/menu-items/create', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      // Handle success
+
+      setSuccess("Menu item is created successfully!");
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        isAvailable: true,
+        ingredients: '',
+        restaurant_id: '',
+      });
+      setImage(null);
     } catch (error) {
-      // Handle error
+      setError("Error creating menu item");
     } finally {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h2 className="font-bold text-3xl text-center text-gray-800 mb-6">Create Menu Item</h2>
@@ -194,4 +216,5 @@ function CreateMenuItemsForm() {
     </div>
   );
 }
+
 export default CreateMenuItemsForm;
