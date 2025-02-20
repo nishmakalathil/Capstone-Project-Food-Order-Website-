@@ -147,8 +147,6 @@ const getRestaurantsByOwner = async (req, res) => {
     // Fetch restaurants by owner_id
     const restaurants = await Restaurants.find({ owner_id: ownerId });
 
-    console.log(restaurants);
-
     if (!restaurants || restaurants.length === 0) {
       return res.status(200).json({ message: 'No restaurants found for this owner' });
     }

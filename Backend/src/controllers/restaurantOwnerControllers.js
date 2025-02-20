@@ -65,7 +65,7 @@ const restaurantOwnerLogin = async (req, res, next) => {
             return res.status(404).json({ message: 'Restaurant owner not found' });
         }
 
-        console.log(existingOwner);
+        //console.log(existingOwner);
 
       
         const passwordMatch = await bcrypt.compare(password, existingOwner.password);
@@ -156,7 +156,7 @@ const updateRestaurantOwnerProfile = async (req, res) => {
 
         
         const updatedData = await restaurantOwner.findByIdAndUpdate(restaurantOwnerId, updateData, { new: true, runValidators: true }).select("-password");
-        console.log(updatedData);
+        //console.log(updatedData);
 
         roleType = "Restaurant Owner";
         if(restaurantOwnerData.role === "admin"){

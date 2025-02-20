@@ -56,8 +56,8 @@ const getSingleMenuItem = async (req, res) => {
     try {
         const { id }  = req.params;
 
-        console.log('In single menu');
-        console.log("Received Single Menu Item ID:", id); // Log the received id
+        //console.log('In single menu');
+        //console.log("Received Single Menu Item ID:", id); // Log the received id
 
         // Validate ObjectId
         if (!validateObjectId(id)) {
@@ -198,48 +198,41 @@ const searchMenuItems = async (req, res) => {
     }
 };
 
+// Controller to fetch menu items for the authenticated owner
+const getMenuItemsByRestaurant = async (req, res) => {
+    // Ensure you're correctly accessing the owner's ID
+    const ownerId = req.restaurantOwner.id; // or req.user.id depending on your authentication setup
 
+    console.log("Owner ID");
+    console.log(ownerId);
 
+    const { restaurantID } = req.params;
 
-
-
-// Controller to fetch menu items by ownerId
-const getMenuItemsByOwner = async (req, res) => {
-  const { ownerId } = req.params;
-
-  try {
-    // Fetch menu items from the database where ownerId matches
-    const menuItems = await MenuItem.find({ owner: ownerId });
-
-    if (!menuItems) {
-      return res.status(404).json({ message: 'No menu items found for this owner.' });
+    console.log("restaurantID");
+    console.log(restaurantID);
+  
+    // Validate the ownerId
+    if (!mongoose.Types.ObjectId.isValid(ownerId)) {
+      return res.status(400).json({ message: 'Invalid ownerId format' });
     }
-
-    // Send the fetched menu items as a JSON response
-    res.status(200).json(menuItems);
-  } catch (error) {
-    // Handle any errors that occur during the fetch
-    console.error('Error fetching menu items:', error);
-    res.status(500).json({ message: 'Server error while fetching menu items.' });
-  }
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
+    try {
+      // Fetch menu items by owner_id
+      const menuItems = await MenuItem.find({ restaurant_id: restaurantID });
+  
+      //console.log(menuItems);
+  
+      if (!menuItems || menuItems.length === 0) {
+        return res.status(200).json({ message: 'No menu items found for this owner' });
+      }
+  
+      res.status(200).json(menuItems);
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+      res.status(500).json({ message: 'Server error while fetching menu items.' });
+    }
+  };
+ 
 module.exports = {
     createMenuItems,
     getAllMenuItems,
@@ -247,5 +240,6 @@ module.exports = {
     getMenuItemDetails,
     updateMenuItem,
     deleteMenuItem,
-    searchMenuItems ,getMenuItemsByOwner
+    searchMenuItems ,
+    getMenuItemsByRestaurant
 };

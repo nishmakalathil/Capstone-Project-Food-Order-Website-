@@ -20,6 +20,7 @@ function CreateMenuItemsForm() {
     const fetchProfile = async () => {
       try {
         const response = await axiosInstance.get("/restaurantOwner/profile");
+        console.log(response);
         setOwnerId(response.data.data._id);
       } catch (err) {
         setError("Error fetching profile");

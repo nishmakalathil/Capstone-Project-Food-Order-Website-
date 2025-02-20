@@ -63,7 +63,7 @@ const router = createBrowserRouter([
           { path: "update", element: <RestaurantOwnerEditProfile /> },
           { path: "create-menu-items", element: <CreateMenuItemsPage /> },
           { path: "create-restaurant", element: <CreateRestaurantsPage /> },
-          { path: "menu-items-page", element: <MenuItemsPage /> },
+          { path: "menu-items/:restaurantId", element: <MenuItemsPage /> },
         ],
       }
       

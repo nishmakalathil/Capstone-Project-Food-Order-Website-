@@ -41,7 +41,9 @@ function RestaurantOwnerProfile() {
 
   const handleEditProfile = () => navigate("/restaurantOwner/update");
   const handleCreateRestaurant = () => navigate("/restaurantOwner/create-restaurant");
-  const handleManageMenuItems = () => navigate("/restaurantOwner/menu-items-page");
+  const handleManageMenuItems = (restaurantId) => {
+    navigate(`/restaurantOwner/menu-items/${restaurantId}`);
+  };
   const handleLogout = async () => {
     try {
       const response = await axiosInstance.post("/restaurantOwner/logout");
@@ -86,6 +88,13 @@ function RestaurantOwnerProfile() {
               restaurants.map((restaurant) => (
                 <li key={restaurant._id} className="text-lg text-gray-700 bg-gray-100 p-3 rounded-lg">
                   🍽️ {restaurant.name}
+                  <div className="mt-4 flex justify-end space-x-2">
+                  <button 
+                  onClick={() => handleManageMenuItems(restaurant._id)} 
+                  className="bg-purple-500 text-white text-sm py-2 px-4 rounded transition duration-300">
+                    Edit Menu Items
+                  </button>
+                  </div>
                 </li>
               ))
             ) : (
@@ -101,9 +110,7 @@ function RestaurantOwnerProfile() {
           <button onClick={handleCreateRestaurant} className="bg-green-500 text-white text-lg py-3 px-8 rounded transition duration-300">
             Create Restaurant
           </button>
-          <button onClick={handleManageMenuItems} className="bg-purple-500 text-white text-lg py-3 px-8 rounded transition duration-300">
-            Manage Menu Items
-          </button>
+          
           <button onClick={handleLogout} className="bg-red-500 text-white text-lg py-3 px-8 rounded transition duration-300">
             Logout
           </button>

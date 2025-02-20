@@ -1,40 +1,35 @@
+// MenuItemsPage.jsx
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
 import axiosInstance from '../../config/axiosInstances';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function MenuItemsPage() {
   const [menuItems, setMenuItems] = useState([]);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { restaurantId } = useParams();
 
   useEffect(() => {
+
     const fetchMenuItems = async () => {
       try {
-        // Retrieve the token from local storage or your preferred storage
-        const token = localStorage.getItem('token');
-        if (!token) {
-          setError('No token found');
-          setLoading(false);
-          return;
-        }
-
-        // Decode the token to get the owner ID
-        const decodedToken = jwtDecode(token);
-        const ownerId = decodedToken.id; // Ensure 'id' matches your token's payload structure
-
-        // Fetch menu items for the owner
-        const response = await axiosInstance.get(`/menu-items/menu-item-owner/${ownerId}`);
+        const response = await axiosInstance.get(`/menu-items/menu-items-restaurant/${restaurantId}`, {
+          withCredentials: true,
+        });
+        console.log('Menu items page');
+        console.log(response);
         setMenuItems(response.data);
       } catch (err) {
+        console.error('Error fetching menu items:', err.response || err.message);
         setError('Error fetching menu items');
       } finally {
         setLoading(false);
       }
     };
+
     fetchMenuItems();
-  }, []);
+  }, [restaurantId]);
 
   const handleEdit = (id) => {
     navigate(`/edit-menu-item/${id}`);
@@ -42,7 +37,7 @@ function MenuItemsPage() {
 
   const handleDelete = async (id) => {
     try {
-      await axiosInstance.delete(`/menu-items/${id}`);
+      await axiosInstance.delete(`/menu-items/${id}`, { withCredentials: true });
       setMenuItems(menuItems.filter((item) => item._id !== id));
     } catch (err) {
       setError('Error deleting menu item');
