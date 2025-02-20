@@ -27,7 +27,15 @@ const NODE_ENV = process.env.NODE_ENV;
         await userData.save();
 
         const token = generateToken(userData._id);
-        res.cookie("token", token);
+        //res.cookie("token", token);
+
+        res.cookie("token", token, {
+            sameSite: NODE_ENV === "production" ? "None" : "Lax",
+            secure: NODE_ENV === "production",
+            httpOnly: NODE_ENV === "production",
+        });
+
+
 
         return res.json({ data: userData, message: "user account created" });
     } catch (error) {

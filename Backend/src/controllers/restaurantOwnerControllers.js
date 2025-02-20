@@ -36,7 +36,15 @@ const restaurantOwnerSignup = async (req, res, next) => {
 
         const token = generateToken(newOwner._id, "restaurantOwner");
 
-        res.cookie("token", token);
+        //res.cookie("token", token);
+
+
+        res.cookie("token", token, {
+            sameSite: NODE_ENV === "production" ? "None" : "Lax",
+            secure: NODE_ENV === "production",
+            httpOnly: NODE_ENV === "production",
+        });
+
 
         res.status(201).json({
             data: { name: newOwner.name, email: newOwner.email },
@@ -77,7 +85,17 @@ const restaurantOwnerLogin = async (req, res, next) => {
         const token = generateToken(existingOwner._id, existingOwner.role); 
 
        
-        res.cookie("token", token);
+        //res.cookie("token", token);
+
+
+
+        res.cookie("token", token, {
+            sameSite: NODE_ENV === "production" ? "None" : "Lax",
+            secure: NODE_ENV === "production",
+            httpOnly: NODE_ENV === "production",
+        });
+
+
 
        
         if (existingOwner.role === 'admin') {
@@ -176,10 +194,16 @@ const updateRestaurantOwnerProfile = async (req, res) => {
 
 // Restaurant Owner Logout Controller
 const restaurantOwnerLogout = (req, res) => {
-    try {
+    
         
-        res.clearCookie("token");
+        //res.clearCookie("token");
 
+ try {
+        res.clearCookie("token", {
+            sameSite: NODE_ENV === "production" ? "None" : "Lax",
+            secure: NODE_ENV === "production",
+            httpOnly: NODE_ENV === "production",
+        });
         
         return res.status(200).json({
             message: "Successfully logged out",
