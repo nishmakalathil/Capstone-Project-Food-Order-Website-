@@ -1,6 +1,9 @@
 const restaurantOwner = require("../Models/restaurantOwnerModel.js");
 const bcrypt = require('bcrypt');
 const  generateToken  = require('../utils/token.js');
+const NODE_ENV = process.env.NODE_ENV;
+
+
 
 
 // Restaurant Owner Signup Controller

@@ -8,6 +8,7 @@ import {
   updateQuantity,
   clearCart,
 } from "../../redux/features/cartSlice"; 
+import axiosInstance from "../../config/axiosInstances";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -24,24 +25,24 @@ const Cart = () => {
   }, [cart, discount]); // Recalculate total when cart or discount changes
 
 
-  const makePayment = async () => {
-    try {
-        const stripe = await loadStripe(import.meta.env.VITE_STRIPE_Publishable_key);
+//   const makePayment = async () => {
+//     try {
+//         const stripe = await loadStripe(import.meta.env.VITE_STRIPE_Publishable_key);
 
-        const session = await axiosInstance({
-            url: "/payment/create-checkout-session",
-            method: "POST",
-            data: { products: cartDetails?.courses },
-        });
+//         const session = await axiosInstance({
+//             url: "/payment/create-checkout-session",
+//             method: "POST",
+//             data: { products: cartDetails?.courses },
+//         });
 
-        console.log(session, "=======session");
-        const result = stripe.redirectToCheckout({
-            sessionId: session.data.sessionId,
-        });
-    } catch (error) {
-        console.log(error);
-    }
-};
+//         console.log(session, "=======session");
+//         const result = stripe.redirectToCheckout({
+//             sessionId: session.data.sessionId,
+//         });
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
 
 
 
@@ -59,32 +60,24 @@ const Cart = () => {
     dispatch(updateQuantity({ menuItemId, quantity }));
   };
 
-  
-
+  //coupon
   const handleApplyCoupon = async () => {
     try {
       setError(""); // Reset error message
-      const response = await fetch("http://localhost:3006/api/coupon/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: couponCode,
-          orderAmount: finalTotal,
-        }),
+  
+      const response = await axiosInstance.post("/coupon/validate", {
+        code: couponCode,
+        orderAmount: finalTotal,
       });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to apply coupon");
-      }
-
-      setDiscount(data.discount);
-      setFinalTotal(data.finalAmount);
-      localStorage.setItem('couponDetails', JSON.stringify(data));
+  
+      setDiscount(response.data.discount);
+      setFinalTotal(response.data.finalAmount);
+      localStorage.setItem("couponDetails", JSON.stringify(response.data));
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.error || "Failed to apply coupon");
     }
   };
+  
 
   const handleClearCart = () => {
     dispatch(clearCart());
