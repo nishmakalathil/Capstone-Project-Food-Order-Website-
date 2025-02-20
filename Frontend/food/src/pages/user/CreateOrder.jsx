@@ -5,6 +5,9 @@ import {
   } from '../../redux/features/createOrderSlice';
 import { useNavigate } from 'react-router-dom';
 
+import { loadStripe } from "@stripe/stripe-js";
+import axiosInstance from '../../config/axiosInstances';
+
 const CreateOrder = () => {
   const [cartItems, setCartItems] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -39,7 +42,7 @@ const CreateOrder = () => {
     }
   }, [cart]);
 
-  const handlePlaceOrder = () => {
+  const handleMakePayment = async () => {
     if (!selectedAddress) {
       alert('Please select a delivery address');
       return;
@@ -47,11 +50,33 @@ const CreateOrder = () => {
 
     // Here you can dispatch an action to create the order
     // For example:
+    const cartItems = JSON.parse(localStorage.getItem('cartItems'));
+
     dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
 
     //alert('Order placed successfully!');
-    navigate('/order-payment');  // Redirect to order success page after placing the order
+    //navigate('/order-payment');  // Redirect to order success page after placing the order
+    console.log(cartItems);
+
+    try {
+      const stripe = await loadStripe(import.meta.env.VITE_STRIPE_Publishable_key);
+      
+      const session = await axiosInstance.post("/payment/create-checkout-session", {
+          products: cartItems.menuItems,
+        });
+
+      console.log(session, "=======session");
+      const result = stripe.redirectToCheckout({
+          sessionId: session.data.sessionId,
+      });
+      } catch (error) {
+            console.log(error);
+      }
+
   };
+
+
+
 
   return (
     <div className="p-6">
@@ -109,9 +134,9 @@ const CreateOrder = () => {
       <div className="mt-6">
         <button
           className="px-6 py-2 bg-pink-500 text-white rounded-full"
-          onClick={handlePlaceOrder}
+          onClick={handleMakePayment}
         >
-          Place Order
+          Make Payment
         </button>
       </div>
     </div>

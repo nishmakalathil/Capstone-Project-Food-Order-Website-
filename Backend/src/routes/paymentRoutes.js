@@ -4,7 +4,7 @@
 
 const express = require('express');
 const paymentRouter = express.Router();
-const  createCheckoutSession  = require('../controllers/paymentController.js');
+const  createCheckoutSession  = require('../controllers/paymentControllers.js');
 
 const userAuth = require("../middlewares/userAuth.js");
 

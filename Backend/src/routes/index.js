@@ -10,7 +10,7 @@ const reviewRouter = require('./reviewRoutes.js');
 const orderRouter = require('./orderRoutes.js'); 
 const deliveryInfoRouter = require('./deliveryInfoRoutes.js'); 
 const couponRouter = require('./couponRoutes.js'); 
-const paymentRouter = require('./couponRoutes.js'); 
+const paymentRouter = require('./paymentRoutes.js'); 
 
 apiRouter.use('/user',userRouter);
 apiRouter.use('/restaurantOwner',restaurantOwnerRouter);

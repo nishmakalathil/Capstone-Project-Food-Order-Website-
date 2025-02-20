@@ -35,7 +35,8 @@ const addToCart = async (req, res) => {
             menuItemId,
             quantity,
             price,
-            image
+            image,
+            name,
           },
         ],
         totalPrice: price * quantity,
@@ -55,6 +56,7 @@ const addToCart = async (req, res) => {
           quantity,
           price,
           image,
+          name,
         });
       }
 

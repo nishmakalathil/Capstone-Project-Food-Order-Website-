@@ -23,6 +23,8 @@ import RestaurantOwnerEditProfile from "../pages/restaurantOwner/RestaurantOwner
 import CreateRestaurantsPage from "../pages/restaurantOwner/CreateRestaurantsPage";
 import MenuItemsPage from"../pages/restaurantOwner/MenuItemsPage";
 import EditMenuItemPage from "../pages/restaurantOwner/EditMenuItemPage";
+import PaymentCancelPage from "../pages/user/PaymentCancelPage";
+import PaymentSuccessPage from "../pages/user/PaymentSuccessPage";
 
 const router = createBrowserRouter([
   {
@@ -46,6 +48,8 @@ const router = createBrowserRouter([
           { path: "deliveryInfo", element: <DeliveryInformation /> },
           { path: "search", element: <SearchResults /> },
           { path: "create-order", element: <CreateOrder /> },
+          { path: "payment-success", element: <PaymentSuccessPage /> },
+          { path: "payment-cancel", element: <PaymentCancelPage /> },
         ],
       },
     ],
