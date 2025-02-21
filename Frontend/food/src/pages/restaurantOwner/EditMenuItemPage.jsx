@@ -18,7 +18,7 @@ function EditMenuItemPage() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Success message state
+  const [successMessage, setSuccessMessage] = useState('');
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ function EditMenuItemPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMessage(''); // Reset success message before submission
+    setSuccessMessage('');
 
     try {
       const formData = new FormData();
@@ -76,7 +76,7 @@ function EditMenuItemPage() {
 
       setSuccessMessage('Menu item updated successfully! 🎉');
 
-      // Optionally, navigate back after a delay
+      // Navigate back after a short delay
       setTimeout(() => {
         navigate(`/restaurantOwner/menu-items/${menuItem.restaurant_id}`);
       }, 2000);
@@ -163,10 +163,14 @@ function EditMenuItemPage() {
           {imagePreview && <img src={imagePreview} alt="Preview" className="mt-2 w-40 h-40 object-cover rounded-lg" />}
         </div>
         <div className="flex gap-4">
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+          <button type="submit" className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition">
             Save Changes
           </button>
-          <button type="button" onClick={() => navigate(`/menu-items/${menuItem.restaurant_id}`)} className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600">
+          <button
+            type="button"
+            onClick={() => navigate(`/menu-items/${menuItem.restaurant_id}`)}
+            className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition"
+          >
             Cancel
           </button>
         </div>

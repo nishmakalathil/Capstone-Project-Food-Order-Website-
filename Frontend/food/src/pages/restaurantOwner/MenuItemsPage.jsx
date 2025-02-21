@@ -1,13 +1,14 @@
-// MenuItemsPage.jsx
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../config/axiosInstances';
 import { useNavigate, useParams } from 'react-router-dom';
+
 function MenuItemsPage() {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { restaurantId } = useParams();
+
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
@@ -26,10 +27,12 @@ function MenuItemsPage() {
     };
     fetchMenuItems();
   }, [restaurantId]);
+
   const handleEdit = (id) => {
     console.log(id);
     navigate(`/restaurantOwner/edit-menu-item/${id}`);
   };
+
   const handleDelete = async (id) => {
     try {
       await axiosInstance.delete(`/menu-items/delete/${id}`, { withCredentials: true });
@@ -38,11 +41,14 @@ function MenuItemsPage() {
       setError('Error deleting menu item');
     }
   };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="text-red-600">{error}</div>;
+
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h2 className="font-bold text-3xl text-center text-gray-800 mb-6">Menu Items</h2>
+
       {menuItems.length === 0 ? (
         <p className="text-gray-600 text-center">No menu items found.</p>
       ) : (
@@ -58,16 +64,17 @@ function MenuItemsPage() {
               <h3 className="font-semibold text-lg">{item.name}</h3>
               <p className="text-gray-600">{item.description}</p>
               <p className="text-gray-700 font-bold">${item.price}</p>
-              <div className="flex gap-4 mt-2">
+
+              <div className="flex gap-4 mt-3">
                 <button
                   onClick={() => handleEdit(item._id)}
-                  className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                  className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(item._id)}
-                  className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                  className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition"
                 >
                   Delete
                 </button>
@@ -79,4 +86,5 @@ function MenuItemsPage() {
     </div>
   );
 }
+
 export default MenuItemsPage;

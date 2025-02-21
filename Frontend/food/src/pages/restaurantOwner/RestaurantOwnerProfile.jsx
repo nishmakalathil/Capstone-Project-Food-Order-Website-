@@ -67,7 +67,7 @@ function RestaurantOwnerProfile() {
           <img
             src={profile.profilePic || "/path/to/default-image.jpg"}
             alt="Profile"
-            className="w-32 h-32 rounded-full object-cover border-4 border-blue-500"
+            className="w-32 h-32 rounded-full object-cover border-4 border-pink-500"
             onError={(e) => (e.target.src = "/path/to/default-image.jpg")}
           />
           <div>
@@ -89,11 +89,11 @@ function RestaurantOwnerProfile() {
                 <li key={restaurant._id} className="text-lg text-gray-700 bg-gray-100 p-3 rounded-lg">
                   🍽️ {restaurant.name}
                   <div className="mt-4 flex justify-end space-x-2">
-                  <button 
-                  onClick={() => handleManageMenuItems(restaurant._id)} 
-                  className="bg-purple-500 text-white text-sm py-2 px-4 rounded transition duration-300">
-                    Edit Menu Items
-                  </button>
+                    <button 
+                      onClick={() => handleManageMenuItems(restaurant._id)} 
+                      className="bg-pink-500 text-white text-sm py-2 px-4 rounded-full hover:bg-pink-600 transition">
+                      Edit Menu Items
+                    </button>
                   </div>
                 </li>
               ))
@@ -104,14 +104,19 @@ function RestaurantOwnerProfile() {
         </div>
 
         <div className="flex justify-center space-x-6 mt-8">
-          <button onClick={handleEditProfile} className="bg-blue-500 text-white text-lg py-3 px-8 rounded transition duration-300">
+          <button 
+            onClick={handleEditProfile} 
+            className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
             Edit Profile
           </button>
-          <button onClick={handleCreateRestaurant} className="bg-green-500 text-white text-lg py-3 px-8 rounded transition duration-300">
+          <button 
+            onClick={handleCreateRestaurant} 
+            className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
             Create Restaurant
           </button>
-          
-          <button onClick={handleLogout} className="bg-red-500 text-white text-lg py-3 px-8 rounded transition duration-300">
+          <button 
+            onClick={handleLogout} 
+            className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
             Logout
           </button>
         </div>

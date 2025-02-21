@@ -115,7 +115,7 @@ function CreateMenuItemsForm() {
             value={formData.restaurant_id}
             onChange={handleInputChange}
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           >
             <option value="">Select a restaurant</option>
             {restaurants.length > 0 ? (
@@ -137,7 +137,7 @@ function CreateMenuItemsForm() {
             value={formData.name}
             onChange={handleInputChange}
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
         <div>
@@ -147,7 +147,7 @@ function CreateMenuItemsForm() {
             value={formData.description}
             onChange={handleInputChange}
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
         <div>
@@ -158,7 +158,7 @@ function CreateMenuItemsForm() {
             value={formData.price}
             onChange={handleInputChange}
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
         <div>
@@ -169,7 +169,7 @@ function CreateMenuItemsForm() {
             value={formData.category}
             onChange={handleInputChange}
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
         <div>
@@ -189,7 +189,7 @@ function CreateMenuItemsForm() {
             value={formData.ingredients}
             onChange={handleInputChange}
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
         <div>
@@ -200,14 +200,14 @@ function CreateMenuItemsForm() {
             onChange={handleImageChange}
             accept="image/*"
             required
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
           />
         </div>
         <div className="mt-4">
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-3 px-6 rounded-lg text-white font-semibold bg-blue-500 hover:bg-blue-600 transition duration-300 focus:outline-none ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full py-3 px-6 rounded-lg text-white font-semibold bg-pink-500 hover:bg-pink-600 transition duration-300 focus:outline-none ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isSubmitting ? 'Creating...' : 'Create Menu Item'}
           </button>
