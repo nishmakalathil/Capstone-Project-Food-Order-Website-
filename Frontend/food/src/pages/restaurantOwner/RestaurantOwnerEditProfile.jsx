@@ -46,7 +46,7 @@ function RestaurantOwnerEditProfile() {
       setSuccessMessage(response.data.message);
       setLoading(false);
       setTimeout(() => {
-        navigate("/restaurant-owner/profile");
+        navigate("/restaurantOwner/profile");
       }, 1500);
     } catch (err) {
       setLoading(false);
