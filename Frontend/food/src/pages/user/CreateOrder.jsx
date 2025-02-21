@@ -48,14 +48,12 @@ const CreateOrder = () => {
       return;
     }
 
-    // Here you can dispatch an action to create the order
-    // For example:
+    
     const cartItems = JSON.parse(localStorage.getItem('cartItems'));
 
     dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
 
-    //alert('Order placed successfully!');
-    //navigate('/order-payment');  // Redirect to order success page after placing the order
+    
     console.log(cartItems);
 
     try {
