@@ -113,7 +113,7 @@ function UserHeader() {
           <Link to={"/user/cart"} className="relative">
             <ShoppingBag size={24} className="text-white" />
             <span className="absolute top-0 right-0 text-xs bg-pink-600 text-white rounded-full px-2">
-              3 {/* Example count */}
+              
             </span>
           </Link>
         </div>
