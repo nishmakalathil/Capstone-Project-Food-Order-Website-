@@ -19,6 +19,7 @@ const Cart = () => {
   const [carterror, setError] = useState("");
   const [finalTotal, setFinalTotal] = useState(0);
   const [showCoupons, setShowCoupons] = useState(false);
+  const [availableCoupons, setAvailableCoupons] = useState([]); 
 
   useEffect(() => {
     const total = cart?.menuItems?.reduce((total, item) => total + item.price * item.quantity, 0) || 0;
@@ -27,7 +28,18 @@ const Cart = () => {
 
   useEffect(() => {
     dispatch(fetchCart());
+    fetchAvailableCoupons();
+    localStorage.setItem("couponDetails", "");
   }, [dispatch]);
+
+  const fetchAvailableCoupons = async () => {
+    try {
+      const response = await axiosInstance.get("/coupon/get-available");
+      setAvailableCoupons(response.data.coupons);
+    } catch (err) {
+      console.error("Error fetching coupons:", err);
+    }
+  };
 
   const handleRemoveFromCart = (menuItemId) => {
     dispatch(removeMenuItemFromCart(menuItemId));
@@ -46,6 +58,8 @@ const Cart = () => {
         code: couponCode,
         orderAmount: finalTotal,
       });
+      console.log("Apply Coupon");
+      console.log(response);
       setDiscount(response.data.discount);
       setFinalTotal(response.data.finalAmount);
       localStorage.setItem("couponDetails", JSON.stringify(response.data));
@@ -140,18 +154,22 @@ const Cart = () => {
             </div>
             {showCoupons && (
               <div className="mt-2">
-                <button 
-                  onClick={() => { setCouponCode("DISCOUNT20"); setShowCoupons(false); }}
-                  className="bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition duration-300 mr-2"
-                >
-                  DISCOUNT20
-                </button>
-                <button 
-                  onClick={() => { setCouponCode("DISCOUNT50"); setShowCoupons(false); }}
-                  className="bg-pink-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition duration-300"
-                >
-                  DISCOUNT50
-                </button>
+                {availableCoupons.length > 0 ? (
+                  availableCoupons.map((coupon) => (
+                    <button
+                      key={coupon._id}
+                      onClick={() => {
+                        setCouponCode(coupon.code);
+                        setShowCoupons(false);
+                      }}
+                      className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition duration-300 mr-2"
+                    >
+                      {coupon.code} ({coupon.discount}% off)
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-red-500">No available coupons at the moment.</p>
+                )}
               </div>
             )}
             {discount > 0 && <p style={{ color: "green" }}>Discount Applied: -{discount}</p>}

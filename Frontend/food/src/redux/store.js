@@ -5,6 +5,7 @@ import userReducer from './features/userSlice';
 import deliveryInfoReducer from  './features/deliveryInfoSlice';
 import createOrderReducer from  './features/createOrderSlice';
 import restaurantOwnerReducer from './features/restaurantOwnerSlice';
+import adminReducer from './features/adminSlice'
 
 const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ const store = configureStore({
     deliveryInfo: deliveryInfoReducer,
     createOrder: createOrderReducer,
     restaurantOwner: restaurantOwnerReducer,
+    admin: adminReducer,
   },
 });
  export default store;

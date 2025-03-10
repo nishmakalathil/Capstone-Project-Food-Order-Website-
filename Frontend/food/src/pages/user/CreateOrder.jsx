@@ -29,17 +29,27 @@ const CreateOrder = () => {
     if (cart && cart.menuItems) {
       setCartItems(cart.menuItems);
     }
+    
+    const storedCouponDetails = localStorage.getItem("couponDetails");
+
+    if (storedCouponDetails) {
+      try {
+          const couponDetails = JSON.parse(storedCouponDetails);
+          setCouponDetails(couponDetails);
+      } catch (error) {
+          console.error("Error parsing couponDetails from localStorage:", error);
+          localStorage.removeItem("couponDetails");
+      }
+    }
 
     // Set deliveryCharges to a fixed value of 50
     const deliveryCharges = 50;
-
-    const couponDetails = JSON.parse(localStorage.getItem('couponDetails'));
-    setCouponDetails(couponDetails);
-
+    
     // Calculate total amount (cart totalPrice + fixed deliveryCharges of 50)
     if (cart) {
-      setTotalAmount(cart.totalPrice + deliveryCharges - couponDetails.discount);
-    }
+      const discount = couponDetails?.discount || 0; // 
+      setTotalAmount(cart.totalPrice + deliveryCharges - discount);
+  }
   }, [cart]);
 
   const handleMakePayment = async () => {
@@ -52,9 +62,6 @@ const CreateOrder = () => {
     const cartItems = JSON.parse(localStorage.getItem('cartItems'));
 
     dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
-
-    
-    console.log(cartItems);
 
     try {
       const stripe = await loadStripe(import.meta.env.VITE_STRIPE_Publishable_key);
@@ -122,7 +129,11 @@ const CreateOrder = () => {
             <div className="mt-4">
               <p><strong>Total Price: ${cart.totalPrice}</strong></p>
               <p><strong>Delivery Charges: $50</strong></p>
-              <p><strong>Discount coupon ${couponDetails.couponCode} applied : -(${couponDetails.discount})</strong></p>
+              {couponDetails ? (
+                  <p>
+                    <strong>Discount coupon {couponDetails.couponCode} applied: -({couponDetails.discount}%)</strong>
+                  </p>
+                ) : null}
               <p><strong>Total Amount: ${totalAmount}</strong></p>
             </div>
           </div>

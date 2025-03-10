@@ -2,49 +2,61 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "../../config/axiosInstances";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { saveAdmin } from "../../redux/features/adminSlice";
 
 function Login({ role }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [error, setError] = useState(null); 
-
   
+  // Check if user came from a different page (e.g., Cart)
   const user = {
     role: "user",
     loginAPI: "/user/login",
     profileRoute: "/user/profile",
     signupRoute: "/signup",
-};
+  };
 
 
-
-if (role == "restaurantOwner") {
-  user.role = "restaurantOwner";
-  user.loginAPI = "/restaurantOwner/login";
-  (user.profileRoute = "/restaurantOwner/profile"), (user.signupRoute = "/restaurantOwner/signup");
-}
-
+  if (role === "restaurantOwner" || role === "admin") {
+    user.role = role;
+    user.loginAPI = "/restaurantOwner/login";
+    user.profileRoute = "/restaurantOwner/profile";
+    user.signupRoute = "/restaurantOwner/signup";
   
-
-  
+  }
 
   const onSubmit = async (data) => {
     try {
       const { email, password } = data;
-
-      console.log(user.loginAPI);
 
       const response = await axiosInstance.post(user.loginAPI,
         { email, password },
         { withCredentials: true }
       );
 
-      
-      
+      const loggedInUser = response.data.data;
 
-      if (response.data && response.data.data) {
-        const token = response.data.data.token;
-        localStorage.setItem("authToken", token); 
+      console.log(loggedInUser);
+
+      if (loggedInUser.role === "restaurantOwner" || loggedInUser.role === "admin") { 
+
+        if (loggedInUser.role === "restaurantOwner") {
+          user.profileRoute = "/restaurantOwner/profile";
+          
+        } else if (loggedInUser.role === "admin") {
+          console.log('here')
+          dispatch(saveAdmin(loggedInUser)); 
+          user.profileRoute = "/admin/dashboard";
+        }
+      }
+
+      if (response.data && loggedInUser) {
+        localStorage.setItem("authToken", loggedInUser.token); 
+        localStorage.setItem("userRole", loggedInUser.role);
+        
         navigate(user.profileRoute); 
 
         // This might be for state sync or to refresh some part of the app

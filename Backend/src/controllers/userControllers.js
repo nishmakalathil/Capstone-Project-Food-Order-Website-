@@ -60,6 +60,11 @@ const userLogin = async (req, res, next) => {
             return res.status(404).json({ message: "User does not exist" });
         }
 
+        // Check if the user is active
+        if (!userExist.isActive) {
+            return res.status(403).json({ message: "Your account has been deactivated. Please contact support." });
+        }
+
         // Compare the password with the hashed password in the database
         const passwordMatch = await bcrypt.compare(password, userExist.password);
 
@@ -78,12 +83,17 @@ const userLogin = async (req, res, next) => {
             maxAge: 24 * 60 * 60 * 1000,  // 1 day expiry (24 hours)
         });
 
-        return res.json({ data: userExist, message: "User login success" });
+        // ✅ Exclude password before sending response
+        const { password: _, ...userData } = userExist.toObject();
+
+        return res.json({ data: userData, message: "User logged in successfully" });
+
     } catch (error) {
         console.error(error);
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };
+
 
 //profile view
 
@@ -167,13 +177,13 @@ const userUpdateProfile = async (req, res, next) => {
             httpOnly: NODE_ENV === "production",
         });
 
-        return res.json({ message: "user logout success" });
+        return res.json({ message: "User logged out successfully" });
     } catch (error) {
         return res.status(error.statusCode || 500).json({ message: error.message || "Internal server error" });
     }
 };
 
-//chec kuser
+//chec user
   
  
 const checkUser = async (req, res, next) => {

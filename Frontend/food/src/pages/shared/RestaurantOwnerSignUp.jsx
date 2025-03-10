@@ -10,23 +10,19 @@ function RestaurantOwnerSignUp() {
 
     const isRestaurantOwnerAuth = useSelector((state) => state.restaurantOwner.isRestaurantOwnerAuth);
     
-    // if logged in user, redirect to profile 
+    // If logged in user, redirect to profile 
     if (isRestaurantOwnerAuth) {
-            navigate("/restaurantOwner/profile");
-            return null;  // Prevent rendering anything if the user isn't authenticated
+        navigate("/restaurantOwner/profile");
+        return null;  // Prevent rendering the form if the user is already authenticated
     }
 
     const onSubmit = async (data) => {
         try {
-            const response = await axiosInstance({
-                method: "POST",
-                url: "/restaurantOwner/signup", 
-                data: data,
-            });
-            console.log("response====", response);
+            const response = await axiosInstance.post("/restaurantOwner/signup", data);
+            console.log("Signup Response:", response);
             navigate("/restaurantOwner/profile");
         } catch (error) {
-            console.log(error);
+            console.error("Signup Error:", error);
         }
     };
 
@@ -34,14 +30,14 @@ function RestaurantOwnerSignUp() {
         <div className="hero bg-base-200 min-h-screen">
             <div className="hero-content flex-col lg:flex-row">
                 <div className="text-center lg:text-left">
-                    <h1 className="text-5xl font-bold">Restaurant Owner - Signup now!</h1>
+                    <h1 className="text-5xl font-bold">Sign up now!</h1>
                     <p className="py-6">
-                        Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque
-                        aut repudiandae et a id nisi.
+                        Join as a Restaurant Owner or an Admin to manage operations seamlessly.
                     </p>
                 </div>
                 <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                     <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
+                        {/* Name */}
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Username</span>
@@ -49,6 +45,7 @@ function RestaurantOwnerSignUp() {
                             <input type="text" placeholder="name" {...register("name")} className="input input-bordered" required />
                         </div>
 
+                        {/* Email */}
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Email</span>
@@ -56,6 +53,7 @@ function RestaurantOwnerSignUp() {
                             <input type="email" placeholder="email" {...register("email")} className="input input-bordered" required />
                         </div>
 
+                        {/* Password */}
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Password</span>
@@ -69,6 +67,7 @@ function RestaurantOwnerSignUp() {
                             />
                         </div>
 
+                        {/* Phone Number */}
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Phone Number</span>
@@ -82,6 +81,7 @@ function RestaurantOwnerSignUp() {
                             />
                         </div>
 
+                        {/* Address */}
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Address</span>
@@ -95,14 +95,25 @@ function RestaurantOwnerSignUp() {
                             />
                         </div>
 
+                        {/* Role Selection */}
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text">Role</span>
+                            </label>
+                            <select {...register("role")} className="input input-bordered" required>
+                                <option value="restaurantOwner">Restaurant Owner</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+
+                        {/* Existing User? */}
                         <label className="label">
-                            <Link to={'/login'}>
-                                <a href="#" className="label-text-alt link link-hover">
-                                    Existing User?
-                                </a>
+                            <Link to={'/login'} className="label-text-alt link link-hover">
+                                Existing User? Log in here
                             </Link>
                         </label>
 
+                        {/* Submit Button */}
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Sign Up</button>
                         </div>

@@ -12,9 +12,6 @@ const RestaurantOwnerLayout = () => {
   const dispatch = useDispatch();
   const location = useLocation(); // To detect URL changes
 
-  // Debugging the authentication state
-  
-
   // Function to check if the restaurant owner is authenticated
   const checkRestaurantOwner = async () => {
     try {

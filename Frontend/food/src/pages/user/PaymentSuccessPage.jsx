@@ -6,7 +6,7 @@ const PaymentSuccessPage = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigate("/"); // Redirects to homepage after 5 seconds
+      navigate("/user/order-display"); // Redirects to homepage after 5 seconds
     }, 5000);
 
     return () => clearTimeout(timeout);

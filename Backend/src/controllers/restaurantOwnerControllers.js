@@ -71,13 +71,15 @@ const restaurantOwnerLogin = async (req, res, next) => {
         if (!existingOwner) {
             return res.status(404).json({ message: 'Restaurant owner not found' });
         }
-        //console.log(existingOwner);
+        
         const passwordMatch = await bcrypt.compare(password, existingOwner.password);
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Incorrect password' });
         }
         const token = generateToken(existingOwner._id, existingOwner.role);
-        //res.cookie("token", token);
+        
+        console.log("Token "+ token);
+        
         res.cookie("token", token, {
             sameSite: NODE_ENV === "production" ? "None" : "Lax",
             secure: NODE_ENV === "production",
@@ -85,13 +87,13 @@ const restaurantOwnerLogin = async (req, res, next) => {
         });
         if (existingOwner.role === 'admin') {
             return res.status(200).json({
-                data: { name: existingOwner.name, email: existingOwner.email },
+                data: { name: existingOwner.name, email: existingOwner.email, role: existingOwner.role},
                 message: 'Login successful as Admin',
                 role: 'admin',
             });
         } else if (existingOwner.role === 'restaurantOwner') {
             return res.status(200).json({
-                data: { name: existingOwner.name, email: existingOwner.email },
+                data: { name: existingOwner.name, email: existingOwner.email, role: existingOwner.role},
                 message: 'Login successful as Restaurant Owner',
                 role: 'restaurantOwner',
             });

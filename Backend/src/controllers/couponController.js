@@ -1,29 +1,12 @@
 const Coupon = require("../Models/couponModel");
 
-// Create a new coupon
-const createCoupon = async (req, res) => {
-  try {
-    const { code, discount } = req.body;
 
-    // Check if coupon already exists
-    const existingCoupon = await Coupon.findOne({ code });
-    if (existingCoupon) {
-      return res.status(400).json({ error: "Coupon code already exists" });
-    }
-
-    const coupon = new Coupon({ code, discount });
-    await coupon.save();
-    res.status(201).json({ message: "Coupon created successfully", coupon });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 // Get all coupons
 const getCoupons = async (req, res) => {
   try {
     const coupons = await Coupon.find();
-    res.json(coupons);
+    res.status(200).json({ coupons });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -55,14 +38,5 @@ const validateCoupon = async (req, res) => {
   }
 };
 
-// Delete a coupon
-const deleteCoupon = async (req, res) => {
-  try {
-    await Coupon.findByIdAndDelete(req.params.id);
-    res.json({ message: "Coupon deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
-module.exports = { createCoupon,getCoupons,validateCoupon,deleteCoupon};
+module.exports = { getCoupons,validateCoupon};

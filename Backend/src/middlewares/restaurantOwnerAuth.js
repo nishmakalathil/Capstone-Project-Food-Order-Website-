@@ -18,10 +18,10 @@ const restaurantOwnerAuth = async (req, res, next) => {
             return res.status(401).json({ message: "User not authorized", success: false });
         }
 
-       
-        if (decoded.role !== 'restaurantOwner' ) {
+        if (decoded.role !== "restaurantOwner" && decoded.role !== "admin") {
             return res.status(403).json({ message: "Access forbidden: Insufficient permissions", success: false });
         }
+        
 
        
         req.restaurantOwner = decoded;

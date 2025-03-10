@@ -59,4 +59,46 @@ const createOrder = async (req, res) => {
   }
 };
 
-module.exports = createOrder;
+
+
+
+// Get orders for the logged-in user
+const getUserOrders = async (req, res) => {
+  try {
+    const userId = req.user.id; // Get the authenticated user ID from `req.user`
+
+    // Fetch orders for the logged-in user
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+
+    if (!orders.length) {
+      return res.status(404).json({ message: 'No orders found for this user.' });
+    }
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error. Could not retrieve orders.' });
+  }
+};
+
+
+
+
+
+
+
+
+
+module.exports = { createOrder, getUserOrders};
+
+
+
+
+
+
+
+
+
+
+
+

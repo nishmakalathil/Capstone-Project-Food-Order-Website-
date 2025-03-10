@@ -11,6 +11,7 @@ const orderRouter = require('./orderRoutes.js');
 const deliveryInfoRouter = require('./deliveryInfoRoutes.js'); 
 const couponRouter = require('./couponRoutes.js'); 
 const paymentRouter = require('./paymentRoutes.js'); 
+const adminRouter =require("./adminRoutes.js")
 
 apiRouter.use('/user',userRouter);
 apiRouter.use('/restaurantOwner',restaurantOwnerRouter);
@@ -22,11 +23,8 @@ apiRouter.use('/order',orderRouter);
 apiRouter.use('/deliveryInfo',deliveryInfoRouter);
 apiRouter.use('/coupon',couponRouter);
 
+apiRouter.use('/admin',adminRouter);
 apiRouter.use('/payment',paymentRouter);
-
-
-
-
 
 
 module.exports = apiRouter;

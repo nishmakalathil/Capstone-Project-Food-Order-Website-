@@ -128,9 +128,10 @@ const updateMenuItemQuantity = async (req, res) => {
   }
 };
 
+
 // Remove Item from Cart
 
-// Backend: Remove item from the cart
+ 
 
 const removeMenuItemFromCart = async (req, res) => {
   try {
