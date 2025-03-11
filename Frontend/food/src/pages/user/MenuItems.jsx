@@ -1,25 +1,28 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import UseFetch from "../../hooks/UseFetch";
 import MenuItemsSkeleton from "../../components/shared/Skeltons";
 import { useNavigate } from "react-router-dom";
+
 function MenuItems() {
     const [menuItemsList, isLoading, error] = UseFetch("/menu-items/get-menu");
     const [showPopup, setShowPopup] = useState(false);
     const [redirectTo, setRedirectTo] = useState(null);
     const navigate = useNavigate();
-    // Function to check if user is logged in
-    const isUserLoggedIn = () => {
-        return localStorage.getItem("authToken") !== null; // Adjust based on your auth system
-    };
+
+    // Get authentication state from Redux
+    const isUserAuth = useSelector((state) => state.user.isUserAuth);
+
     // Function to handle menu item click
     const handleMenuItemClick = (menuItemId) => {
-        if (!isUserLoggedIn()) {
+        if (!isUserAuth) {
             setRedirectTo(`/menu-items/details/${menuItemId}`); // Store the intended page
-            setShowPopup(true); // Show popup
+            setShowPopup(true); // Show popup for non-logged-in users
             return;
         }
         navigate(`/menu-items/details/${menuItemId}`); // Allow navigation if logged in
     };
+
     if (isLoading) {
         return <MenuItemsSkeleton />;
     }
@@ -29,6 +32,7 @@ function MenuItems() {
     if (!menuItemsList || menuItemsList.length === 0) {
         return <div>No menu items found.</div>;
     }
+
     return (
         <div className="flex flex-col items-center justify-start px-20 py-16">
             <section>
@@ -55,6 +59,7 @@ function MenuItems() {
                     </div>
                 ))}
             </section>
+
             {/* Popup for login */}
             {showPopup && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -80,4 +85,5 @@ function MenuItems() {
         </div>
     );
 }
+
 export default MenuItems;

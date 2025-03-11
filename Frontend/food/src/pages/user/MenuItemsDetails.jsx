@@ -4,16 +4,21 @@ import UseFetch from "../../hooks/UseFetch";
 import MenuItemsSkeleton from "../../components/shared/Skeltons";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cartSlice";
+
+
 function MenuItemDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [menuItem, isLoading, error] = UseFetch(`/menu-items/details/${id}`);
   const [quantity, setQuantity] = useState(1);
+  
+  
   useEffect(() => {
     console.log("MenuItemDetails:", menuItem || "No Data");
     console.log("isLoading:", isLoading);
   }, [menuItem, isLoading]);
+  
   if (isLoading) {
     return <MenuItemsSkeleton />;
   }
@@ -23,6 +28,8 @@ function MenuItemDetails() {
   if (!menuItem) {
     return <div className="text-red-500">No menu item found.</div>;
   }
+  
+  
   const handleAddToCart = () => {
     if (!menuItem || typeof menuItem !== "object") {
       console.error("Error: menuItem is undefined or invalid.");
@@ -74,7 +81,7 @@ function MenuItemDetails() {
             className="px-6 py-2 bg-pink-600 text-white rounded-full shadow-md hover:bg-pink-700 transition duration-200"
           >
             <button>
-              {isLoading ? "Loading..." : "Add to Cart 🛒"}
+              {isLoading ? "Loading..." : "Add to Cart"}
             </button>
 
           </button>

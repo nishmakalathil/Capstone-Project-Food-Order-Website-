@@ -8,37 +8,37 @@ import axiosInstance from "../config/axiosInstances";
 import Footer from "../components/user/Footer";
 
 const UserLayout = () => {
-  const { isUserAuth } = useSelector((state) => state.user);  // Get authentication status from Redux
+  const { isUserAuth } = useSelector((state) => state.user);  
   const dispatch = useDispatch();
-  const location = useLocation();  // Track location change
+  const location = useLocation();  
 
   const checkUser = async () => {
     try {
       const response = await axiosInstance.get("/user/check-user");
-      console.log("API Response:", response.data);  // Log API response
+      console.log("API Response:", response.data);  
 
       if (response.data.authenticated) {
-        dispatch(saveUser(response.data.user));  // Save user data to Redux if authenticated
+        dispatch(saveUser(response.data.user));  
       } else {
-        dispatch(clearUser());  // Clear user data if not authenticated
+        dispatch(clearUser());  
       }
     } catch (error) {
-      console.error("Error checking user authentication:", error);  // Log any errors
-      dispatch(clearUser());  // Clear user data if there's an error
+      console.error("Error checking user authentication:", error);  
+      dispatch(clearUser());  
     }
   };
 
   useEffect(() => {
-    checkUser();  // Check user authentication when the component mounts or location changes
+    checkUser();  
   }, [location.pathname]);
 
   useEffect(() => {
-    console.log("isUserAuth:", isUserAuth);  // Log the authentication state change
+    console.log("isUserAuth:", isUserAuth);  
   }, [isUserAuth]);
 
   return (
     <div>
-      {isUserAuth ? <UserHeader /> : <Header />}  {/* Show UserHeader only if authenticated */}
+      {isUserAuth ? <UserHeader /> : <Header />}  
       <div className="min-h-96">
         <Outlet />
       </div>
