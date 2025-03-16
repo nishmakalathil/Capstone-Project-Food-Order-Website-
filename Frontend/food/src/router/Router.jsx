@@ -22,6 +22,7 @@ import EditProfile from "../pages/user/EditProfile";
 import CreateMenuItemsPage from "../pages/restaurantOwner/CreateMenuItemsPage";
 import RestaurantOwnerProfile from "../pages/restaurantOwner/RestaurantOwnerProfile";
 import RestaurantOwnerEditProfile from "../pages/restaurantOwner/RestaurantOwnerEditProfile";
+import RestaurantOwnerRestaurants from "../pages/restaurantOwner/RestaurantOwnerRestaurants";
 import CreateRestaurantsPage from "../pages/restaurantOwner/CreateRestaurantsPage";
 import MenuItemsPage from "../pages/restaurantOwner/MenuItemsPage";
 import EditMenuItemPage from "../pages/restaurantOwner/EditMenuItemPage";
@@ -33,6 +34,7 @@ import ManageRestaurantOwners from "../pages/admin/ManageRestaurantOwners";
 import ManageMenuItems from "../pages/admin/ManageMenuitems";
 import ManageOrders from "../pages/admin/ManageOrders";
 import ManageCoupons from "../pages/admin/ManageCoupons";
+import EditRestaurantPage from "../pages/restaurantOwner/EditRestaurantPage";
 
 // ✅ Import Admin Pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -87,9 +89,11 @@ const router = createBrowserRouter([
           { path: "profile", element: <RestaurantOwnerProfile /> },
           { path: "update", element: <RestaurantOwnerEditProfile /> },
           { path: "create-menu-items", element: <CreateMenuItemsPage /> },
+          { path: "get-restaurants", element: <RestaurantOwnerRestaurants /> },
           { path: "create-restaurant", element: <CreateRestaurantsPage /> },
           { path: "menu-items/:restaurantId", element: <MenuItemsPage /> },
           { path: "edit-menu-item/:menuitemId", element: <EditMenuItemPage /> },
+          { path: "edit-restaurant/:restaurantId", element: <EditRestaurantPage /> },
         ],
       },
     ],

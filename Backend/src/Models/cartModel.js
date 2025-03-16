@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 // Cart Schema
 const CartSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  restaurant_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Restaurants', required: false },
   menuItems: [{
     menuItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem', required: true },
     quantity: { type: Number, required: true },

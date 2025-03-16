@@ -7,7 +7,6 @@ function RestaurantOwnerEditProfile() {
     name: "",
     email: "",
     phone: "",
-    restaurantName: "",
     address: "",
   });
 
@@ -66,8 +65,7 @@ function RestaurantOwnerEditProfile() {
           {[ 
             { label: "Name", name: "name", type: "text" },
             { label: "Email", name: "email", type: "email" },
-            { label: "Phone", name: "phone", type: "tel" },
-            { label: "Restaurant Name", name: "restaurantName", type: "text" },
+            { label: "Phone", name: "phoneNumber", type: "tel" },
             { label: "Address", name: "address", type: "text" },
           ].map(({ label, name, type }) => (
             <div key={name}>

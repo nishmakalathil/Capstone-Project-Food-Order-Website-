@@ -15,7 +15,7 @@ const addToCart = async (req, res) => {
     }
 
     // Check if menuItem exists
-    const menuItem = await MenuItem.findById(menuItemId);
+    const menuItem = await MenuItem.findById(menuItemId).populate('restaurant_id');
     if (!menuItem) {
       return res.status(404).json({ message: 'Menu item not found' });
     }
@@ -26,28 +26,30 @@ const addToCart = async (req, res) => {
 
     let cart = await Cart.findOne({ userId });
 
-    // If cart doesn't exist, create a new one
-    if (!cart) {
-      cart = new Cart({
-        userId,
-        menuItems: [
-          {
-            menuItemId,
-            quantity,
-            price,
-            image,
-            name,
-          },
-        ],
-        totalPrice: price * quantity,
-        totalQuantity: quantity,
-        status: 'Pending',
-      });
-    } else {
-      const existingItemIndex = cart.menuItems.findIndex(
-        (item) => item.menuItemId.toString() === menuItemId.toString()
-      );
+    // If cart exists and contains items, check restaurant consistency
+    if (cart && cart.menuItems.length > 0) {
+      // Check if cart belongs to a different restaurant
 
+      //console.log("cart restaurant_id ---- menuItem restaurant_id.id");
+      //console.log(cart.restaurant_id +"----"+ menuItem.restaurant_id.id);
+
+      if (cart.restaurant_id && cart.restaurant_id != menuItem.restaurant_id.id) {
+        return res.status(400).json({
+            message: "You can only add items from the same restaurant. Please clear your cart first.",
+        });
+      }
+    }
+    else {
+      // If no cart exists, create a new one and set the restaurant_id
+      cart = new Cart({
+          userId,
+          restaurant_id: menuItem.restaurant_id.id, // Set restaurant_id in cart
+          menuItems: [],
+      });
+    }
+
+      const existingItemIndex = cart?.menuItems?.findIndex((item) => item.menuItemId.toString() === menuItemId.toString());
+ 
       if (existingItemIndex >= 0) {
         cart.menuItems[existingItemIndex].quantity += quantity;
       } else {
@@ -59,13 +61,14 @@ const addToCart = async (req, res) => {
           name,
         });
       }
+    
 
-      // Recalculate the total price and quantity
-      cart.calculateTotalPrice();
-    }
+    // Recalculate the total price and quantity
+    cart.calculateTotalPrice();
 
     // Save cart
     await cart.save();
+
     res.status(200).json({ message: 'Item added to cart', cart });
   } catch (error) {
     res.status(500).json({ message: 'Error: ' + error.message });
@@ -189,8 +192,8 @@ const clearCart = async (req, res) => {
     cart.totalPrice = 0;
     cart.totalQuantity = 0;
 
-    // Save the updated cart
-    await cart.save();
+    // Delete the updated cart
+    await Cart.findByIdAndDelete(cart._id);
 
     res.status(200).json({ message: 'Cart cleared successfully', cart });
   } catch (error) {

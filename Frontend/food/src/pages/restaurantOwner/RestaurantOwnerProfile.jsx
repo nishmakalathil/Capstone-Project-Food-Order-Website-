@@ -6,7 +6,6 @@ function RestaurantOwnerProfile() {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [restaurants, setRestaurants] = useState([]);
   const [ownerId, setOwnerId] = useState(null);
   const navigate = useNavigate();
 
@@ -25,25 +24,8 @@ function RestaurantOwnerProfile() {
     fetchProfile();
   }, []);
 
-  useEffect(() => {
-    if (ownerId) {
-      const fetchRestaurants = async () => {
-        try {
-          const response = await axiosInstance.get(`/restaurants/owner/${ownerId}`);
-          setRestaurants(response.data.msg === "No restaurants found for this owner" ? [] : response.data);
-        } catch (error) {
-          setError("Error fetching restaurants");
-        }
-      };
-      fetchRestaurants();
-    }
-  }, [ownerId]);
-
   const handleEditProfile = () => navigate("/restaurantOwner/update");
-  const handleCreateRestaurant = () => navigate("/restaurantOwner/create-restaurant");
-  const handleManageMenuItems = (restaurantId) => {
-    navigate(`/restaurantOwner/menu-items/${restaurantId}`);
-  };
+  
   const handleLogout = async () => {
     try {
       const response = await axiosInstance.post("/restaurantOwner/logout");
@@ -80,27 +62,7 @@ function RestaurantOwnerProfile() {
           <p className="text-lg text-gray-700"><strong>Address:</strong> {profile.address}</p>
           <p className="text-lg text-gray-700"><strong>Phone:</strong> {profile.phoneNumber}</p>
 
-          <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-            Restaurants Owned by {profile.name}
-          </h3>
-          <ul className="space-y-2">
-            {restaurants.length > 0 ? (
-              restaurants.map((restaurant) => (
-                <li key={restaurant._id} className="text-lg text-gray-700 bg-gray-100 p-3 rounded-lg">
-                  🍽️ {restaurant.name}
-                  <div className="mt-4 flex justify-end space-x-2">
-                    <button 
-                      onClick={() => handleManageMenuItems(restaurant._id)} 
-                      className="bg-pink-500 text-white text-sm py-2 px-4 rounded-full hover:bg-pink-600 transition">
-                      Edit Menu Items
-                    </button>
-                  </div>
-                </li>
-              ))
-            ) : (
-              <li className="text-lg text-gray-500">No restaurants found.</li>
-            )}
-          </ul>
+
         </div>
 
         <div className="flex justify-center space-x-6 mt-8">
@@ -108,11 +70,6 @@ function RestaurantOwnerProfile() {
             onClick={handleEditProfile} 
             className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
             Edit Profile
-          </button>
-          <button 
-            onClick={handleCreateRestaurant} 
-            className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
-            Create Restaurant
           </button>
           <button 
             onClick={handleLogout} 

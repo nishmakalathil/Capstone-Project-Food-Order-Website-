@@ -61,7 +61,7 @@ const CreateOrder = () => {
     
     const cartItems = JSON.parse(localStorage.getItem('cartItems'));
 
-    dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
+    
 
     try {
       const stripe = await loadStripe(import.meta.env.VITE_STRIPE_Publishable_key);
@@ -74,6 +74,8 @@ const CreateOrder = () => {
       const result = stripe.redirectToCheckout({
           sessionId: session.data.sessionId,
       });
+      
+      dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
       } catch (error) {
             console.log(error);
       }

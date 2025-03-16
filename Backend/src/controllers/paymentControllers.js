@@ -43,5 +43,26 @@ const createCheckoutSession = async (req, res) => {
   }
 };
 
+//session status
+const sessionStatus = async (req, res) => {
 
-module.exports =  createCheckoutSession ;
+  try {
+      const sessionId = req.query.session_id;
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+      console.log("session=====", session);
+
+      res.send({
+          status: session?.status,
+          customer_email: session?.customer_details?.email,
+          session_data: session,
+      });
+  } catch (error) {
+      res.status(error?.statusCode || 500).json(error.message || "internal server error");
+  }
+};
+
+
+
+
+module.exports =  {createCheckoutSession,sessionStatus} ;

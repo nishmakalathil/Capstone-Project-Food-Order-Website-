@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast"; 
 import UseFetch from "../../hooks/UseFetch";
 import MenuItemsSkeleton from "../../components/shared/Skeltons";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "../../redux/features/cartSlice";
 
 
@@ -12,7 +13,11 @@ function MenuItemDetails() {
   const dispatch = useDispatch();
   const [menuItem, isLoading, error] = UseFetch(`/menu-items/details/${id}`);
   const [quantity, setQuantity] = useState(1);
-  
+
+  const cart = useSelector((state) => state.cart.cart);
+  const cartItems = cart && cart.menuItems ? cart.menuItems : []; // Ensure it's always an array
+
+  console.log(cartItems);
   
   useEffect(() => {
     console.log("MenuItemDetails:", menuItem || "No Data");
@@ -31,15 +36,26 @@ function MenuItemDetails() {
   
   
   const handleAddToCart = () => {
+    
     if (!menuItem || typeof menuItem !== "object") {
-      console.error("Error: menuItem is undefined or invalid.");
+      toast.error("Error: Invalid menu item.");
       return;
     }
-    if (!menuItem._id || !menuItem.name || !menuItem.price) {
-      console.error("Error: menuItem is missing required properties.");
+    if (!menuItem._id || !menuItem.name || !menuItem.price || !menuItem.restaurant_id._id) {
+      toast.error("Error: Missing required menu item details.");
       return;
     }
-    console.log('Add to cart clicked');
+
+     // Check if the restaurant matches
+  if (cart && cart.restaurant_id && cart.restaurant_id !== menuItem.restaurant_id._id) {
+    toast.error("You can only add items from the same restaurant. Please clear your cart first.", {
+      position: "top-center",
+    });
+    return;
+  }
+
+    // console.log('Add to cart clicked');
+
     dispatch(
       addToCart({
         _id: menuItem._id,
@@ -48,10 +64,17 @@ function MenuItemDetails() {
         image: menuItem.image || "",
         quantity: quantity,
         menuItemId: menuItem._id,
+        restaurant_id: menuItem.restaurant_id._id,
       })
     );
+    
+    toast.success("Item added to cart!", {
+      position: "top-right",
+    });
+
     navigate("/user/cart");
   };
+
   return (
     <div className="container mx-auto p-4">
       <div className="max-w-2xl mx-auto">

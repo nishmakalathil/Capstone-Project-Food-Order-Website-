@@ -16,8 +16,13 @@ function MenuItemsPage() {
           withCredentials: true,
         });
         console.log('Menu items page');
-        console.log(response);
-        setMenuItems(response.data);
+        console.log(response.data);
+        if (Array.isArray(response.data)) {
+          setMenuItems(response.data);
+        } else {
+          setMenuItems([]); 
+          setError("No menu items found");
+        }
       } catch (err) {
         console.error('Error fetching menu items:', err.response || err.message);
         setError('Error fetching menu items');
@@ -43,13 +48,13 @@ function MenuItemsPage() {
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-600">{error}</div>;
+  if (error) return <div className="text-red-600 text-center font-semibold">{error}</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h2 className="font-bold text-3xl text-center text-gray-800 mb-6">Menu Items</h2>
 
-      {menuItems.length === 0 ? (
+      {!Array.isArray(menuItems) || menuItems.length === 0 ? (
         <p className="text-gray-600 text-center">No menu items found.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

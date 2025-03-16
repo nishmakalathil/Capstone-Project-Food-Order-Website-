@@ -46,7 +46,11 @@ const RestaurantOwnerHeader = () => {
                 About
               </Link>
             </li>
-
+            <li>
+              <Link to={"/restaurantOwner/get-restaurants"} className="font-bold">
+                Restaurants
+              </Link>
+            </li>
             <li>
               <Link to={"/restaurantOwner/create-menu-items"} className="font-bold">
                 Create Menu Items

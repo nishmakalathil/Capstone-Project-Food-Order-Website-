@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import UseFetch from "../../hooks/UseFetch";
 import MenuItemsSkeleton from "../../components/shared/Skeltons";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 function MenuItems() {
     const [menuItemsList, isLoading, error] = UseFetch("/menu-items/get-menu");
-    const [showPopup, setShowPopup] = useState(false);
-    const [redirectTo, setRedirectTo] = useState(null);
     const navigate = useNavigate();
 
     // Get authentication state from Redux
@@ -16,10 +15,24 @@ function MenuItems() {
     // Function to handle menu item click
     const handleMenuItemClick = (menuItemId) => {
         if (!isUserAuth) {
-            setRedirectTo(`/menu-items/details/${menuItemId}`); // Store the intended page
-            setShowPopup(true); // Show popup for non-logged-in users
+            toast.error("You need to log in to view menu item details!", {
+                position: "top-center",
+                duration: 3000,
+                style: {
+                    background: "#D32F2F",
+                    color: "#fff",
+                    fontWeight: "bold",
+                },
+            });
+
+            // Redirect user to login page after 2 seconds
+            setTimeout(() => {
+                navigate("/login", { state: { from: `/menu-items/details/${menuItemId}` } });
+            }, 2000);
+
             return;
         }
+
         navigate(`/menu-items/details/${menuItemId}`); // Allow navigation if logged in
     };
 
@@ -59,29 +72,6 @@ function MenuItems() {
                     </div>
                 ))}
             </section>
-
-            {/* Popup for login */}
-            {showPopup && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-                        <p className="text-lg font-semibold mb-4">
-                            You need to log in to view menu item details.
-                        </p>
-                        <button
-                            onClick={() => navigate("/login", { state: { from: redirectTo } })}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                        >
-                            Go to Login
-                        </button>
-                        <button
-                            onClick={() => setShowPopup(false)}
-                            className="ml-4 px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500"
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

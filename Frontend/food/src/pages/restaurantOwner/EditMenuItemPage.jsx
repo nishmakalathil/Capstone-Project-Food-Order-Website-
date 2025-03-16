@@ -168,7 +168,7 @@ function EditMenuItemPage() {
           </button>
           <button
             type="button"
-            onClick={() => navigate(`/menu-items/${menuItem.restaurant_id}`)}
+            onClick={() => navigate(`/restaurantOwner/menu-items/${menuItem.restaurant_id}`)}
             className="px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition"
           >
             Cancel

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axiosInstance from "../config/axiosInstances"; // Custom axios instance
+import axiosInstance from "../config/axiosInstances"; 
 
 function UseFetch(url) {
     const [data, setData] = useState(null);
@@ -15,10 +15,10 @@ function UseFetch(url) {
         const fetchData = async () => {
             try {
                 const response = await axiosInstance.get(url);
-                setData(response.data); // Set the response data directly
+                setData(response.data); 
                 setIsLoading(false);
             } catch (err) {
-                setError(err.response?.data?.message || err.message); // Get error message
+                setError(err.response?.data?.message || err.message);
                 setIsLoading(false);
             }
         };

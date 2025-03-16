@@ -18,7 +18,7 @@ restaurantsRouter.get('/get-all', getAllRestaurants);
 restaurantsRouter.get('/get-single/:id', getSingleRestaurantById);
 
 //update restaurants by Id
-restaurantsRouter.put('/update/:id', updateRestaurantById);
+restaurantsRouter.put('/update/:id', restaurantOwnerAuth, upload.single('image'), updateRestaurantById);
 
 
 

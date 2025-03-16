@@ -60,8 +60,10 @@ const getAllRestaurants = async (req, res) => {
 const getSingleRestaurantById = async (req, res) => {
     try {
         const { id } = req.params;  // Get the restaurant ID from the URL parameter
+        
 
         const restaurant = await Restaurants.findById(id);  // Find the restaurant by its ID
+       
 
         if (!restaurant) {
             return res.status(404).json({ message: "Restaurant not found" });
@@ -73,37 +75,58 @@ const getSingleRestaurantById = async (req, res) => {
     }
 };
 
-
-
-
-
-
-
-
-
 //update
 const updateRestaurantById = async (req, res) => {
-    try {
-        const { id } = req.params;  // Get the restaurant ID from the URL parameter
-        const { name, location, cuisine ,phone_number} = req.body;  // Get fields from the request body
-
-        // Prepare the update data object
-        const updateData = { name, location, cuisine };
-
-        const updatedRestaurant = await Restaurants.findByIdAndUpdate(id, updateData, { new: true });
-
-        if (!updatedRestaurant) {
-            return res.status(404).json({ message: "Restaurant not found" });
-        }
-
-        res.status(200).json({
-            message: "Restaurant updated successfully",
-            restaurant: updatedRestaurant
-        });
-    } catch (error) {
-        res.status(500).json({ message: "Error: " + error.message });
+  try {
+    const { id } = req.params;
+    const { name, address, phone_number, delivery_hours, delivery_areas, average_delivery_time } = req.body;
+    
+    // Validate the restaurant ID format
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid restaurant ID format." });
     }
+
+    // Construct update object dynamically (only include provided fields)
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (address) updateData.address = address;
+    if (phone_number) updateData.phone_number = phone_number;
+    if (delivery_hours) updateData.delivery_hours = delivery_hours;
+    if (delivery_areas) updateData.delivery_areas = delivery_areas;
+    if (average_delivery_time) updateData.average_delivery_time = average_delivery_time;
+
+    // Handle image upload if a file is provided
+    if (req.file && req.file.path) {
+      try {
+        const cloudinaryResponse = await cloudinaryInstance.uploader.upload(req.file.path);
+        updateData.image = cloudinaryResponse.secure_url; //  Use `secure_url` for HTTPS images
+      } catch (cloudinaryError) {
+        console.error("Cloudinary Upload Error:", cloudinaryError);
+        return res.status(500).json({ message: "Error uploading image: " + cloudinaryError.message });
+      }
+    }
+
+    // Find and update restaurant
+    const updatedRestaurant = await Restaurants.findByIdAndUpdate(id, updateData, {
+      new: true,            // Return updated document
+      runValidators: true,  // Ensure fields follow schema validation
+    });
+
+    if (!updatedRestaurant) {
+      return res.status(404).json({ message: "Restaurant not found." });
+    }
+
+    // Success response
+    res.status(200).json({
+      message: "Restaurant updated successfully.",
+      restaurant: updatedRestaurant,
+    });
+  } catch (error) {
+    console.error("Update Error:", error);
+    res.status(500).json({ message: "Internal server error: " + error.message });
+  }
 };
+
 
 
 // Controller to delete a restaurant by ID
