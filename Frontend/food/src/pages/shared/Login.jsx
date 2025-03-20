@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "../../config/axiosInstances";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom"; // ✅ Import useLocation
 import { useDispatch } from "react-redux";
 import { saveAdmin } from "../../redux/features/adminSlice";
-import { toast } from "react-hot-toast"; // ✅ Import toast
+import { toast } from "react-hot-toast";
 
 function Login({ role }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation(); // ✅ Get current URL
+  const loginRef = useRef(null); // ✅ Create ref for scrolling
   const [error, setError] = useState(null);
 
   // Define login settings based on role
@@ -26,6 +28,15 @@ function Login({ role }) {
     user.profileRoute = "/restaurantOwner/profile";
     user.signupRoute = "/restaurantOwner/signup";
   }
+
+  // Scroll to the login form when the page loads
+  useEffect(() => {
+    if (location.hash === "#login-form" && loginRef.current) {
+      setTimeout(() => {
+        loginRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100); // Delay to ensure smooth transition
+    }
+  }, [location]);
 
   // Handle form submission
   const onSubmit = async (data) => {
@@ -63,7 +74,7 @@ function Login({ role }) {
   };
 
   return (
-    <div className="hero bg-base-200 min-h-screen">
+    <div className="hero bg-base-200 min-h-screen" ref={loginRef}> {/* ✅ Attach ref here */}
       <div className="hero-content flex-col lg:flex-row-reverse">
         {/* Left Section */}
         <div className="text-center lg:text-left">
