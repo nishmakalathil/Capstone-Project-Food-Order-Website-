@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema(
     sessionId: {
       type: String,
       required: true,
-  },
+    },
     cart: {
       menuItems: [
         {

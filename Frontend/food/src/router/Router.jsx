@@ -35,6 +35,7 @@ import ManageMenuItems from "../pages/admin/ManageMenuitems";
 import ManageOrders from "../pages/admin/ManageOrders";
 import ManageCoupons from "../pages/admin/ManageCoupons";
 import EditRestaurantPage from "../pages/restaurantOwner/EditRestaurantPage";
+import LeaveReview from "../pages/user/LeaveReview";
 
 // ✅ Import Admin Pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -69,6 +70,7 @@ const router = createBrowserRouter([
           { path: "payment-success", element: <PaymentSuccessPage /> },
           { path: "payment-cancel", element: <PaymentCancelPage /> },
           { path: "order-display", element: <OrderDisplay /> },
+          { path: "leave-review/:id", element: < LeaveReview/> },
           
         ],
       },

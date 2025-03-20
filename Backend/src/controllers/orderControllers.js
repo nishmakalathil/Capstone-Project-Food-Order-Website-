@@ -6,7 +6,11 @@ const createOrder = async (req, res) => {
   try {
     // Extract user data and cart details from the request
     const userId = req.user.id;
-    const { deliveryInfo, couponCode, discount } = req.body;
+
+    console.log("Create Order - req body");
+    console.log(req.body);
+
+    const { deliveryInfo, couponCode, discount, sessionId } = req.body;
 
     // Find the cart for the user
     const cart = await Cart.findOne({ userId });
@@ -27,6 +31,7 @@ const createOrder = async (req, res) => {
         totalQuantity: cart.totalQuantity,
         couponCode: couponCode || '',  // If couponCode exists, it will be used
       },
+      sessionId: sessionId,
       deliveryInfo: {
         deliveryAddress: deliveryInfo.deliveryAddress,
         deliveryTime: deliveryInfo.deliveryTime,

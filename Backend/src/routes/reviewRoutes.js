@@ -2,7 +2,7 @@ const express = require('express');
 const reviewRouter = express.Router();
 const userAuth  = require("../middlewares/userAuth.js");
 
-const{addReview,getMenuItemReviews, deleteReview ,getAverageRating} = require('../controllers/reviewControllers.js');
+const{addReview,getMenuItemReviews, deleteReview ,getAverageRating,getUserReviews} = require('../controllers/reviewControllers.js');
 
 //Add Review
 
@@ -19,6 +19,9 @@ reviewRouter.delete('/delete-review/:reviewId', userAuth, deleteReview);
 //Get Average Rating
 reviewRouter.get("/get-average-rating/:menuItemId", getAverageRating);
 
+
+// Get all reviews for the logged-in user
+reviewRouter.get("/get-user-reviews",userAuth , getUserReviews);
 
 
 module.exports = reviewRouter;

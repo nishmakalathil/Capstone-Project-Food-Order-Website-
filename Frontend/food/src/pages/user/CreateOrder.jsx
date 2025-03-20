@@ -70,12 +70,17 @@ const CreateOrder = () => {
           products: cartItems.menuItems,
         });
 
-      console.log(session, "=======session");
-      const result = stripe.redirectToCheckout({
-          sessionId: session.data.sessionId,
-      });
-      
-      dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount }));
+      const sessionId = session.data.sessionId;
+
+      console.log(sessionId + "=======session");
+
+       const result = stripe.redirectToCheckout({
+           sessionId: session.data.sessionId,
+       });
+
+
+      dispatch(createOrder({ cartItems, deliveryInfo: selectedAddress, totalAmount, sessionId }));
+
       } catch (error) {
             console.log(error);
       }

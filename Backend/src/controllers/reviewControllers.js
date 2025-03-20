@@ -101,5 +101,25 @@ const getAverageRating = async (req, res) => {
     }
 };
 
+const getUserReviews = async (req, res) => {
+    try {
+        const userId = req.user.id; // Extract user ID from authenticated request
+
+        // Find all reviews written by this user
+        const reviews = await Review.find({ userId }).populate("menuItemId", "name");
+
+        if (!reviews.length) {
+            return res.status(404).json({ message: "No reviews found for this user." });
+        }
+
+        res.status(200).json({ data: reviews, message: "User reviews fetched successfully" });
+    } catch (error) {
+        console.error("Error fetching user reviews:", error);
+        res.status(500).json({ message: "Internal server error", error });
+    }
+};
+
+
+
  
-module.exports ={addReview,getMenuItemReviews,deleteReview,getAverageRating }
+module.exports ={addReview,getMenuItemReviews,deleteReview,getAverageRating,getUserReviews }
