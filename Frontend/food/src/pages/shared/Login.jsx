@@ -5,18 +5,15 @@ import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { saveAdmin } from "../../redux/features/adminSlice";
 import { toast } from "react-hot-toast";
-
 function Login({ role }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState(null);
-
-  // 🚀 Reset scroll position when the component loads
+  // :rocket: Reset scroll position when the component loads
   useEffect(() => {
-    window.scrollTo(0, 0); // ✅ Scrolls to top
+    window.scrollTo(0, 0); // :white_tick: Scrolls to top
   }, []);
-
   // Define login settings based on role
   const user = {
     role: "user",
@@ -24,23 +21,19 @@ function Login({ role }) {
     profileRoute: "/user/profile",
     signupRoute: "/signup",
   };
-
   if (role === "restaurantOwner" || role === "admin") {
     user.role = role;
     user.loginAPI = "/restaurantOwner/login";
     user.profileRoute = "/restaurantOwner/profile";
     user.signupRoute = "/restaurantOwner/signup";
   }
-
   // Handle form submission
   const onSubmit = async (data) => {
     try {
       const { email, password } = data;
       const response = await axiosInstance.post(user.loginAPI, { email, password }, { withCredentials: true });
-
       const loggedInUser = response.data.data;
       console.log(loggedInUser);
-
       if (loggedInUser.role === "restaurantOwner" || loggedInUser.role === "admin") {
         if (loggedInUser.role === "restaurantOwner") {
           user.profileRoute = "/restaurantOwner/profile";
@@ -50,13 +43,10 @@ function Login({ role }) {
           user.profileRoute = "/admin/dashboard";
         }
       }
-
       if (response.data && loggedInUser) {
         localStorage.setItem("authToken", loggedInUser.token);
         localStorage.setItem("userRole", loggedInUser.role);
-
         toast.success("Login successfully!", { position: "top-center", duration: 3000 });
-
         navigate(user.profileRoute);
         window.dispatchEvent(new Event("storage"));
       }
@@ -66,7 +56,6 @@ function Login({ role }) {
       setError(error.response?.data?.message || "Login failed, please try again.");
     }
   };
-
   return (
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -75,7 +64,6 @@ function Login({ role }) {
           <h1 className="text-5xl font-bold">Login now! {user.role}</h1>
           <p className="py-6">Please login to access your account.</p>
         </div>
-
         {/* Right Section - Login Form */}
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
           <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
@@ -93,7 +81,6 @@ function Login({ role }) {
                 autoComplete="email"
               />
             </div>
-
             {/* Password Input */}
             <div className="form-control">
               <label className="label">
@@ -120,13 +107,11 @@ function Login({ role }) {
                 </label>
               </div>
             </div>
-
             {/* Login Button */}
             <div className="form-control mt-6">
               <button className="btn btn-primary">Login</button>
             </div>
           </form>
-
           {/* Error Message */}
           {error && <div className="text-red-500 text-center mt-4">{error}</div>}
         </div>
@@ -134,5 +119,4 @@ function Login({ role }) {
     </div>
   );
 }
-
 export default Login;

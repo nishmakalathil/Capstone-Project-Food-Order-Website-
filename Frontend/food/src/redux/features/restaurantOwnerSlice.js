@@ -1,11 +1,9 @@
 
 import { createSlice } from '@reduxjs/toolkit';
-
 const initialState = {
   isRestaurantOwnerAuth: false, // Authentication state
   restaurantOwnerData: null,    // To store restaurant owner info
 };
-
 const restaurantOwnerSlice = createSlice({
   name: 'restaurantOwner',
   initialState,
@@ -20,6 +18,5 @@ const restaurantOwnerSlice = createSlice({
     }
   }
 });
-
 export const { saveRestaurantOwner, clearRestaurantOwner } = restaurantOwnerSlice.actions;
 export default restaurantOwnerSlice.reducer;
