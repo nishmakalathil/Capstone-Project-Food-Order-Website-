@@ -42,18 +42,23 @@ const checkAdminAuth = async (req, res) => {
   }
 };
 
-
 const logoutAdmin = (req, res) => {
     try {
-        // Clear cookie if using JWT stored in cookies
-        res.clearCookie("token");
+        res.clearCookie("token", {
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            secure: process.env.NODE_ENV === "production",
+            httpOnly: true, // Ensures the cookie is only accessible via HTTP(S)
+        });
 
-        // Optional: Destroy session if using session-based auth
+        // Optional: Destroy session if using session-based authentication
         if (req.session) {
-            req.session.destroy((err) => {
+            return req.session.destroy((err) => {
                 if (err) {
+                    console.error("Error destroying session:", err);
                     return res.status(500).json({ success: false, message: "Logout failed" });
                 }
+
+                return res.status(200).json({ success: true, message: "Admin logged out successfully" });
             });
         }
 
@@ -63,6 +68,8 @@ const logoutAdmin = (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
+
+
 
 //get Users
 const getUsers = async (req, res) => {
