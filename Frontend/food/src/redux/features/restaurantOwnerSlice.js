@@ -14,7 +14,10 @@ const restaurantOwnerSlice = createSlice({
       state.isRestaurantOwnerAuth = true;
       state.restaurantOwnerData = action.payload; // Save restaurant owner data in Redux state
     },
-    clearRestaurantOwner: () => initialState, // ✅ Resets state completely
+    clearRestaurantOwner: (state) => {
+      state.isRestaurantOwnerAuth = false; // Set to false when clearing state
+      state.restaurantOwnerData = null;    // Clear restaurant owner data
+    }
   }
 });
 
