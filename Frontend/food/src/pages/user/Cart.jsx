@@ -164,7 +164,7 @@ const Cart = () => {
                       }}
                       className="bg-yellow-500 text-white px-4 py-2 rounded-full hover:bg-pink-600 transition duration-300 mr-2"
                     >
-                      {coupon.code} ({coupon.discount}% off)
+                      {coupon.code} ({coupon.discount} less)
                     </button>
                   ))
                 ) : (

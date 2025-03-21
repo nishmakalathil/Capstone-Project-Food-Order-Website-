@@ -212,11 +212,12 @@ const checkRestaurantOwner = async (req, res) => {
         if (user.role !== 'restaurantOwner') {
             return res.status(403).json({ authenticated: false, message: "Forbidden: User is not a restaurant owner" });
         }
-
-        return res.json({
-            authenticated: true,
-            user: { id: user.id, name: user.name, email: user.email }
-        });
+        else{
+            return res.json({
+                authenticated: true,
+                user: { id: user.id, name: user.name, email: user.email }
+            });
+        }    
     } catch (error) {
         return res.status(500).json({ message: error.message || "Internal server error" });
     }

@@ -72,11 +72,7 @@ function Header() {
               Logout
             </button>
           ) : (
-            <Link to="/restaurantowner/login">
-              <button className="px-8 py-3 rounded-full bg-pink-500 text-white font-semibold hover:bg-pink-700 transition duration-300">
-                Login
-              </button>
-            </Link>
+            <p></p>
           )}
         </div>
       </div>

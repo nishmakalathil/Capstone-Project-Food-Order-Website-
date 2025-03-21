@@ -26,14 +26,7 @@ function RestaurantOwnerProfile() {
 
   const handleEditProfile = () => navigate("/restaurantOwner/update");
   
-  const handleLogout = async () => {
-    try {
-      const response = await axiosInstance.post("/restaurantOwner/logout");
-      if (response.data.success) navigate("/restaurantOwner/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
+ 
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -71,11 +64,7 @@ function RestaurantOwnerProfile() {
             className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
             Edit Profile
           </button>
-          <button 
-            onClick={handleLogout} 
-            className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
-            Logout
-          </button>
+          
         </div>
       </div>
     </div>

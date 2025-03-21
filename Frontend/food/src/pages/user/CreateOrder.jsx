@@ -20,37 +20,38 @@ const CreateOrder = () => {
   // Get cart items from redux store
   const { cart } = useSelector((state) => state.cart);
 
+  // Set deliveryCharges to a fixed value of 50
+  const deliveryCharges = 50;
+
   useEffect(() => {
     // Get selected address from localStorage
     const savedAddress = JSON.parse(localStorage.getItem('selectedAddress'));
     setSelectedAddress(savedAddress);
-
+  
     // Set cart items (if any) from Redux store
     if (cart && cart.menuItems) {
       setCartItems(cart.menuItems);
     }
-    
-    const storedCouponDetails = localStorage.getItem("couponDetails");
-
-    if (storedCouponDetails) {
-      try {
-          const couponDetails = JSON.parse(storedCouponDetails);
-          setCouponDetails(couponDetails);
-      } catch (error) {
-          console.error("Error parsing couponDetails from localStorage:", error);
-          localStorage.removeItem("couponDetails");
-      }
+  
+    // Fetch coupon details separately
+    try {
+      const storedCoupon = JSON.parse(localStorage.getItem("couponDetails")) || { discount: 0 }; // Default if null
+      setCouponDetails(storedCoupon);
+    } catch (error) {
+      console.error("Error parsing couponDetails:", error);
+      setCouponDetails({ discount: 0 });
     }
-
-    // Set deliveryCharges to a fixed value of 50
-    const deliveryCharges = 50;
-    
-    // Calculate total amount (cart totalPrice + fixed deliveryCharges of 50)
+  }, [cart]); // Runs when cart changes
+  
+  //  useEffect to Recalculate Total When `couponDetails` Updates
+  useEffect(() => {
     if (cart) {
-      const discount = couponDetails?.discount || 0; // 
+      const discount = couponDetails?.discount || 0; // Ensure discount is applied correctly
+      console.log(`Cart Total: ${cart.totalPrice}, Delivery: ${deliveryCharges}, Discount: ${discount}`);
+      
       setTotalAmount(cart.totalPrice + deliveryCharges - discount);
-  }
-  }, [cart]);
+    }
+  }, [cart, couponDetails]); // Runs when `cart` or `couponDetails` changes
 
   const handleMakePayment = async () => {
     if (!selectedAddress) {
@@ -68,6 +69,8 @@ const CreateOrder = () => {
       
       const session = await axiosInstance.post("/payment/create-checkout-session", {
           products: cartItems.menuItems,
+          totaldiscount : couponDetails?.discount || 0,
+          deliverycharges : deliveryCharges,
         });
 
       const sessionId = session.data.sessionId;
@@ -126,22 +129,22 @@ const CreateOrder = () => {
                   />
                   <div>
                     <p><strong>{item.menuItemId.name}</strong></p> {/* Display Menu Item Name */}
-                    <p>Price: ${item.price}</p>
+                    <p>Price: ₹{item.price}</p>
                     <p>Quantity: {item.quantity}</p>
-                    <p>Total: ${item.price * item.quantity}</p>
+                    <p>Total: ₹{item.price * item.quantity}</p>
                   </div>
                 </li>
               ))}
             </ul>
             <div className="mt-4">
-              <p><strong>Total Price: ${cart.totalPrice}</strong></p>
-              <p><strong>Delivery Charges: $50</strong></p>
+              <p><strong>Total Price: ₹{cart.totalPrice}</strong></p>
+              <p><strong>Delivery Charges: ₹50</strong></p>
               {couponDetails ? (
                   <p>
-                    <strong>Discount coupon {couponDetails.couponCode} applied: -({couponDetails.discount}%)</strong>
+                    <strong>Discount coupon {couponDetails.couponCode} applied: -({couponDetails.discount})</strong>
                   </p>
                 ) : null}
-              <p><strong>Total Amount: ${totalAmount}</strong></p>
+              <p><strong>Total Amount: ₹{totalAmount}</strong></p>
             </div>
           </div>
         )}

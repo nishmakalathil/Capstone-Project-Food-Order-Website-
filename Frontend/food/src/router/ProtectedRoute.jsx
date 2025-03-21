@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 const ProtectedRoute = () => {
     const navigate = useNavigate();
-    const isUserAuth = useSelector((state) => state.user.isUserAuth);
+    //const isUserAuth = useSelector((state) => state.user.isUserAuth);
     
     
     return <Outlet />;

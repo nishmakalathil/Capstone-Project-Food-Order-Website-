@@ -102,8 +102,8 @@ const userProfile = async (req, res, next) => {
         
         const userId = req.user.id; 
 
-        console.log("Profile: ");
-        console.log(req.user);
+        //console.log("Profile: ");
+        //console.log(req.user);
 
         const userData = await User.findById(userId).select("-password"); 
         if (!userData) {
@@ -190,11 +190,14 @@ const checkUser = async (req, res, next) => {
     try {
       const user = req.user; // Get authenticated user from session or JWT
   
-      if (user) {
+      if (user.role == 'user') {
         return res.json({
           authenticated: true,
           user: { id: user.id, name: user.name, email: user.email } // Send user data
         });
+      }
+      else{
+        return res.json({ authenticated: false });
       }
   
       // If no user is authenticated, return authenticated: false

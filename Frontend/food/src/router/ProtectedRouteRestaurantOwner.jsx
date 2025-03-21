@@ -5,7 +5,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 const ProtectedRouteRestaurantOwner = () => {
     const navigate = useNavigate();
-    const isUserAuth = useSelector((state) => state.restaurantOwner.isRestaurantOwnerAuth);
+    //const isUserAuth = useSelector((state) => state.restaurantOwner.isRestaurantOwnerAuth);
 
     return <Outlet />;
 };

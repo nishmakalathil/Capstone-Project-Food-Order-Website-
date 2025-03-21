@@ -10,9 +10,13 @@ const client_domain = process.env.CLIENT_DOMAIN;
 const createCheckoutSession = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { products } = req.body;
+    const { products, totaldiscount, deliverycharges } = req.body;
 
-    console.log(products);
+    // Calculate the total price before discount
+    const totalPrice = products.reduce((acc, product) => acc + product.price, 0);
+
+    // Apply discount
+    const discountedTotal = totalPrice - totaldiscount + deliverycharges;
 
     const lineItems = products.map((product) => ({
       price_data: {
@@ -21,7 +25,7 @@ const createCheckoutSession = async (req, res) => {
           name: product?.name,
           images: [product?.image],
         },
-        unit_amount: Math.round(product?.price * 100),
+        unit_amount: Math.round(discountedTotal * 100),
       },
       quantity: 1,
     }));
@@ -33,9 +37,6 @@ const createCheckoutSession = async (req, res) => {
       success_url: `${client_domain}/user/payment-success`,
       cancel_url: `${client_domain}/user/payment-cancel`,
     });
-
-    // const newOrder = new Order({ userId, sessionId: session.id });
-    // await newOrder.save();
 
     res.json({ success: true, sessionId: session.id });
   } catch (error) {

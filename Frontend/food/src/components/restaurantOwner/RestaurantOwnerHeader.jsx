@@ -1,8 +1,22 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axiosInstance from "../../config/axiosInstances";
 
 const RestaurantOwnerHeader = () => {
   const navigate = useNavigate();
+  
+
+  const handleLogout = async () => {
+    try {
+      const response = await axiosInstance.post("/restaurantOwner/logout");
+      if (response.data.success) navigate("/restaurantOwner/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  
+  
   return (
     <div className="flex justify-between items-center p-4 md:p-14 h-auto shadow-2xl flex-wrap">
       {/* Logo and Search Bar Section */}
@@ -37,16 +51,6 @@ const RestaurantOwnerHeader = () => {
         <nav>
           <ul className="flex justify-center items-center gap-6 text-md">
             <li>
-              <Link to={"/"} className="font-bold">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to={"/about"} className="font-bold">
-                About
-              </Link>
-            </li>
-            <li>
               <Link to={"/restaurantOwner/get-restaurants"} className="font-bold">
                 Restaurants
               </Link>
@@ -61,9 +65,16 @@ const RestaurantOwnerHeader = () => {
                 Profile
               </Link>
             </li>
+            <li>
+              <button 
+                onClick={handleLogout} 
+                className="bg-pink-500 text-white text-lg py-3 px-8 rounded-full hover:bg-pink-600 transition">
+                Logout
+              </button>
+            </li>
           </ul>
         </nav>
-
+        
       </div>
     </div>
   );

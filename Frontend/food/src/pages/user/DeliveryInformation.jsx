@@ -15,7 +15,6 @@ const DeliveryInformation = () => {
   const { cartItems } = useSelector((state) => state.cart); // Assuming cartItems are stored in Redux
   const [newAddress, setNewAddress] = useState({
     deliveryAddress: '',
-    deliveryTime: '',
     contactNumber: '',
     deliveryInstructions: '',
   });
@@ -30,7 +29,7 @@ const DeliveryInformation = () => {
 
   // Save new address
   const handleSaveAddress = async () => {
-    if (newAddress.deliveryAddress && newAddress.deliveryTime && newAddress.contactNumber) {
+    if (newAddress.deliveryAddress && newAddress.contactNumber) {
       try {
         await dispatch(saveDeliveryInfo(newAddress));
         alert('Delivery address added successfully');
@@ -45,7 +44,7 @@ const DeliveryInformation = () => {
 
   // Update an existing address
   const handleUpdateAddress = async () => {
-    if (!newAddress.deliveryAddress || !newAddress.deliveryTime || !newAddress.contactNumber) {
+    if (!newAddress.deliveryAddress || !newAddress.contactNumber) {
       alert('Please fill in all required fields');
       return;
     }
@@ -77,7 +76,6 @@ const DeliveryInformation = () => {
   const handleEditClick = (address) => {
     setNewAddress({
       deliveryAddress: address.deliveryAddress,
-      deliveryTime: address.deliveryTime,
       contactNumber: address.contactNumber,
       deliveryInstructions: address.deliveryInstructions,
     });
@@ -108,7 +106,6 @@ const DeliveryInformation = () => {
   const resetForm = () => {
     setNewAddress({
       deliveryAddress: '',
-      deliveryTime: '',
       contactNumber: '',
       deliveryInstructions: '',
     });
@@ -133,19 +130,6 @@ const DeliveryInformation = () => {
             value={newAddress.deliveryAddress}
             onChange={(e) => setNewAddress({ ...newAddress, deliveryAddress: e.target.value })}
             placeholder="Enter delivery address"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700" htmlFor="deliveryTime">
-            Delivery Time
-          </label>
-          <input
-            id="deliveryTime"
-            type="text"
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-            value={newAddress.deliveryTime}
-            onChange={(e) => setNewAddress({ ...newAddress, deliveryTime: e.target.value })}
-            placeholder="Enter delivery time"
           />
         </div>
         <div className="mb-4">
@@ -208,7 +192,6 @@ const DeliveryInformation = () => {
                 <li key={address._id} className="border p-4 rounded-lg">
                   <div>
                     <h4 className="font-semibold">{address.deliveryAddress}</h4>
-                    <p>{address.deliveryTime}</p>
                     <p>{address.contactNumber}</p>
                     <p>{address.deliveryInstructions}</p>
                   </div>

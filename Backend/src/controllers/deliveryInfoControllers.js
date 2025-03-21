@@ -6,11 +6,11 @@ const DeliveryInfo = require('../Models/deliveryInfoModel.js');
 // Example: Adding a new address
 const saveDeliveryInfo = async (req, res) => {
     try {
-        const { deliveryAddress, deliveryTime, contactNumber, deliveryInstructions } = req.body;
+        const { deliveryAddress, contactNumber, deliveryInstructions } = req.body;
         const userId = req.user.id;  // Assuming req.user contains user info
 
         // Check if all required fields are present
-        if (!deliveryAddress || !deliveryTime || !contactNumber) {
+        if (!deliveryAddress || !contactNumber) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -25,7 +25,6 @@ const saveDeliveryInfo = async (req, res) => {
         // Push the new address to the addresses array
         deliveryInfo.addresses.push({
             deliveryAddress,
-            deliveryTime,
             contactNumber,
             deliveryInstructions: deliveryInstructions || ""
         });
@@ -52,11 +51,11 @@ const saveDeliveryInfo = async (req, res) => {
 const updateDeliveryInfo = async (req, res) => {
     try {
         //console.log('here in delivery info');
-        const { deliveryAddress, deliveryTime, contactNumber, deliveryInstructions, _id } = req.body;
+        const { deliveryAddress, contactNumber, deliveryInstructions, _id } = req.body;
         const userId = req.user.id;
 
         // Check if the required fields are provided
-        if ( !deliveryAddress || !deliveryTime || !contactNumber) {
+        if ( !deliveryAddress || !contactNumber) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
@@ -75,7 +74,6 @@ const updateDeliveryInfo = async (req, res) => {
 
         // Update the address fields
         address.deliveryAddress = deliveryAddress || address.deliveryAddress;
-        address.deliveryTime = deliveryTime || address.deliveryTime;
         address.contactNumber = contactNumber || address.contactNumber;
         address.deliveryInstructions = deliveryInstructions || address.deliveryInstructions;
 

@@ -13,7 +13,7 @@ const ManageCoupons = () => {
         fetchCoupons();
     }, []);
 
-    // Fetch all coupons
+
     const fetchCoupons = async () => {
         try {
             const response = await axiosInstance.get("/coupon/get-available");
@@ -27,7 +27,7 @@ const ManageCoupons = () => {
         }
     };
 
-    // Create a new coupon
+    
     const createCoupon = async (e) => {
         e.preventDefault();
         try {
@@ -47,7 +47,7 @@ const ManageCoupons = () => {
         }
     };
 
-    // Delete an unused coupon
+    
     const deleteCoupon = async (couponCode) => {
         if (!window.confirm("Are you sure you want to delete this coupon?")) return;
     
@@ -87,7 +87,7 @@ const ManageCoupons = () => {
                     />
                     <input
                         type="number"
-                        placeholder="Discount (%)"
+                        placeholder="Discount less"
                         value={discount}
                         onChange={(e) => setDiscount(e.target.value)}
                         className="p-2 border rounded-lg w-full"
@@ -121,7 +121,7 @@ const ManageCoupons = () => {
                         <thead>
                             <tr className="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
                                 <th className="py-3 px-6 text-left">Code</th>
-                                <th className="py-3 px-6 text-left">Discount (%)</th>
+                                <th className="py-3 px-6 text-left">Discount less</th>
                                 <th className="py-3 px-6 text-left">Expires On</th>
                                 <th className="py-3 px-6 text-left">Actions</th>
                             </tr>
@@ -130,7 +130,7 @@ const ManageCoupons = () => {
                             {coupons.map((coupon) => (
                                 <tr key={coupon._id} className="border-b border-gray-200 hover:bg-gray-100">
                                     <td className="py-3 px-6">{coupon.code}</td>
-                                    <td className="py-3 px-6">{coupon.discount}%</td>
+                                    <td className="py-3 px-6">{coupon.discount}</td>
                                     <td className="py-3 px-6">{new Date(coupon.expirationDate).toLocaleDateString()}</td>
                                     <td className="py-3 px-6">
                                         <button
