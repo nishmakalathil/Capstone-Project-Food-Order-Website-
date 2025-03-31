@@ -20,8 +20,6 @@ restaurantsRouter.get('/get-single/:id', getSingleRestaurantById);
 //update restaurants by Id
 restaurantsRouter.put('/update/:id', restaurantOwnerAuth, upload.single('image'), updateRestaurantById);
 
-
-
 //delete restaurants
 restaurantsRouter.delete('/delete-restaurants', restaurantOwnerAuth, deleteRestaurant);
 

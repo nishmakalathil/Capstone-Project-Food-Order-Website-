@@ -10,7 +10,7 @@ const orderSchema = new mongoose.Schema(
     cart: {
       menuItems: [
         {
-          itemId: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem' },
+          menuItemId: { type: mongoose.Schema.Types.ObjectId, ref: 'MenuItem' },
           quantity: { type: Number },
           price: { type: Number },
           image: { type: String },
@@ -29,6 +29,7 @@ const orderSchema = new mongoose.Schema(
     },
     deliveryCharges: { type: Number }, // Delivery charges included here
     totalAmount: { type: Number }, // Total amount after applying delivery charges, coupon, etc.
+    reviewed: { type: Boolean, default: false }, // ✅ Added review field (default: false)
   },
   { timestamps: true } // ✅ Automatically adds createdAt (Order Date) & updatedAt
 );

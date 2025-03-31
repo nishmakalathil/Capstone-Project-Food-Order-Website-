@@ -22,47 +22,64 @@ const DeliveryInformation = () => {
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
-  // Fetch delivery addresses when the component mounts
+  
   useEffect(() => {
     dispatch(getAllDeliveryInfo());
   }, [dispatch]);
 
-  // Save new address
+  
   const handleSaveAddress = async () => {
-    if (newAddress.deliveryAddress && newAddress.contactNumber) {
-      try {
-        await dispatch(saveDeliveryInfo(newAddress));
+    if (!newAddress.deliveryAddress || !newAddress.contactNumber) {
+      alert('Please fill in all fields');
+      return;
+    }
+  
+    try {
+      const resultAction = await dispatch(saveDeliveryInfo(newAddress));
+  
+      if (saveDeliveryInfo.fulfilled.match(resultAction)) {
+        await dispatch(getAllDeliveryInfo()); // 🔥 Refetch addresses immediately
         alert('Delivery address added successfully');
         resetForm();
-      } catch (err) {
+      } else {
         alert('Failed to add delivery address');
       }
-    } else {
-      alert('Please fill in all fields');
+    } catch (err) {
+      alert('An error occurred while adding the delivery address');
     }
   };
+  
 
-  // Update an existing address
+  
   const handleUpdateAddress = async () => {
     if (!newAddress.deliveryAddress || !newAddress.contactNumber) {
       alert('Please fill in all required fields');
       return;
     }
+  
     const updatedAddress = {
       ...newAddress,
-      _id: editingAddressId, // Ensure you're sending the correct address ID
+      _id: editingAddressId,
     };
+  
     try {
-      await dispatch(updateDeliveryInfo(updatedAddress));
-      alert('Delivery address updated successfully');
-      setIsEditing(false);
-      resetForm();
+      const resultAction = await dispatch(updateDeliveryInfo(updatedAddress));
+  
+      if (updateDeliveryInfo.fulfilled.match(resultAction)) {
+        await dispatch(getAllDeliveryInfo()); // 🔥 Refetch the updated addresses list
+        alert('Delivery address updated successfully');
+        setIsEditing(false);
+        resetForm();
+      } else {
+        alert('Failed to update delivery address');
+      }
     } catch (err) {
-      alert('Failed to update delivery address');
+      alert('An error occurred while updating the delivery address');
     }
   };
+  
 
-  // Delete address
+  
   const handleDeleteAddress = async (addressId) => {
     try {
       await dispatch(deleteDeliveryInfo(addressId));
@@ -72,7 +89,7 @@ const DeliveryInformation = () => {
     }
   };
 
-  // Handle address edit click
+  
   const handleEditClick = (address) => {
     setNewAddress({
       deliveryAddress: address.deliveryAddress,
@@ -83,26 +100,26 @@ const DeliveryInformation = () => {
     setIsEditing(true);
   };
 
-  // Handle address selection
+  
   const handleAddressSelect = (address) => {
     setSelectedAddress(address);
   };
 
-  // Proceed to Create Order page
+
   const handleProceedToCreateOrder = () => {
     if (selectedAddress) {
-      // Store selected address and cart items in localStorage
+      
       localStorage.setItem('selectedAddress', JSON.stringify(selectedAddress));
-      //localStorage.setItem('cartItems', JSON.stringify(cartItems));
+      
 
-      // Navigate to the Create Order page
+      
       navigate('/user/create-order');
     } else {
       alert('Please select a delivery address');
     }
   };
 
-  // Reset the form fields
+  
   const resetForm = () => {
     setNewAddress({
       deliveryAddress: '',
@@ -176,7 +193,7 @@ const DeliveryInformation = () => {
         </div>
       </div>
 
-      {/* Display Addresses */}
+      
       <h3 className="text-xl mb-4">Your Saved Addresses</h3>
       {loading ? (
         <div>Loading...</div>

@@ -6,7 +6,7 @@ const OrderDisplay = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [reviewedItems, setReviewedItems] = useState(new Set()); // Track reviewed menu items
+    const [reviewedItems, setReviewedItems] = useState(new Map()); 
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,8 +26,19 @@ const OrderDisplay = () => {
             try {
                 const response = await axiosInstance.get("/review/get-user-reviews");
                 if (response.data && Array.isArray(response.data.data)) {
-                    const reviewedMenuIds = new Set(response.data.data.map(review => review.menuItemId));
-                    setReviewedItems(reviewedMenuIds);
+                    
+
+                    const reviewedMenuMap = new Map();
+                    response.data.data.forEach(review => {
+                        const key = `${review.orderId}-${review.menuItemId._id}`;
+                        reviewedMenuMap.set(key, {
+                            rating: review.rating,
+                            comment: review.comment,
+                        });
+                    });
+
+                    
+                    setReviewedItems(reviewedMenuMap);
                 }
             } catch (error) {
                 console.error("Error fetching user reviews:", error);
@@ -54,38 +65,50 @@ const OrderDisplay = () => {
                                 <p><strong>Order Date:</strong> {new Date(order.createdAt).toLocaleDateString()}</p>
                                 <p><strong>Total:</strong> ${order.totalAmount}</p>
 
-                                {/* Display Ordered Items with Images */}
                                 <div className="mt-2">
                                     <strong>Items:</strong>
                                     {Array.isArray(order.cart.menuItems) ? (
                                         <ul>
-                                            {order.cart.menuItems.map((item, index) => (
-                                                <li key={index} className="flex items-center gap-4 my-2">
-                                                    {/* Item Image */}
-                                                    <img
-                                                        src={item.image || "https://via.placeholder.com/50"}
-                                                        alt={item.name}
-                                                        className="w-12 h-12 rounded-lg object-cover"
-                                                    />
-                                                    {/* Item Details */}
-                                                    <div>
-                                                        <p className="font-semibold">{item.name}</p>
-                                                        <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                                            {order.cart.menuItems.map((item, index) => {
+                                                const reviewKey = `${order._id || order.id}-${item.menuItemId}`;
+                                                const reviewData = reviewedItems.get(reviewKey);
+                                                return (
+                                                    <li key={index} className="flex items-center gap-4 my-2">
+                                                        <img
+                                                            src={item.image || "https://via.placeholder.com/50"}
+                                                            alt={item.name}
+                                                            className="w-12 h-12 rounded-lg object-cover"
+                                                        />
+                                                        <div>
+                                                            <p className="font-semibold">{item.name}</p>
+                                                            <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
 
-                                                        {/* Leave a Review Button (Only if not already reviewed) */}
-                                                        {!reviewedItems.has(item._id) ? (
-                                                            <button
-                                                                onClick={() => navigate(`/user/leave-review/${item._id}`)}
-                                                                className="mt-2 px-4 py-2 text-sm bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition-all"
-                                                            >
-                                                                ⭐ Leave a Review
-                                                            </button>
-                                                        ) : (
-                                                            <p className="text-sm text-gray-500 mt-2">✅ Review Submitted</p>
-                                                        )}
-                                                    </div>
-                                                </li>
-                                            ))}
+                                                            {reviewData ? (
+                                                                <div className="mt-2 text-sm text-gray-500">
+                                                                    <p>✅ Review Submitted</p>
+                                                                    <p><strong>Rating:</strong> {reviewData.rating} ⭐</p>
+                                                                    <p><strong>Comment:</strong> {reviewData.comment}</p>
+
+                                                                    <button
+                                                                    onClick={() => navigate(`/user/leave-review/${order._id || order.id}/${item.menuItemId}`)}
+                                                                    className="mt-2 px-4 py-2 text-sm bg-yellow-500 text-white rounded-full shadow-md hover:bg-blue-600 transition-all"
+                                                                >
+                                                                     Update Review
+                                                                </button>
+                                                                </div>
+                                                                
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => navigate(`/user/leave-review/${order._id || order.id}/${item.menuItemId}`)}
+                                                                    className="mt-2 px-4 py-2 text-sm bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition-all"
+                                                                >
+                                                                    ⭐ Leave a Review
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })}
                                         </ul>
                                     ) : (
                                         <p>No items</p>
@@ -98,7 +121,6 @@ const OrderDisplay = () => {
                     !loading && !error && <p className="text-center text-gray-600">No orders found.</p>
                 )}
 
-                {/* Back to Profile Button */}
                 <div className="mt-4 flex flex-col gap-3">
                     <button
                         onClick={() => navigate("/user/profile")}

@@ -70,7 +70,7 @@ const router = createBrowserRouter([
           { path: "payment-success", element: <PaymentSuccessPage /> },
           { path: "payment-cancel", element: <PaymentCancelPage /> },
           { path: "order-display", element: <OrderDisplay /> },
-          { path: "leave-review/:id", element: < LeaveReview/> },
+          { path: "leave-review/:orderId/:menuItemId", element: < LeaveReview/> },
           
         ],
       },

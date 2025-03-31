@@ -10,10 +10,10 @@ function RestaurantOwnerSignUp() {
 
     const isRestaurantOwnerAuth = useSelector((state) => state.restaurantOwner.isRestaurantOwnerAuth);
     
-    // If logged in user, redirect to profile 
+    
     if (isRestaurantOwnerAuth) {
         navigate("/restaurantOwner/profile");
-        return null;  // Prevent rendering the form if the user is already authenticated
+        return null;  
     }
 
     const onSubmit = async (data) => {
@@ -37,7 +37,7 @@ function RestaurantOwnerSignUp() {
                 </div>
                 <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                     <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
-                        {/* Name */}
+                        
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Username</span>
@@ -45,7 +45,7 @@ function RestaurantOwnerSignUp() {
                             <input type="text" placeholder="name" {...register("name")} className="input input-bordered" required />
                         </div>
 
-                        {/* Email */}
+                        
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Email</span>
@@ -53,7 +53,7 @@ function RestaurantOwnerSignUp() {
                             <input type="email" placeholder="email" {...register("email")} className="input input-bordered" required />
                         </div>
 
-                        {/* Password */}
+                        
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Password</span>
@@ -67,7 +67,7 @@ function RestaurantOwnerSignUp() {
                             />
                         </div>
 
-                        {/* Phone Number */}
+                        
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Phone Number</span>
@@ -81,7 +81,7 @@ function RestaurantOwnerSignUp() {
                             />
                         </div>
 
-                        {/* Address */}
+                        
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Address</span>
@@ -95,7 +95,7 @@ function RestaurantOwnerSignUp() {
                             />
                         </div>
 
-                        {/* Role Selection */}
+                        
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Role</span>
@@ -106,14 +106,14 @@ function RestaurantOwnerSignUp() {
                             </select>
                         </div>
 
-                        {/* Existing User? */}
+                        
                         <label className="label">
                             <Link to={'/login'} className="label-text-alt link link-hover">
                                 Existing User? Log in here
                             </Link>
                         </label>
 
-                        {/* Submit Button */}
+                        
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Sign Up</button>
                         </div>

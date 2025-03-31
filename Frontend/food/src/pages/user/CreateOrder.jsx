@@ -17,23 +17,23 @@ const CreateOrder = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Get cart items from redux store
+  
   const { cart } = useSelector((state) => state.cart);
 
-  // Set deliveryCharges to a fixed value of 50
+  
   const deliveryCharges = 50;
 
   useEffect(() => {
-    // Get selected address from localStorage
+    
     const savedAddress = JSON.parse(localStorage.getItem('selectedAddress'));
     setSelectedAddress(savedAddress);
   
-    // Set cart items (if any) from Redux store
+    
     if (cart && cart.menuItems) {
       setCartItems(cart.menuItems);
     }
   
-    // Fetch coupon details separately
+    
     try {
       const storedCoupon = JSON.parse(localStorage.getItem("couponDetails")) || { discount: 0 }; // Default if null
       setCouponDetails(storedCoupon);
@@ -41,17 +41,19 @@ const CreateOrder = () => {
       console.error("Error parsing couponDetails:", error);
       setCouponDetails({ discount: 0 });
     }
-  }, [cart]); // Runs when cart changes
+  }, [cart]); 
   
-  //  useEffect to Recalculate Total When `couponDetails` Updates
+  
   useEffect(() => {
+
     if (cart) {
-      const discount = couponDetails?.discount || 0; // Ensure discount is applied correctly
+      const discount = couponDetails?.discount || 0; 
       console.log(`Cart Total: ${cart.totalPrice}, Delivery: ${deliveryCharges}, Discount: ${discount}`);
       
       setTotalAmount(cart.totalPrice + deliveryCharges - discount);
     }
-  }, [cart, couponDetails]); // Runs when `cart` or `couponDetails` changes
+
+  }, [cart, couponDetails]); 
 
   const handleMakePayment = async () => {
     if (!selectedAddress) {
@@ -120,7 +122,7 @@ const CreateOrder = () => {
             <ul>
               {cartItems.map((item) => (
                 <li key={item.menuItemId._id} className="mb-4 flex items-center">
-                  {/* Display image if available */}
+                  
                   <img
                     src={item.image || "/path/to/placeholder-image.jpg"}
                     alt={item.menuItemId.name}
@@ -128,7 +130,7 @@ const CreateOrder = () => {
                     onError={(e) => (e.target.src = "/path/to/placeholder-image.jpg")}
                   />
                   <div>
-                    <p><strong>{item.menuItemId.name}</strong></p> {/* Display Menu Item Name */}
+                    <p><strong>{item.menuItemId.name}</strong></p>
                     <p>Price: ₹{item.price}</p>
                     <p>Quantity: {item.quantity}</p>
                     <p>Total: ₹{item.price * item.quantity}</p>

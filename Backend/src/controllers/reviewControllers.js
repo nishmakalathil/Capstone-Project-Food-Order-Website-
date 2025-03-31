@@ -5,7 +5,7 @@ const MenuItem = require("../Models/menuItemsModel.js");
 
 const addReview = async (req, res) => {
     try {
-        const { menuItemId, rating, comment } = req.body;
+        const { menuItemId, rating, comment, orderId } = req.body;
         const userId = req.user.id;
 
         // Validate if the menu exists
@@ -19,7 +19,7 @@ const addReview = async (req, res) => {
         }
 
         // Create or update the review
-        const review = await Review.findOneAndUpdate({ userId, menuItemId }, { rating, comment }, { new: true, upsert: true });
+        const review = await Review.findOneAndUpdate({ userId, menuItemId, orderId }, { rating, comment }, { new: true, upsert: true });
 
         // Optionally, you can update the course's average rating here
 
@@ -34,11 +34,12 @@ const addReview = async (req, res) => {
  const getMenuItemReviews = async (req, res) => {
     try {
        
-        const { menuItemId } = req.params;
+        const { orderId, menuItemId } = req.params;
 
-        const reviews = await Review.find({ menuItemId }).populate("userId", "name").sort({ createdAt: -1 });
+        const reviews = await Review.findOne({ menuItemId, orderId })
+            .populate("userId", "name");
 
-        if (!reviews.length) {
+        if (!reviews) {
             return res.status(404).json({ message: "No reviews found for this menuiitem" });
         }
 

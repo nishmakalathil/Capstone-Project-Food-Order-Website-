@@ -11,7 +11,6 @@ const deliveryInfoSchema = new mongoose.Schema({
     addresses: [  // Use an array of objects for storing multiple addresses
         {
             deliveryAddress: { type: String, required: true },
-            deliveryTime: { type: Date, required: true },
             contactNumber: { type: String, required: true },
             deliveryInstructions: { type: String, default: "" },
         }

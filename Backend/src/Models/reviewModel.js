@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const MenuItem =  require('./menuItemsModel.js');
 const User = require('./userModel.js'); 
+const Order = require('./orderModel.js');
 
 const reviewSchema = new mongoose.Schema({
     userId: {
@@ -11,6 +12,11 @@ const reviewSchema = new mongoose.Schema({
     menuItemId: {
         type: mongoose.Types.ObjectId,
         ref: "MenuItem",
+        required: true,
+    },
+    orderId: {
+        type: mongoose.Types.ObjectId,
+        ref: "Order",
         required: true,
     },
     rating: {

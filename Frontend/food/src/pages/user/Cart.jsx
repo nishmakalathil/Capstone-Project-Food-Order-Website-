@@ -75,6 +75,7 @@ const Cart = () => {
   const handleProceedToCheckout = () => {
     if (cart && cart.menuItems.length > 0) {
       localStorage.setItem('cartItems', JSON.stringify(cart));
+      dispatch(addToCart(cart));
       navigate("/user/deliveryinfo");
     } else {
       alert('Your cart is empty, add items before proceeding to checkout.');

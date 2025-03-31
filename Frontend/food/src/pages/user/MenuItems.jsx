@@ -9,10 +9,10 @@ function MenuItems() {
     const [menuItemsList, isLoading, error] = UseFetch("/menu-items/get-menu");
     const navigate = useNavigate();
 
-    // Get authentication state from Redux
+    
     const isUserAuth = useSelector((state) => state.user.isUserAuth);
 
-    // Function to handle menu item click
+    
     const handleMenuItemClick = (menuItemId) => {
         if (!isUserAuth) {
             toast.error("You need to log in to view menu item details!", {
@@ -25,7 +25,7 @@ function MenuItems() {
                 },
             });
 
-            // Redirect user to login page after 2 seconds
+            
             setTimeout(() => {
                 navigate("/login", { state: { from: `/menu-items/details/${menuItemId}` } });
             }, 2000);
@@ -33,7 +33,7 @@ function MenuItems() {
             return;
         }
 
-        navigate(`/menu-items/details/${menuItemId}`); // Allow navigation if logged in
+        navigate(`/menu-items/details/${menuItemId}`); 
     };
 
     if (isLoading) {

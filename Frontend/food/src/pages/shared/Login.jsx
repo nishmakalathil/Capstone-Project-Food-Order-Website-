@@ -19,18 +19,14 @@ function Login({ role }) {
     window.scrollTo(0, 0);
   }, []);
 
-  
-
   const roleConfig = {
     user: {
       loginAPI: "/user/login",
       signupRoute: "/signup",
-      
     },
     restaurantOwner: {
       loginAPI: "/restaurantOwner/login",
       signupRoute: "/restaurantOwner/signup",
-      
     },
     admin: {
       loginAPI: "/admin/login",
@@ -38,11 +34,12 @@ function Login({ role }) {
     },
   };
 
-  let profileRoute = "/user/profile";
-
-  const config = roleConfig[role] || roleConfig.user;
+  // Default role to "user" if no role is provided
+  const currentRole = role || "user";
+  const config = roleConfig[currentRole];
 
   const onSubmit = async (data) => {
+    console.log('here');
     try {
       // Clear old session before logging in
       dispatch(clearUser());
@@ -57,28 +54,25 @@ function Login({ role }) {
 
       console.log("Logged-in user:", loggedInUser);
 
-
       // Assign correct authentication state
-      if (loggedInUser.role == "restaurantOwner") {
+      if (loggedInUser.role === "restaurantOwner") {
         dispatch(saveRestaurantOwner(loggedInUser));
-        profileRoute = "/restaurantOwner/profile";
+        navigate("/restaurantOwner/profile");
         console.log("Restaurant Owner logged in");
-      } else if (loggedInUser.role == "admin") {
+      } else if (loggedInUser.role === "admin") {
         dispatch(saveAdmin(loggedInUser));
-        profileRoute = "/admin/dashboard";
+        navigate("/admin/dashboard");
         console.log("Admin logged in");
-      } else if (loggedInUser.role == "user") {
+      } else {
         dispatch(saveUser(loggedInUser));
-        console.log("User logged in, isUserAuth should be true");
+        navigate("/user/profile");
+        console.log("User logged in");
       }
 
       localStorage.setItem("authToken", loggedInUser.token);
       localStorage.setItem("userRole", loggedInUser.role);
 
       toast.success("Login successful!", { position: "top-center" });
-
-
-      navigate(profileRoute);
       window.dispatchEvent(new Event("storage"));
     } catch (error) {
       console.error("Login error:", error);
@@ -91,7 +85,7 @@ function Login({ role }) {
     <div className="hero bg-base-200 min-h-screen">
       <div className="hero-content flex-col lg:flex-row-reverse" ref={loginRef}>
         <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">Login now! {role}</h1>
+          <h1 className="text-5xl font-bold">Login now! {currentRole}</h1>
           <p className="py-6">Please login to access your account.</p>
         </div>
 
@@ -101,17 +95,36 @@ function Login({ role }) {
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
-              <input type="email" placeholder="email" {...register("email")} className="input input-bordered" required autoComplete="email" />
+              <input
+                type="email"
+                placeholder="email"
+                {...register("email")}
+                className="input input-bordered"
+                required
+                autoComplete="email"
+              />
             </div>
 
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
-              <input type="password" placeholder="password" {...register("password")} className="input input-bordered" required autoComplete="current-password" />
+              <input
+                type="password"
+                placeholder="password"
+                {...register("password")}
+                className="input input-bordered"
+                required
+                autoComplete="current-password"
+              />
               <div className="flex items-center justify-between">
                 <Link to="#" className="label-text-alt link link-hover">Forgot password?</Link>
-                <Link to={config.signupRoute} className="label-text-alt link link-hover">New User?</Link>
+                {/* Only show "New User?" link if role is "user" */}
+                {currentRole === "user" && (
+                  <Link to={config.signupRoute} className="label-text-alt link link-hover">
+                    New User?
+                  </Link>
+                )}
               </div>
             </div>
 

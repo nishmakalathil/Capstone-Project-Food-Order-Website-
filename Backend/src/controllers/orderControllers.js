@@ -22,6 +22,9 @@ const createOrder = async (req, res) => {
     // Calculate delivery charges (example: fixed amount or based on cart value)
     const deliveryCharges = cart.totalPrice > 50 ? 0 : 5;  // Example logic
 
+    console.log('Create Order');
+    console.log(cart.menuItems);
+
     // Create a new order object
     const order = new Order({
       userId,

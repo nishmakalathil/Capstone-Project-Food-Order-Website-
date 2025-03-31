@@ -14,12 +14,12 @@ const EditProfile = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // Fetch the current user data and populate the form
+    
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
                 const response = await axiosInstance.get('/user/profile');
-                setUser(response.data.data);  // Populate the form with existing user data
+                setUser(response.data.data);  
             } catch (error) {
                 console.error('Error fetching user profile for editing', error);
             }
@@ -28,7 +28,7 @@ const EditProfile = () => {
         fetchUserProfile();
     }, []);
 
-    // Handle form field changes
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setUser((prevState) => ({
@@ -37,14 +37,14 @@ const EditProfile = () => {
         }));
     };
 
-    // Handle the form submission to update the profile
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
             const response = await axiosInstance.put('/user/update', user);
-            // Redirect to profile page after successful update
+            
             navigate('/user/profile');
         } catch (error) {
             setError('Failed to update profile');
@@ -54,11 +54,11 @@ const EditProfile = () => {
         }
     };
 
-    // Handle Logout action
+    
     const handleLogout = async () => {
         try {
             const response = await axiosInstance.post('/user/logout');
-            navigate('/login'); // Redirect to login page after successful logout
+            navigate('/login'); 
         } catch (error) {
             console.error('Error logging out', error);
         }
@@ -66,7 +66,7 @@ const EditProfile = () => {
 
     return (
         <div className="max-w-md mx-auto p-4">
-            {/* Welcome message */}
+            
             <h1 className="text-2xl font-bold text-center mb-6">Edit Your Profile</h1>
 
             <h2 className="text-2xl font-semibold mb-4">Edit Profile</h2>
@@ -144,7 +144,7 @@ const EditProfile = () => {
                 </button>
             </form>
 
-            {/* Logout Button with Tailwind CSS for oval shape */}
+            
             <button
                 onClick={handleLogout}
                 className="w-full bg-pink-500 text-white py-2 px-4 rounded-full focus:outline-none transition duration-300 mt-4"

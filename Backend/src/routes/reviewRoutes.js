@@ -10,7 +10,7 @@ reviewRouter.post("/add-review", userAuth, addReview);
 
 
 //Get Reviews
-reviewRouter.get("/get-menu-reviews/:menuItemId", getMenuItemReviews);
+reviewRouter.get("/get-menu-reviews/:orderId/:menuItemId", getMenuItemReviews);
 
 //Delete Review
 reviewRouter.delete('/delete-review/:reviewId', userAuth, deleteReview);

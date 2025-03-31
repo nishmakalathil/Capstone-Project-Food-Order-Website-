@@ -1,137 +1,116 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../config/axiosInstances";
-import { toast } from "react-hot-toast";
 
 const LeaveReview = () => {
-    const { id } = useParams();  // ✅ Get menu item ID from URL
+    const { orderId, menuItemId  } = useParams();
     const navigate = useNavigate();
     const [menuItem, setMenuItem] = useState(null);
-    const [review, setReview] = useState("");
     const [rating, setRating] = useState(5);
-    const [loading, setLoading] = useState(true);
+    const [comment, setComment] = useState("");
     const [error, setError] = useState(null);
-
-    console.log("Reviewing menuItemId:", id); // ✅ Debugging
-
-    // ✅ Fetch menu item details
+    const [existingReview, setExistingReview] = useState(null);
     
     useEffect(() => {
-        if (!id) {
-            setError("Invalid menu item ID.");
-            setLoading(false);
+        if (!menuItemId) {
+            setError("Menu item ID is missing.");
             return;
         }
-    
+        
         const fetchMenuItem = async () => {
             try {
-                console.log("Fetching menu item details...");
-                console.log("API Request URL:", `/menu-items/get-single/${id}`); // ✅ Debugging
-    
-                const response = await axiosInstance.get(`/menu-items/get-single/${id}`);
-    
-                if (!response.data || !response.data.data) {
-                    throw new Error("Menu item not found");
-                }
-    
-                setMenuItem(response.data.data);
-                console.log("Fetched menu item:", response.data.data);
-            } catch (err) {
+                const response = await axiosInstance.get(`/menu-items/get-single/${menuItemId}`);
+                setMenuItem(response.data);
+            } catch (error) {
                 setError("Failed to load menu item details.");
-                console.error("Error fetching menu item:", err);
-            } finally {
-                setLoading(false);
+                console.error("Error fetching menu item:", error);
             }
         };
-    
+
+        const fetchReview = async () => {
+            try {
+                const response = await axiosInstance.get(`/review/get-menu-reviews/${orderId}/${menuItemId}`);
+                console.log(response.data.data);
+                if (response.data.data) {
+                    setExistingReview(response.data.data);
+                    setRating(response.data.data.rating);
+                    setComment(response.data.data.comment);
+                }
+            } catch (error) {
+                console.error("No existing review found or failed to fetch review:", error);
+            }
+        };
+        
         fetchMenuItem();
-    }, [id]);
-    // ✅ Handle form submission
+        fetchReview();
+    }, [menuItemId]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!id) {
-            toast.error("Invalid menu item ID.", { position: "top-center" });
+        if (!menuItemId) {
+            setError("Menu item ID is missing.");
             return;
         }
-
         try {
-            console.log("Submitting review...", { menuItemId: id, rating, comment: review });
+            const reviewData = { menuItemId, rating, comment, orderId };
 
-            await axiosInstance.post(`/review/add-review`, {
-                menuItemId: id,  // ✅ Use `id` from `useParams()`
-                rating,
-                comment: review,
-            });
-
-            toast.success("Review submitted successfully!", { position: "top-center" });
-            navigate("/user/order-display"); // ✅ Redirect to orders page
-        } catch (err) {
-            toast.error(err.response?.data?.message || "Failed to submit review.", { position: "top-center" });
-            console.error("Review submission error:", err);
+            await axiosInstance.post("/review/add-review", reviewData);
+            
+            navigate("/user/order-display");
+        } catch (error) {
+            setError("Failed to submit review. Please try again.");
+            console.error("Error submitting review:", error);
         }
     };
-
-    if (loading) return <p className="text-center">Loading menu item details...</p>;
-    if (error) return <p className="text-center text-red-500">{error}</p>;
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                <h1 className="text-2xl font-semibold text-center mb-4">Leave a Review</h1>
-
+                <h1 className="text-2xl font-semibold text-center mb-4">{existingReview ? "Update Your Review" : "Leave a Review"}</h1>
+                {error && <p className="text-center text-red-500">{error}</p>}
                 {menuItem ? (
-                    <div className="text-center mb-4">
+                    <>
+                        <h2 className="text-lg font-bold">{menuItem.name}</h2>
                         <img
-                            src={menuItem.image || "https://via.placeholder.com/150"}
+                            src={menuItem.image || "https://via.placeholder.com/100"}
                             alt={menuItem.name}
-                            className="w-24 h-24 mx-auto rounded-lg object-cover"
+                            className="w-24 h-24 mx-auto my-2 rounded-lg"
                         />
-                        <h2 className="font-bold text-lg mt-2">{menuItem.name}</h2>
-                    </div>
+                        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                            <label>
+                                Rating (1-5):
+                                <input
+                                    type="number"
+                                    value={rating}
+                                    onChange={(e) => setRating(Number(e.target.value))}
+                                    min="1"
+                                    max="5"
+                                    className="w-full p-2 border rounded"
+                                />
+                            </label>
+                            <label>
+                                Comment:
+                                <textarea
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    className="w-full p-2 border rounded"
+                                    rows="3"
+                                />
+                            </label>
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                            >
+                                {existingReview ? "Update Review" : "Submit Review"}
+                            </button>
+                        </form>
+                    </>
                 ) : (
-                    <p className="text-center text-gray-600">Menu item details not available.</p>
+                    <p className="text-center">Loading menu item details...</p>
                 )}
-
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Rating:</label>
-                        <select
-                            value={rating}
-                            onChange={(e) => setRating(Number(e.target.value))}
-                            className="w-full p-2 border rounded"
-                        >
-                            {[5, 4, 3, 2, 1].map((num) => (
-                                <option key={num} value={num}>
-                                    {num} ⭐
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="block text-gray-700">Your Review:</label>
-                        <textarea
-                            value={review}
-                            onChange={(e) => setReview(e.target.value)}
-                            className="w-full p-2 border rounded"
-                            rows="3"
-                            required
-                        ></textarea>
-                    </div>
-
-                    <button
-                        type="submit"
-                        className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-                    >
-                        Submit Review
-                    </button>
-                </form>
-
-                {/* ✅ Back Button */}
                 <button
                     onClick={() => navigate("/user/order-display")}
-                    className="w-full bg-gray-400 text-white py-2 mt-4 rounded hover:bg-gray-500"
+                    className="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
                 >
                     Cancel
                 </button>

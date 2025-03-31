@@ -46,7 +46,7 @@ function MenuItemDetails() {
       return;
     }
 
-     // Check if the restaurant matches
+     
   if (cart && cart.restaurant_id && cart.restaurant_id !== menuItem.restaurant_id._id) {
     toast.error("You can only add items from the same restaurant. Please clear your cart first.", {
       position: "top-center",
@@ -54,7 +54,7 @@ function MenuItemDetails() {
     return;
   }
 
-    // console.log('Add to cart clicked');
+    
 
     dispatch(
       addToCart({
@@ -80,7 +80,7 @@ function MenuItemDetails() {
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-4 text-center sm:text-left">{menuItem.name}</h1>
         <img
-          src={menuItem.image || "/path/to/placeholder-image.jpg"} // Use default image if no image
+          src={menuItem.image || "/path/to/placeholder-image.jpg"} 
           alt={menuItem.name}
           className="w-full h-60 object-cover mb-4 rounded-lg"
         />

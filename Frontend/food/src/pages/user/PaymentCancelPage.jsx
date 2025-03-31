@@ -6,7 +6,7 @@ const PaymentCancelPage = () => {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigate("/"); // Redirects to homepage after 5 seconds
+      navigate("/"); 
     }, 5000);
 
     return () => clearTimeout(timeout);

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../config/axiosInstances';
 
 const Profile = () => {
+    
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
@@ -33,13 +34,13 @@ const Profile = () => {
     };
 
     const handleOrdersClick = () => {
-        navigate('/user/order-display'); // Navigate to the orders page
+        navigate('/user/order-display'); 
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-3xl flex">
-                {/* Left Side - Profile Info */}
+                
                 <div className="w-1/3 flex flex-col items-center border-r-2 pr-6">
                     <img
                         src={user?.profilePic || 'https://res.cloudinary.com/dbkexrtm3/image/upload/v1739786132/avatar-profile-icon-flat-style-female-user-profile-vector-illustration-isolated-background-women-profile-sign-business-concept_157943-38866_njdxig.avif'}
@@ -51,7 +52,7 @@ const Profile = () => {
                     <p className="text-gray-600">{user?.mobile}</p>
                 </div>
 
-                {/* Right Side - Buttons */}
+                
                 <div className="w-2/3 flex flex-col justify-center items-center gap-3 pl-6">
                     <button
                         onClick={handleEditClick}
