@@ -2,25 +2,25 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../config/axiosInstances';
 
-// Fetch all delivery info
+
 export const getAllDeliveryInfo = createAsyncThunk(
   'deliveryInfo/getAllDeliveryInfo',
   async () => {
     const response = await axiosInstance.get('/deliveryInfo/getAll');
-    return response.data.data; // Adjust based on your response structure
+    return response.data.data; 
   }
 );
 
-// Save delivery info
+
 export const saveDeliveryInfo = createAsyncThunk(
   'deliveryInfo/saveDeliveryInfo',
   async (deliveryData) => {
     const response = await axiosInstance.post('/deliveryInfo/save', deliveryData);
-    return response.data.data; // Ensure the correct return structure
+    return response.data.data; 
   }
 );
 
-// Update delivery info
+
 export const updateDeliveryInfo = createAsyncThunk(
   'deliveryInfo/updateDeliveryInfo',
   async (deliveryData) => {
@@ -30,56 +30,56 @@ export const updateDeliveryInfo = createAsyncThunk(
   }
 );
 
-// Delete delivery info
+
 export const deleteDeliveryInfo = createAsyncThunk(
   'deliveryInfo/deleteDeliveryInfo',
   async (addressId) => {
     const response = await axiosInstance.delete(`/deliveryInfo/delete/${addressId}`);
-    return addressId; // Return addressId to remove it from the state
+    return addressId; 
   }
 );
 
 const deliveryInfoSlice = createSlice({
   name: 'deliveryInfo',
   initialState: {
-    addresses: [], // Stores array of address objects
+    addresses: [], 
     loading: false,
     error: null,
   },
   extraReducers: (builder) => {
     builder
-      // Fetching all delivery info
+      
       .addCase(getAllDeliveryInfo.pending, (state) => {
         state.loading = true;
       })
       .addCase(getAllDeliveryInfo.fulfilled, (state, action) => {
         state.loading = false;
-        state.addresses = action.payload; // Populating the addresses array with fetched data
+        state.addresses = action.payload; 
       })
       .addCase(getAllDeliveryInfo.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       })
 
-      // Saving a new delivery address
+      
       .addCase(saveDeliveryInfo.fulfilled, (state, action) => {
-        state.addresses.push(action.payload);  // Add new address to the addresses array
+        state.addresses.push(action.payload);  
       })
 
-      // Updating an existing address
+      
       .addCase(updateDeliveryInfo.fulfilled, (state, action) => {
         const index = state.addresses.findIndex(
           (address) => address._id === action.payload._id
         );
         if (index !== -1) {
-          state.addresses[index] = action.payload; // Update the existing address
+          state.addresses[index] = action.payload; 
         }
       })
 
-      // Deleting an address
+    
       .addCase(deleteDeliveryInfo.fulfilled, (state, action) => {
         state.addresses = state.addresses.filter(
-          (address) => address._id !== action.payload // Remove the address by ID
+          (address) => address._id !== action.payload 
         );
       });
   },

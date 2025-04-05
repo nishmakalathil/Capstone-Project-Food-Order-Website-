@@ -17,9 +17,9 @@ const restaurantOwnerSchema = new mongoose.Schema({
         default: 'https://tcap.pbworks.com/f/1435170280/myAvatar.png' 
     },
 
-    approved: { type: Boolean, default: false }, // Approval status (Admin-controlled)
+    approved: { type: Boolean, default: false },
 
-}, { timestamps: true }); // Adds createdAt & updatedAt fields
+}, { timestamps: true }); 
 
 const RestaurantOwner = mongoose.model('RestaurantOwner', restaurantOwnerSchema);
 

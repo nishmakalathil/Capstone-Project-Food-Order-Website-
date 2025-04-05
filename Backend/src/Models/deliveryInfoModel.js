@@ -8,7 +8,7 @@ const deliveryInfoSchema = new mongoose.Schema({
         ref: 'User', 
         required: true 
     },
-    addresses: [  // Use an array of objects for storing multiple addresses
+    addresses: [  
         {
             deliveryAddress: { type: String, required: true },
             contactNumber: { type: String, required: true },

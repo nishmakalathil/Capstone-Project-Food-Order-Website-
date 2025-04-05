@@ -8,6 +8,7 @@ import { clearRestaurantOwner, saveRestaurantOwner } from "../../redux/features/
 import { clearUser, saveUser } from "../../redux/features/userSlice";
 import { toast } from "react-hot-toast";
 
+
 function Login({ role }) {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -34,14 +35,14 @@ function Login({ role }) {
     },
   };
 
-  // Default role to "user" if no role is provided
+  
   const currentRole = role || "user";
   const config = roleConfig[currentRole];
 
   const onSubmit = async (data) => {
     console.log('here');
     try {
-      // Clear old session before logging in
+      
       dispatch(clearUser());
       dispatch(clearRestaurantOwner());
       dispatch(clearAdmin());
@@ -54,7 +55,7 @@ function Login({ role }) {
 
       console.log("Logged-in user:", loggedInUser);
 
-      // Assign correct authentication state
+      
       if (loggedInUser.role === "restaurantOwner") {
         dispatch(saveRestaurantOwner(loggedInUser));
         navigate("/restaurantOwner/profile");

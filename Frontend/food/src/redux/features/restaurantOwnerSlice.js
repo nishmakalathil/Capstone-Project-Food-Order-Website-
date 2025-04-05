@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   isRestaurantOwnerAuth: false, 
-  restaurantOwner: null,  // Renamed for consistency with userSlice
+  restaurantOwner: null,  
 };
 
 const restaurantOwnerSlice = createSlice({

@@ -36,16 +36,13 @@ import ManageOrders from "../pages/admin/ManageOrders";
 import ManageCoupons from "../pages/admin/ManageCoupons";
 import EditRestaurantPage from "../pages/restaurantOwner/EditRestaurantPage";
 import LeaveReview from "../pages/user/LeaveReview";
-
-// ✅ Import Admin Pages
 import AdminDashboard from "../pages/admin/AdminDashboard";
-// import ManageUsers from "../pages/admin/ManageUsers";
-// import ManageRestaurants from "../pages/admin/ManageRestaurants";
-// import ManageMenuItems from "../pages/admin/ManageMenuItems";
-// import ManageOrders from "../pages/admin/ManageOrders";
+
+
+
 
 const router = createBrowserRouter([
-  // ✅ User Routes
+  //  User Routes
   {
     path: "",
     element: <UserLayout />,
@@ -77,7 +74,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ✅ Restaurant Owner Routes
+  //  Restaurant Owner Routes
   {
     path: "restaurantOwner",
     element: <RestaurantOwnerLayout />,
@@ -101,7 +98,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // ✅ Admin Routes
+  //  Admin Routes
   {
     path: "admin",
     element: <AdminLayout />, // ✅ Admin Layout
