@@ -46,8 +46,11 @@ function MenuItemDetails() {
       return;
     }
 
-     
-  if (cart && cart.restaurant_id && cart.restaurant_id !== menuItem.restaurant_id._id) {
+  console.log("Cart - "+ cart);
+  //console.log('Cart Restaturant Id - '+ cart.restaurant_id);
+  //console.log('Check - menu item restaurant id - '+ menuItem.restaurant_id._id); 
+    
+  if (cart && cart.restaurant_id && (cart.restaurant_id !== menuItem.restaurant_id._id)) {
     toast.error("You can only add items from the same restaurant. Please clear your cart first.", {
       position: "top-center",
     });

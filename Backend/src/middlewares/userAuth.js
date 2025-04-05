@@ -15,7 +15,7 @@ const userAuth = (req, res, next) => {
         req.user = tokenVerified;
 
         // Log the user for debugging purposes (remove in production)
-        console.log('Authenticated user:', req.user);
+        // console.log('Authenticated user:', req.user);
 
         // Proceed to the next middleware or route handler
         next();

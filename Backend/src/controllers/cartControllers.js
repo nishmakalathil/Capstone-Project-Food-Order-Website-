@@ -150,6 +150,7 @@ const removeMenuItemFromCart = async (req, res) => {
       return item._id && item._id.toString() === menuItemId.toString();
     });
 
+    console.log("Item Index");
     console.log(itemIndex);
 
     if (itemIndex === -1) {
@@ -166,6 +167,12 @@ const removeMenuItemFromCart = async (req, res) => {
     cart.menuItems.splice(itemIndex, 1);
 
     await cart.save();
+
+    // Remove cart if last item is also removed
+    if(itemIndex == 0)
+    {
+      await Cart.findByIdAndDelete(cart._id);
+    }
 
     res.status(200).json({ message: 'Item removed from cart', cart });
   } catch (error) {
