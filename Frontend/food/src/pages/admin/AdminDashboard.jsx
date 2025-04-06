@@ -11,7 +11,7 @@ const AdminDashboard = () => {
   });
 
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     axiosInstance.get("/admin/dashboard-stats")

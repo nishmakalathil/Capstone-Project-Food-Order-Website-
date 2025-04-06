@@ -45,14 +45,9 @@ const AdminLayout = () => {
   };
 
   useEffect(() => {
-    //  const token = localStorage.getItem("authToken");
-    //  const role = localStorage.getItem("userRole");
-
-    // if (token && role === "admin") {
-    //    dispatch(saveAdmin({ role: "admin" })); 
-    // } else {
+    
       checkAdminAuth(); 
-    //}
+    
   }, []); 
 
   return (

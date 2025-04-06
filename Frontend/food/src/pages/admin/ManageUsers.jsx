@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axiosInstance from "../../config/axiosInstances";
 
 const ManageUsers = () => {
-  const [users, setUsers] = useState([]); // ✅ Ensure users is always an array
+  const [users, setUsers] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -10,7 +10,7 @@ const ManageUsers = () => {
     const fetchUsers = async () => {
       try {
         const response = await axiosInstance.get("/admin/get-users");
-        setUsers(response.data?.users ?? []); // ✅ Ensure users is never undefined
+        setUsers(response.data?.users ?? []); 
       } catch (err) {
         setError("Failed to fetch users.");
         console.error("Error fetching users:", err);
@@ -25,7 +25,7 @@ const ManageUsers = () => {
   const handleDeactivateUser = async (userId, isActive) => {
     try {
       const response = await axiosInstance.patch(`/admin/deactivate-user/${userId}`, {
-          isActive: !isActive, // Toggle isActive value
+          isActive: !isActive, 
       });
 
       if (response.status === 200) {
@@ -33,7 +33,7 @@ const ManageUsers = () => {
               prevUsers.map((user) =>
                   user._id === userId ? { ...user, isActive: !isActive } : user
               )
-          ); // ✅ Update state safely
+          ); 
 
           alert(`User ${isActive ? "deactivated" : "activated"} successfully`);
       }

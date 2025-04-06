@@ -25,6 +25,7 @@ function RestaurantOwnerRestaurants() {
     };
     fetchProfile();
   }, []);
+  
   useEffect(() => {
     if (ownerId) {
       const fetchRestaurants = async () => {

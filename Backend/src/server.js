@@ -18,7 +18,7 @@ app.get("/api/test", (req, res) => {
 
 
 app.use(cors({
-  origin: ["http://localhost:5201","https://capstone-project-food-order-website-5n5w.vercel.app"],  
+  origin: ["http://localhost:5173","https://capstone-project-food-order-website-5n5w.vercel.app"],  
   methods: ["GET", "PUT", "POST", "PATCH", "DELETE", "OPTIONS"],
   credentials: true,  
   

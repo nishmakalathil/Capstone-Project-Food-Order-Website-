@@ -9,13 +9,13 @@ const adminSlice = createSlice({
   name: "admin",
   initialState,
   reducers: {
-    // ✅ Save Admin Data & Mark Authenticated
+    // Save Admin Data & Mark Authenticated
     saveAdmin: (state, action) => {
       state.isAdminAuth = true;
       state.admin = action.payload;
     },
     
-    // ❌ Clear Admin Data on Logout
+    // Clear Admin Data on Logout
     clearAdmin: (state) => {
       state.isAdminAuth = false;
       state.admin = null;

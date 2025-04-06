@@ -7,8 +7,8 @@ const createOrder = async (req, res) => {
     // Extract user data and cart details from the request
     const userId = req.user.id;
 
-    console.log("Create Order - req body");
-    console.log(req.body);
+    //console.log("Create Order - req body");
+    //console.log(req.body);
 
     const { deliveryInfo, couponCode, discount, sessionId } = req.body;
 
