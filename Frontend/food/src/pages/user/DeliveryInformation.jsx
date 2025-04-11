@@ -12,7 +12,7 @@ const DeliveryInformation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addresses, loading, error } = useSelector((state) => state.deliveryInfo);
-  const { cartItems } = useSelector((state) => state.cart); // Assuming cartItems are stored in Redux
+  //const { cartItems } = useSelector((state) => state.cart); // Assuming cartItems are stored in Redux
   const [newAddress, setNewAddress] = useState({
     deliveryAddress: '',
     contactNumber: '',
@@ -33,9 +33,16 @@ const DeliveryInformation = () => {
       alert('Please fill in all fields');
       return;
     }
+
+    console.log("handlesave address");
   
     try {
+      console.log("before result action");
+      
       const resultAction = await dispatch(saveDeliveryInfo(newAddress));
+      
+      console.log("resultAction");
+      console.log(resultAction);
   
       if (saveDeliveryInfo.fulfilled.match(resultAction)) {
         await dispatch(getAllDeliveryInfo()); // 🔥 Refetch addresses immediately
@@ -45,6 +52,7 @@ const DeliveryInformation = () => {
         alert('Failed to add delivery address');
       }
     } catch (err) {
+      console.error('Error while saving delivery info:', err);
       alert('An error occurred while adding the delivery address');
     }
   };
@@ -201,7 +209,7 @@ const DeliveryInformation = () => {
         <div className="text-red-500">{error}</div>
       ) : (
         <div>
-          {addresses && addresses.length === 0 ? (
+          {!addresses || addresses.length === 0 ? (
             <p>No delivery addresses available.</p>
           ) : (
             <ul className="space-y-4">

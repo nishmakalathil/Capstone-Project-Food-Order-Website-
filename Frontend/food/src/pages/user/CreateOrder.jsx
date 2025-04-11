@@ -105,7 +105,6 @@ const CreateOrder = () => {
           <div>
             <p><strong>Address:</strong> {selectedAddress.deliveryAddress}</p>
             <p><strong>Contact Number:</strong> {selectedAddress.contactNumber}</p>
-            <p><strong>Delivery Time:</strong> {selectedAddress.deliveryTime}</p>
             <p><strong>Instructions:</strong> {selectedAddress.deliveryInstructions}</p>
           </div>
         ) : (
@@ -125,12 +124,12 @@ const CreateOrder = () => {
                   
                   <img
                     src={item.image || "/path/to/placeholder-image.jpg"}
-                    alt={item.menuItemId.name}
+                    alt={item.name}
                     className="w-20 h-20 object-cover mr-4"
                     onError={(e) => (e.target.src = "/path/to/placeholder-image.jpg")}
                   />
                   <div>
-                    <p><strong>{item.menuItemId.name}</strong></p>
+                    <p><strong>{item.name}</strong></p>
                     <p>Price: ₹{item.price}</p>
                     <p>Quantity: {item.quantity}</p>
                     <p>Total: ₹{item.price * item.quantity}</p>

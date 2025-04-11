@@ -106,7 +106,7 @@ const getAllDeliveryInfo = async (req, res) => {
 
         // Check if delivery information is found
         if (!deliveryInfo || deliveryInfo.addresses.length === 0) {
-            return res.status(404).json({ message: "No delivery information found" });
+            return res.status(200).json({ message: "No delivery information found" });
         }
 
         res.status(200).json({

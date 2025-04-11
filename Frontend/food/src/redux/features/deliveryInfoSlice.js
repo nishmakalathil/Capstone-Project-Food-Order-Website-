@@ -63,7 +63,10 @@ const deliveryInfoSlice = createSlice({
 
       
       .addCase(saveDeliveryInfo.fulfilled, (state, action) => {
-        state.addresses.push(action.payload);  
+        if (!state.addresses) {
+          state.addresses = [];
+        }
+        state.addresses.push(action.payload);
       })
 
       
